@@ -1,0 +1,88 @@
+/* src/styles/Popup.css */
+
+.popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.popup-inner {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 300px;
+  max-width: 80%;
+}
+
+.popup-inner h3 {
+  margin-top: 0;
+}
+
+.popup-inner input,
+.popup-inner textarea,
+.popup-inner input[type="file"] {
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.toggle-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.toggle-buttons button {
+  flex: 1;
+  padding: 10px;
+  margin: 0 5px;
+  border: none;
+  background-color: #ddd;
+  color: #333;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.toggle-buttons button.active {
+  background-color: #1abc9c;
+  color: white;
+}
+
+.toggle-buttons button:hover {
+  background-color: #16a085;
+  color: white;
+}
+
+.submit-button,
+.close-button {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  background-color: #1abc9c;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.close-button {
+  background-color: #e74c3c;
+}
+
+.submit-button:hover {
+  background-color: #16a085;
+}
+
+.close-button:hover {
+  background-color: #c0392b;
+}
