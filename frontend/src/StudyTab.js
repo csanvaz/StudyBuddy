@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import ContentPopup from './ContentPopup';
-
+import './styles/StudyTab.css';
 
 function StudyTab() {
     const [studyMaterials, setStudyMaterials] = useState([]);
