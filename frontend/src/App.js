@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './App.css';
+import './styles/App.css';
 import * as GiIcons from "react-icons/gi";
 import { BrowserRouter as Router, Route, Routes, Link, useLocation } from 'react-router-dom';
 import QuizTab from './QuizTab';
