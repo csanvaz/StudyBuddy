@@ -1,63 +1,82 @@
 .study-tab-background {
-    min-height: 100vh; /* Ensure it covers the full viewport height */
-    display: flex;
-    justify-content: center;
-    align-items: center; /* Center items vertically */
-    padding-top: 20px; /* Add some padding at the top */
-  }
-  
-  .study-tab-sheet {
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 80%;
-    max-width: 800px;
-    margin: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* Center content horizontally */
-  }
-  
-  .full-width-button {
-    width: 100%;
-    padding: 15px;
-    margin-bottom: 20px;
-    margin-top: 20px; /* Add some space above the button */
-    background-color: #1abc9c;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    text-align: center;
-  }
-  
-  .full-width-button:hover {
-    background-color: #16a085;
-  }
-  
-  .study-materials {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-top: 20px;
-    width: 100%; /* Ensure the materials take the full width */
-  }
-  
-  .material-button {
-    background-color: #28a745;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-    text-align: center;
-    width: 100%;
-    transition: background-color 0.3s ease;
-  }
-  
-  .material-button:hover {
-    background-color: #218838;
-  }
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  height: 100%;
+  overflow: auto;
+}
+
+.study-tab-sheet {
+  background: rgba(255, 255, 255, 0.9);
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+  width: 90%;
+  max-width: 700px;
+  text-align: center;
+}
+
+.study-tab-sheet h2 {
+  font-size: 1.8rem;
+  color: #2c3e50;
+  margin-bottom: 20px;
+}
+
+.study-materials {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.material-button {
+  background-color: #f5f7fa;
+  padding: 15px 20px;
+  border: 2px solid #dfe6e9;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  font-size: 1rem;
+  font-weight: bold;
+  color: #34495e;
+  cursor: pointer;
+  transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s;
+}
+
+.material-button:hover {
+  background-color: #ecf0f1;
+  transform: scale(1.05);
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+.full-width-button {
+  background-color: #1abc9c;
+  color: white;
+  font-size: 1rem;
+  padding: 15px;
+  margin-bottom: 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.full-width-button:hover {
+  background-color: #16a085;
+}
+
+.popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
