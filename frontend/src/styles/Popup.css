@@ -89,9 +89,23 @@
 
 .checkbox-group {
   display: flex;
-  flex-direction: column;
-  gap: 10px;
+  flex-direction: column; /* Align checkboxes and labels vertically */
+  gap: 10px; /* Add space between each checkbox-label pair */
   margin-top: 10px;
+}
+
+.checkbox-group label {
+  display: flex;
+  align-items: center;
+}
+
+.checkbox-group input[type="checkbox"] {
+  margin-right: 10px;
+}
+
+.checkbox-group label span {
+  display: inline-block;
+  min-width: 150px; /* Set a fixed or minimum width for the labels */
 }
 
 .content-type-section h4 {
