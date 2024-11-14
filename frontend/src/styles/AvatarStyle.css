@@ -1,0 +1,211 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: 'Fredoka', serif;
+    margin: 0;
+    padding: 0;
+    background: white;
+    overflow: hidden;
+  }
+  
+  .app {
+    display: flex;
+    height: 100vh;
+    position: relative;
+    z-index: 1;
+  }
+  
+  /* Mountain background layers */
+  .mountain-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+  }
+  
+  .mountain {
+    position: absolute;
+    bottom: -10vh;
+    width: 100%;
+    height: 50vh;
+    background: linear-gradient(to top, #4d8379, #87c0b2);
+    clip-path: polygon(0 100%, 25% 60%, 50% 80%, 75% 50%, 100% 100%);
+    opacity: 0.8;
+  }
+  
+  .mountain:nth-child(2) {
+    bottom: -5vh;
+    background: linear-gradient(to top, #527d6b, #88c1b5);
+    clip-path: polygon(0 100%, 20% 70%, 45% 50%, 70% 70%, 100% 100%);
+    height: 100vh;
+    opacity: 0.6;
+  }
+  
+  .mountain:nth-child(3) {
+    bottom: 0;
+    background: linear-gradient(to top, #5c8d7b, #9ed4c5);
+    clip-path: polygon(0 100%, 30% 60%, 60% 75%, 80% 55%, 100% 100%);
+    height: 60vh;
+    opacity: 0.4;
+  }
+  
+  .sidebar {
+    display: flex;
+    flex-direction: column;
+    width: 20%;
+    padding-right: 20px;
+    padding-top: 60px;
+    border-right: 2px solid #000000;
+    height: 100vh;
+    background-color: white;
+    z-index: 1;
+  }
+  
+  .menu-button {
+    font-size: 16px;
+    color: #404040;
+    background-color: transparent;
+    border: none;
+    padding: 12px 20px 12px 30px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    border-radius: 8px;
+    width: calc(100% - 30px);
+  }
+  
+  .menu-button.active {
+    color: #428ce2;
+    background-color: #d1d3c9;
+    border: 2px solid #428ce2;
+    border-radius: 8px;
+    font-weight: 700;
+  }
+  
+  .content {
+    flex: 1;
+    padding-left: 20px;
+  }
+  
+  /* Styling for the welcome text */
+  .welcome-stats-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 50px auto 0;
+    max-width: 600px;
+  }
+  
+  .welcome-text {
+    font-size: 24px;
+    font-weight: bold;
+    color: #404040;
+    margin-bottom: 10px;
+  }
+  
+  /* Main rectangular stats container */
+  .stats-container {
+    background-color: #d1d3c9;
+    border: 2px solid #428ce2;
+    border-radius: 12px;
+    opacity: 0.9;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 500px;
+    width: 100%;
+    z-index: 2;
+    position: relative;
+  }
+  
+  /* Title inside the stats container */
+  .stats-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #404040;
+    text-align: center;
+  }
+  
+  /* Inner square boxes */
+  .stat-square {
+    background-color: #d1d3c9;
+    border: 2px solid #428ce2;
+    border-radius: 12px;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: bold;
+    opacity: 1;
+  }
+  
+  /* Individual colors for XP, Streak, and Gold text */
+  .xp-square {
+    color: #ef7971;
+  }
+  
+  .streak-square {
+    color: #404040;
+  }
+  
+  .gold-square {
+    color: #ef7971;
+  }
+  
+  /* Container for the three stat squares */
+  .stats-grid {
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+  }
+  
+  .avatar-container {
+    width: 300px; /* Increase this value to make the avatar larger */
+    height: 300px; /* Increase this value to keep it proportionate */
+    margin-bottom: 10px;
+  }
+  
+  
+  /* Avatar input area */
+  .avatar-input {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 10px;
+    margin-bottom: 10px
+  }
+  
+  .avatar-input input {
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    width: 80%;
+    max-width: 200px;
+    text-align: center;
+  }
+  
+  .avatar-input button {
+    padding: 8px 12px;
+    background-color: #428ce2;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  
