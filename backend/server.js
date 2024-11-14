@@ -4,6 +4,7 @@ const multer = require('multer');
 const fs = require('fs');
 import { topicQuestionPrompt } from './prompts.js';
 require('dotenv').config();
+const { loginUser } = require('./loginUser');
 
 const app = express();
 const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
@@ -65,6 +66,41 @@ app.post('/api/file-questions', upload.single('file'), async (req, res) => {
         res.status(500).json({ error: 'An error occurred', details: error.message });
     }
 });
+
+app.post('/api/register', async (req, res) => {
+    const { username, email, password } = req.body;
+    const result = await registerUser(username, email, password);
+    if (result.success) {
+      res.status(201).json({ userId: result.userId });
+    } else {
+      res.status(400).json({ error: result.error });
+    }
+  });
+  
+  app.post('/api/login', async (req, res) => {
+    const { username, password } = req.body;
+    const result = await loginUser(username, password);
+    if (result.success) {
+        const userResult = await pool.query('SELECT avatar FROM users WHERE username = $1', [username]);
+        const avatar = userResult.rows[0]?.avatar || 'default';
+        
+        res.status(200).json({ userId: result.userId, avatar: avatar });
+    } else {
+        res.status(401).json({ error: result.error });
+    }
+});
+
+app.post('/api/update-avatar', async (req, res) => {
+    const { userId, avatar } = req.body;
+    try {
+        await pool.query('UPDATE users SET avatar = $1 WHERE user_id = $2', [avatar, userId]);
+        res.status(200).json({ success: true, message: 'Avatar updated successfully' });
+    } catch (error) {
+        console.error('Error updating avatar:', error);
+        res.status(500).json({ error: 'An error occurred', details: error.message });
+    }
+});
+
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
