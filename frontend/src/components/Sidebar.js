@@ -13,8 +13,8 @@ function Sidebar({ setSelectedTab, selectedTab }) {
                 Home
             </button>
             <button
-                className={selectedTab === 'Tab2' ? 'active' : ''}
-                onClick={() => setSelectedTab('Tab2')}
+                className={selectedTab === 'StudyTab' ? 'active' : ''}
+                onClick={() => setSelectedTab('StudyTab')}
             >
                 <span className="icon-placeholder">
                     <img src="/icons/bookIcon.png" alt="Tab 2 Icon" />

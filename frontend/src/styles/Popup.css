@@ -86,3 +86,55 @@
 .close-button:hover {
   background-color: #c0392b;
 }
+
+.checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.content-type-section h4 {
+  margin-top: 20px;
+  font-weight: bold;
+}
+
+.content-button {
+  background: none;
+  border: none;
+  color: #007bff;
+  cursor: pointer;
+  font-size: 16px;
+  text-align: left;
+  padding: 5px 0;
+}
+
+.content-button:hover {
+  text-decoration: underline;
+}
+
+.study-materials {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.material-button {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  text-align: center;
+  width: 100%;
+  transition: background-color 0.3s ease;
+}
+
+.material-button:hover {
+  background-color: #218838;
+}
+
+
