@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './styles/Popup.css';
 
 function ContentPopup({ onAddContent, onClose }) {
     const [subject, setSubject] = useState('');
