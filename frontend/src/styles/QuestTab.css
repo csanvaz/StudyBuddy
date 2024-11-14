@@ -1,6 +1,4 @@
-/* src/styles/QuizTab.css */
-
-.quiz-tab-background {
+.quest-tab-background {
   background: url('') no-repeat center center fixed;
   background-size: cover;
   height: 100vh;
@@ -9,7 +7,7 @@
   align-items: center;
 }
 
-.quiz-tab-sheet {
+.quest-tab-sheet {
   background: white;
   padding: 20px;
   border-radius: 10px;
@@ -36,12 +34,12 @@
   background-color: #16a085;
 }
 
-.quiz-list {
+.quest-list {
   list-style: none;
   padding: 0;
 }
 
-.quiz-list-item {
+.quest-list-item {
   background-color: #f9f9f9;
   padding: 15px;
   margin-bottom: 10px;
@@ -50,6 +48,6 @@
   cursor: pointer;
 }
 
-.quiz-list-item:hover {
+.quest-list-item:hover {
   background-color: #f1f1f1;
 }

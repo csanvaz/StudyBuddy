@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './styles/App.css';
 import * as GiIcons from "react-icons/gi";
 import { BrowserRouter as Router, Route, Routes, Link, useLocation } from 'react-router-dom';
-import QuizTab from './QuizTab';
+import QuestTab from './QuestTab';
 import StudyTab from './StudyTab';
 import Login from './Login';
 import multiavatar from '@multiavatar/multiavatar';
@@ -47,8 +47,8 @@ const AppContent = ({ userName, avatarName, handleAvatarChange, setAvatarName })
         <MenuButton
           text="QUEST"
           icon={GiIcons.GiHiking}
-          isActive={location.pathname === '/quiz'}
-          path="/quiz"
+          isActive={location.pathname === '/quest'}
+          path="/quest"
         />
       </div>
 
@@ -93,7 +93,7 @@ const AppContent = ({ userName, avatarName, handleAvatarChange, setAvatarName })
             }
           />
           <Route path="/study" element={<StudyTab />} />
-          <Route path="/quiz" element={<QuizTab />} />
+          <Route path="/quest" element={<QuestTab />} />
         </Routes>
       </div>
     </div>

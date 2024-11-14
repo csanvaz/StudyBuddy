@@ -1,26 +1,26 @@
 import React, { useState } from 'react';
 import './styles/Popup.css';
-import './styles/QuizTab.css';
+import './styles/QuestTab.css';
 
 
-function QuizTab() {
-    const [quizzes, setQuizzes] = useState([]);
+function QuestTab() {
+    const [quests, setQuests] = useState([]);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
 
-    const handleAddQuiz = (quiz) => {
-        setQuizzes([...quizzes, quiz]);
+    const handleAddQuest = (quest) => {
+        setQuests([...quests, quest]);
         setIsPopupOpen(false);
     };
 
     return (
-        <div className="quiz-tab-background">
-            <div className="quiz-tab-sheet">
+        <div className="quest-tab-background">
+            <div className="quest-tab-sheet">
                 <button className="full-width-button" onClick={() => setIsPopupOpen(true)}>Add Content</button>
-                {isPopupOpen && <QuizPopup onAddQuiz={handleAddQuiz} onClose={() => setIsPopupOpen(false)} />}
-                <h2>My Quizzes</h2>
-                <ul className="quiz-list">
-                    {quizzes.map((quiz, index) => (
-                        <li key={index} className="quiz-list-item">{quiz.title}</li>
+                {isPopupOpen && <QuestPopup onAddQuest={handleAddQuest} onClose={() => setIsPopupOpen(false)} />}
+                <h2>My Quests</h2>
+                <ul className="quest-list">
+                    {quests.map((quest, index) => (
+                        <li key={index} className="quest-list-item">{quest.title}</li>
                     ))}
                 </ul>
             </div>
@@ -28,20 +28,20 @@ function QuizTab() {
     );
 }
 
-function QuizPopup({ onAddQuiz, onClose }) {
-    const [quizTitle, setQuizTitle] = useState('');
-    const [quizContent, setQuizContent] = useState('');
+function QuestPopup({ onAddQuest, onClose }) {
+    const [questTitle, setQuestTitle] = useState('');
+    const [questContent, setQuestContent] = useState('');
     const [isFileUpload, setIsFileUpload] = useState(false);
 
     const handleSubmit = () => {
-        onAddQuiz({ title: quizTitle, content: quizContent });
+        onAddQuest({ title: questTitle, content: questContent });
     };
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         const reader = new FileReader();
         reader.onload = (event) => {
-            setQuizContent(event.target.result);
+            setQuestContent(event.target.result);
         };
         reader.readAsText(file);
     };
@@ -49,12 +49,12 @@ function QuizPopup({ onAddQuiz, onClose }) {
     return (
         <div className="popup">
             <div className="popup-inner">
-                <h3>Add a New Quiz</h3>
+                <h3>Add a New Quest</h3>
                 <input
                     type="text"
-                    placeholder="Quiz Title"
-                    value={quizTitle}
-                    onChange={(e) => setQuizTitle(e.target.value)}
+                    placeholder="Quest Title"
+                    value={questTitle}
+                    onChange={(e) => setQuestTitle(e.target.value)}
                 />
                 <div className="toggle-buttons">
                     <button
@@ -75,15 +75,15 @@ function QuizPopup({ onAddQuiz, onClose }) {
                 ) : (
                     <textarea
                         placeholder="Paste text here"
-                        value={quizContent}
-                        onChange={(e) => setQuizContent(e.target.value)}
+                        value={questContent}
+                        onChange={(e) => setQuestContent(e.target.value)}
                     ></textarea>
                 )}
-                <button className="submit-button" onClick={handleSubmit}>Add Quiz</button>
+                <button className="submit-button" onClick={handleSubmit}>Add Quest</button>
                 <button className="close-button" onClick={onClose}>Close</button>
             </div>
         </div>
     );
 }
 
-export default QuizTab;
+export default QuestTab;

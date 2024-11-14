@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './styles/Popup.css';
-import './styles/QuizTab.css';
+import './styles/QuestTab.css';
 
 
 function StudyTab() {
