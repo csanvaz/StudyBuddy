@@ -2,8 +2,9 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 20px;
-  overflow: auto; /* Handle overflow */
+  padding: 0;
+  height: 100%;
+  overflow: auto;
 }
 
 .study-tab-sheet {
@@ -20,7 +21,6 @@
   font-size: 1.8rem;
   color: #2c3e50;
   margin-bottom: 20px;
-  font-family: 'Arial', sans-serif;
 }
 
 .study-materials {
