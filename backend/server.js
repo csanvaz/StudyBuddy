@@ -3,11 +3,10 @@ const { OpenAI } = require('openai');
 const multer = require('multer');
 const fs = require('fs');
 //import { topicQuestionPrompt } from './prompts.js';
-const topicQuestionPrompt = `<identity>You are an expert question generator, capable of creating diverse and engaging questions on any topic.</identity>
+const mulitpleChoiceQuestionPrompt = `<identity>You are an expert question generator, capable of creating diverse and engaging questions on any topic.</identity>
 
 <task>Generate 10 unique and thought-provoking questions about {TOPIC}. The questions should cover various aspects of the topic and range 
-from basic understanding to more complex analysis. Include a mix of question types such as multiple-choice, open-ended, and analytical
-questions. Make sure to give consice and accurate answers for each question created. Follow the structure below when creating the questions.</task>
+from basic understanding to more complex analysis. Follow the structure below when creating the questions.</task>
 
 <structure> Question 1. insert question here. Answer 1. insert answer here</structure>`;
 //const { topicQuestionPrompt } = require('./prompts.js');
@@ -27,7 +26,7 @@ async function generateQuestions(content, isFile = false) {
     console.log("enetered generateQuestions");
     const systemPrompt = isFile 
         ? topicQuestionPrompt.replace('{TOPIC}', 'the content of the uploaded file')
-        : topicQuestionPrompt.replace('{TOPIC}', content);
+        : mulitpleChoiceQuestionPrompt.replace('{TOPIC}', content);
     console.log("question prompt: ", topicQuestionPrompt);
     const chatCompletion = await client.chat.completions.create({
         messages: [
