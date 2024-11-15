@@ -7,7 +7,9 @@ const topicQuestionPrompt = `<identity>You are an expert question generator, cap
 
 <task>Generate 10 unique and thought-provoking questions about {TOPIC}. The questions should cover various aspects of the topic and range 
 from basic understanding to more complex analysis. Include a mix of question types such as multiple-choice, open-ended, and analytical
-questions.</task>`;
+questions. Make sure to give consice and accurate answers for each question created. Follow the structure below when creating the questions.</task>
+
+<structure> Question 1. insert question here. Answer 1. insert answer here</structure>`;
 //const { topicQuestionPrompt } = require('./prompts.js');
 require('dotenv').config();
 //const { loginUser } = require('./loginUser');
