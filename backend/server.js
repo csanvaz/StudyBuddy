@@ -3,7 +3,12 @@ const { OpenAI } = require('openai');
 const multer = require('multer');
 const fs = require('fs');
 //import { topicQuestionPrompt } from './prompts.js';
-const { topicQuestionPrompt } = require('./prompts.js');
+const topicQuestionPrompt = `<identity>You are an expert question generator, capable of creating diverse and engaging questions on any topic.</identity>
+
+<task>Generate 10 unique and thought-provoking questions about {TOPIC}. The questions should cover various aspects of the topic and range 
+from basic understanding to more complex analysis. Include a mix of question types such as multiple-choice, open-ended, and analytical
+questions.</task>`;
+//const { topicQuestionPrompt } = require('./prompts.js');
 require('dotenv').config();
 //const { loginUser } = require('./loginUser');
 
@@ -44,6 +49,7 @@ app.post('/api/topic-questions', async (req, res) => {
     try {
         const topic = req.body.topic;
         console.log("reg body", req.body.topic);
+        console.log("topicQuestionPrompt: ", topicQuestionPrompt); 
         const response = await generateQuestions(topic);
         console.log('topicQuestionPrompt:', topicQuestionPrompt);
         res.json({ response: response });
