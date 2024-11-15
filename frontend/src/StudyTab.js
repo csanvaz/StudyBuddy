@@ -43,7 +43,7 @@ function StudyTab() {
                         <button
                             key={index}
                             className="material-button"
-                            onClick={() => fetchTopicQuestions(material.subject)}
+                            onClick={() => fetchTopicQuestions(material.index)}
                         >
                             {material.subject}
                         </button>
