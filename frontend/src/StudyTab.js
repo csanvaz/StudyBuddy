@@ -16,7 +16,7 @@ function StudyTab() {
     // Function to make POST request to the backend
     const fetchTopicQuestions = async (topic) => {
         try {
-            const response = await fetch('http://localhost:5001/api/topic-questions', {
+            const response = await fetch('https://CS484FinalProjectEnvironment-env.eba-qkbmea2x.us-east-1.elasticbeanstalk.com/api/topic-questions', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
