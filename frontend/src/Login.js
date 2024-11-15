@@ -34,20 +34,6 @@ const Login = ({ onLogin }) => {
 };
 */
 
-const loginUser = async (username, password) => {
-  const response = await fetch('/api/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, password }),
-  });
-  const data = await response.json();
-  if (response.ok) {
-      handleLogin(username, data.avatar);
-  } else {
-      console.error('Login failed:', data.error);
-  }
-};
-
   return (
     <div className="login-page"> {/* Add this wrapper */}
       <div className="login-container">

@@ -1,4 +1,10 @@
 {
+  "name": "cs484-backend",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+    },
   "dependencies": {
     "bcrypt": "^5.0.1",
     "cors": "^2.8.5",

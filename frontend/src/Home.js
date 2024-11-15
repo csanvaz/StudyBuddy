@@ -1,17 +1,43 @@
-import React from 'react';
-import * as GiIcons from 'react-icons/gi'; // Import all icons as GiIcons
+import React, { useState } from 'react';
+import * as GiIcons from 'react-icons/gi';
+import multiavatar from '@multiavatar/multiavatar';
 
-const Home = () => {
+const Home = ({ userName, avatarName, handleAvatarChange, setAvatarName }) => {
+  const [inputValue, setInputValue] = useState(avatarName);
+
   const getXP = () => 150;
   const getStreak = () => 5;
   const getGold = () => 100;
-  const getUserName = () => "@user name";
+
+  const handleInputChange = (e) => {
+    setInputValue(e.target.value);
+  };
+
+  const handleGenerateAvatar = () => {
+    setAvatarName(inputValue);
+    handleAvatarChange();
+  };
 
   return (
     <div className="content">
       <div className="welcome-stats-container">
-        <h1 className="welcome-text">Welcome, {getUserName()}!</h1>
-
+        <h1 className="welcome-text">Welcome, {userName}!</h1>
+        {/* Avatar Display */}
+        <div className="avatar-container">
+          <div dangerouslySetInnerHTML={{ __html: multiavatar(avatarName) }} />
+        </div>
+        {/* Avatar Name Input */}
+        <div className="avatar-input">
+          <input
+            type="text"
+            placeholder="Enter avatar name"
+            value={inputValue}
+            onChange={handleInputChange}
+          />
+          <button onClick={handleGenerateAvatar}>
+            Generate Avatar
+          </button>
+        </div>
         <div className="stats-container">
           <p className="stats-title">Your statistics:</p>
           <div className="stats-grid">
