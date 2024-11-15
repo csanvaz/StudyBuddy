@@ -1,7 +1,22 @@
-const topicQuestionPrompt = `<identity>You are an expert question generator, capable of creating diverse and engaging questions on any topic.</identity>
+const flashCardPrompt = `<identity>You are an expert question generator, capable of creating diverse and engaging questions on any topic.</identity>
 
 <task>Generate 10 unique and thought-provoking questions about {TOPIC}. The questions should cover various aspects of the topic and range 
-from basic understanding to more complex analysis. Include a mix of question types such as multiple-choice, open-ended, and analytical
- questions.</task>`;
+from basic understanding to more complex analysis. Follow the structure below when creating the questions.</task>
 
- const characterGenerator = '';
+<structure> Question 1. insert question here. Answer 1. insert answer here</structure>`;
+
+const mulitpleChoiceQuestionPrompt = `<identity>You are an expert question generator, capable of creating diverse and engaging questions on any topic.</identity>
+
+<task>Generate 10 unique and thought-provoking questions about {TOPIC}. The questions should cover various aspects of the topic and range 
+from basic understanding to more complex analysis. Also generate 4 possible answers for the questions. Only one answer is correct.
+Follow the structure below when creating the questions, giving the multiple choice answer options, and providing the correct answer.</task>
+
+<structure> Question 1. insert question here. 
+Answer 1. insert possible answer here 
+Answer 2. insert possible answer here 
+Answer 3. insert possible answer here
+Answer 4. insert possible answer here
+Correct Answer: Insert correct answer here
+</structure>`;
+
+const askMyDocPrompt = '';

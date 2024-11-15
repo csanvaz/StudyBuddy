@@ -2,16 +2,9 @@ const express = require('express');
 const { OpenAI } = require('openai');
 const multer = require('multer');
 const fs = require('fs');
-//import { topicQuestionPrompt } from './prompts.js';
-const mulitpleChoiceQuestionPrompt = `<identity>You are an expert question generator, capable of creating diverse and engaging questions on any topic.</identity>
+import { flashCardPrompt, mulitpleChoiceQuestionPrompt, askMyDocPrompt } from './prompts.js';
 
-<task>Generate 10 unique and thought-provoking questions about {TOPIC}. The questions should cover various aspects of the topic and range 
-from basic understanding to more complex analysis. Follow the structure below when creating the questions.</task>
-
-<structure> Question 1. insert question here. Answer 1. insert answer here</structure>`;
-//const { topicQuestionPrompt } = require('./prompts.js');
 require('dotenv').config();
-//const { loginUser } = require('./loginUser');
 
 const app = express();
 const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
@@ -35,11 +28,17 @@ app.get('/test', async (req, res) => {
 });
 
 // Function to generate questions
-async function generateQuestions(content, isFile = false) {
+async function generateQuestions(content, isFile = false, multipleChoice = false) {
     console.log("enetered generateQuestions");
-    const systemPrompt = isFile 
-        ? topicQuestionPrompt.replace('{TOPIC}', 'the content of the uploaded file')
-        : mulitpleChoiceQuestionPrompt.replace('{TOPIC}', content);
+     
+    let systemPrompt;
+    if (isFile) {
+        systemPrompt = askMyDocPrompt.replace('{TOPIC}', 'the content of the uploaded file');
+    } else if (multipleChoice) {
+        systemPrompt = mulitpleChoiceQuestionPrompt.replace('{TOPIC}', content);
+    } else {
+        systemPrompt = flashCardPrompt.replace('{TOPIC}', content);
+    }
     console.log("question prompt: ", topicQuestionPrompt);
     const chatCompletion = await client.chat.completions.create({
         messages: [
