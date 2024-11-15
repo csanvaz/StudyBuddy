@@ -33,7 +33,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use(cors({
-    origin: 'https://main.d1ajqyoui7w437.amplifyapp.com',
+    origin: 'https://main.d1v5rs7h6klasx.amplifyapp.com',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   }));
