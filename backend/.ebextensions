@@ -17,8 +17,8 @@ files:
           listen 443 ssl;
           server_name CS484FinalProjectEnvironment-env.eba-qkbmea2x.us-east-1.elasticbeanstalk.com www.CS484FinalProjectEnvironment-env.eba-qkbmea2x.us-east-1.elasticbeanstalk.com;
 
-          ssl_certificate /etc/letsencrypt/live/your-domain.com/fullchain.pem;
-          ssl_certificate_key /etc/letsencrypt/live/your-domain.com/privkey.pem;
+          ssl_certificate /etc/letsencrypt/live/CS484FinalProjectEnvironment-env.eba-qkbmea2x.us-east-1.elasticbeanstalk.com/fullchain.pem;
+          ssl_certificate_key /etc/letsencrypt/live/CS484FinalProjectEnvironment-env.eba-qkbmea2x.us-east-1.elasticbeanstalk.com/privkey.pem;
 
           location / {
               proxy_pass http://127.0.0.1:8080;  # Port 8080 is the default for Node.js apps on EB
