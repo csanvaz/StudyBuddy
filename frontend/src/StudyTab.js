@@ -3,6 +3,9 @@ import ContentPopup from './ContentPopup';
 import './styles/StudyTab.css';
 import Flashcard from './components/flashCard';
 
+const serverUrl = 'https://CS484FinalProjectEnvironment-env.eba-qkbmea2x.us-east-1.elasticbeanstalk.com/api/topic-questions';
+const testUrl = 'localhost:8080/api/topic-questions';
+
 function StudyTab() {
     const [studyMaterials, setStudyMaterials] = useState([]);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -17,7 +20,7 @@ function StudyTab() {
 
     const fetchTopicQuestions = async (topic, multipleChoice = false) => {
         try {
-            const response = await fetch('https://CS484FinalProjectEnvironment-env.eba-qkbmea2x.us-east-1.elasticbeanstalk.com/api/topic-questions', {
+            const response = await fetch(serverUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -43,7 +46,7 @@ function StudyTab() {
         setShowOptionPopup(false); 
 
         if (option === 'Flashcards') {
-            fetchTopicQuestions(currentTopic); // Continue to flashcards
+            fetchTopicQuestions(currentTopic, false); // Continue to flashcards
         } else {
             alert(`${option} is coming soon!`); // Alert for other options
         }
