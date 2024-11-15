@@ -15,14 +15,14 @@ function StudyTab() {
         setIsPopupOpen(false);
     };
 
-    const fetchTopicQuestions = async (topic,) => {
+    const fetchTopicQuestions = async (topic, multipleChoice = false) => {
         try {
             const response = await fetch('https://CS484FinalProjectEnvironment-env.eba-qkbmea2x.us-east-1.elasticbeanstalk.com/api/topic-questions', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ topic }),
+                body: JSON.stringify({ topic, multipleChoice }),
             });
 
             const data = await response.json();
