@@ -9,6 +9,7 @@ const Flashcard = ({ questions, topic }) => {
   useEffect(() => {
     // Parse the questions string into an array of question-answer pairs
     const parseQuestions = (questionsString) => {
+      //console.log('questions:', questionsString);
       const pairs = questionsString.split('Question').slice(1);
       return pairs.map(pair => {
         const [question, answer] = pair.split('Answer');
