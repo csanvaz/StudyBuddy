@@ -18,7 +18,11 @@ const app = express();
 const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 const upload = multer({ dest: 'uploads/' });
 const cors = require('cors');
-app.use(cors());
+app.use(cors({
+  origin: 'https://main.d1v5rs7h6klasx.amplifyapp.com/',
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true,
+}));
 
 app.use(express.json());
 
