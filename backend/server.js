@@ -42,9 +42,7 @@ app.use(cors({
 // Function to generate questions
 async function generateQuestions(content, isFile = false) {
     //console.log("enetered generateQuestions");
-    const systemPrompt = isFile 
-        ? topicQuestionPrompt.replace('{TOPIC}', 'the content of the uploaded file')
-        : topicQuestionPrompt.replace('{TOPIC}', content);
+    const systemPrompt = topicQuestionPrompt.replace('{TOPIC}', content);
     //console.log("question prompt: ", topicQuestionPrompt);
     const chatCompletion = await client.chat.completions.create({
         messages: [
