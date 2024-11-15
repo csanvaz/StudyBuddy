@@ -20,3 +20,5 @@ Correct Answer: Insert correct answer here
 </structure>`;
 
 const askMyDocPrompt = '';
+
+module.exports = { flashCardPrompt };

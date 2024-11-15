@@ -2,12 +2,18 @@ const express = require('express');
 const { OpenAI } = require('openai');
 const multer = require('multer');
 const fs = require('fs');
-//import { flashCardPrompt, mulitpleChoiceQuestionPrompt, askMyDocPrompt } from './prompts.js';
 const flashCardPrompt = require('./prompts.js');
 const mulitpleChoiceQuestionPrompt = require('./prompts.js');
 const askMyDocPrompt = require('./prompts.js');
 
+const flashCardPrompt1 = JSON.stringify(flashCardPrompt)
+
 require('dotenv').config();
+
+//https://CS484FinalProjectEnvironment-env.eba-qkbmea2x.us-east-1.elasticbeanstalk.com/api/topic-questions
+//origin:
+//https://main.d1v5rs7h6klasx.amplifyapp.com
+// SET ORIGIN TO TRUE FOR LOCAL TESTING
 
 const app = express();
 const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
@@ -31,17 +37,12 @@ app.get('/test', async (req, res) => {
 });
 
 // Function to generate questions
-async function generateQuestions(content, isFile = false, multipleChoice = false) {
-    console.log("entered generateQuestions");
-     
-    let systemPrompt;
-    if (isFile) {
-        systemPrompt = askMyDocPrompt.replace('{TOPIC}', 'the content of the uploaded file');
-    } else if (multipleChoice) {
-        systemPrompt = mulitpleChoiceQuestionPrompt.replace('{TOPIC}', content);
-    } else {
-        systemPrompt = flashCardPrompt.replace('{TOPIC}', content);
-    }
+async function generateQuestions(content, isFile = false) {
+    console.log("enetered generateQuestions");
+    const systemPrompt = isFile 
+        ? flashCardPrompt.replace('{TOPIC}', 'the content of the uploaded file')
+        : String(flashCardPrompt1).replace('{TOPIC}', content);
+    console.log("system prompt: ", systemPrompt);
     //console.log("question prompt: ", topicQuestionPrompt);
     const chatCompletion = await client.chat.completions.create({
         messages: [
@@ -64,11 +65,10 @@ async function generateQuestions(content, isFile = false, multipleChoice = false
 app.post('/api/topic-questions', async (req, res) => {
     try {
         const topic = req.body.topic;
-        //const multipleChoice = req.body.
         console.log("reg body", req.body.topic);
-        // console.log("topicQuestionPrompt: ", flashCardPrompt); 
-        const response = await generateQuestions(topic, multipleChoice);
-        // console.log('topicQuestionPrompt:', flashCardPrompt);
+        //console.log("topicQuestionPrompt: ", topicQuestionPrompt); 
+        const response = await generateQuestions(topic);
+        //console.log('topicQuestionPrompt:', topicQuestionPrompt);
         res.json({ response: response });
     } catch (error) {
         console.error('Detailed error:', error);
@@ -84,7 +84,7 @@ app.post('/api/file-questions', upload.single('file'), async (req, res) => {
         }
 
         const fileContent = fs.readFileSync(req.file.path, 'utf8');
-        const response = await generateQuestions(fileContent, true);
+        const response = await generateQuestions(fileContent);
         
         // Delete the file after processing
         fs.unlinkSync(req.file.path);
