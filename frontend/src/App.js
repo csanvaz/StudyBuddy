@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
 import './styles/App.css';
 import * as GiIcons from "react-icons/gi";
-import { BrowserRouter as Router, Route, Routes, Link, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Link, useLocation, Navigate, useNavigate } from 'react-router-dom';
 import QuestTab from './QuestTab';
 import StudyTab from './StudyTab';
 import Login from './Login';
+import Register from './Register';
+import Home from './Home';
+import PrivateRoute from './PrivateRoute';
 import multiavatar from '@multiavatar/multiavatar';
-
-const getXP = () => 150;
-const getStreak = () => 5;
-const getGold = () => 100;
 
 const MenuButton = ({ text, icon: Icon, isActive, path }) => {
   return (
@@ -57,43 +56,27 @@ const AppContent = ({ userName, avatarName, handleAvatarChange, setAvatarName })
           <Route
             path="/"
             element={
-              <div className="welcome-stats-container">
-                <h1 className="welcome-text">Welcome, {userName}!</h1>
-
-                {/* Avatar Display */}
-                <div className="avatar-container">
-                  <div dangerouslySetInnerHTML={{ __html: multiavatar(avatarName) }} />
-                </div>
-
-                {/* Avatar Name Input */}
-                <div className="avatar-input">
-                  <input
-                    type="text"
-                    placeholder="Enter avatar name"
-                    value={avatarName}
-                    onChange={(e) => setAvatarName(e.target.value)}
-                  />
-                  <button onClick={() => handleAvatarChange()}>
-                    Generate Avatar
-                  </button>
-                </div>
-
-                <div className="stats-container">
-                  <p className="stats-title">Your statistics:</p>
-                  <div className="stats-grid">
-                    <div className="stat-square xp-square">XP: {getXP()}</div>
-                    <div className="stat-square streak-square">Streak: {getStreak()}</div>
-                    <div className="stat-square gold-square">
-                      <GiIcons.GiGoldBar style={{ color: '#ef7971', fontSize: '24px', marginRight: '8px' }} />
-                      {getGold()}
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <PrivateRoute isLoggedIn={true}>
+                <Home />
+              </PrivateRoute>
             }
           />
-          <Route path="/study" element={<StudyTab />} />
-          <Route path="/quest" element={<QuestTab />} />
+          <Route
+            path="/study"
+            element={
+              <PrivateRoute isLoggedIn={true}>
+                <StudyTab />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/quest"
+            element={
+              <PrivateRoute isLoggedIn={true}>
+                <QuestTab />
+              </PrivateRoute>
+            }
+          />
         </Routes>
       </div>
     </div>
@@ -105,26 +88,31 @@ const App = () => {
   const [userName, setUserName] = useState("");
   const [avatarName, setAvatarName] = useState("default");
 
+  const navigate = useNavigate();
+
   const handleLogin = (username) => {
     setIsLoggedIn(true);
     setUserName(username);
+    navigate('/');
   };
 
   const handleAvatarChange = () => multiavatar(avatarName);
 
   return (
-    <Router>
-      {isLoggedIn ? (
-        <AppContent
-          userName={userName}
-          avatarName={avatarName}
-          handleAvatarChange={handleAvatarChange}
-          setAvatarName={setAvatarName}
-        />
-      ) : (
-        <Login onLogin={handleLogin} />
-      )}
-    </Router>
+    isLoggedIn ? (
+      <AppContent
+        userName={userName}
+        avatarName={avatarName}
+        handleAvatarChange={handleAvatarChange}
+        setAvatarName={setAvatarName}
+      />
+    ) : (
+      <Routes>
+        <Route path="/login" element={<Login onLogin={handleLogin} />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="*" element={<Navigate to="/login" />} />
+      </Routes>
+    )
   );
 };
 
