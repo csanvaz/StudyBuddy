@@ -21,9 +21,9 @@ function StudyTab() {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ topic })
+                body: JSON.stringify({ topic }) 
             });
-
+    
             const data = await response.json();
             setQuestionResponse(data.response);
             console.log('Generated Questions:', data.response);
@@ -31,6 +31,7 @@ function StudyTab() {
             console.error('Error fetching questions:', error);
         }
     };
+    
 
     return (
         <div className="study-tab-background">
