@@ -3,7 +3,6 @@ import { Routes, Route, useLocation, Link } from 'react-router-dom';
 import Home from './Home';
 import StudyTab from './StudyTab';
 import QuestTab from './QuestTab';
-import PrivateRoute from './PrivateRoute';
 import * as GiIcons from "react-icons/gi";
 
 const MenuButton = ({ text, icon: Icon, isActive, path }) => {
@@ -14,6 +13,10 @@ const MenuButton = ({ text, icon: Icon, isActive, path }) => {
     </Link>
   );
 };
+
+const PrivateRoute = ({ isLoggedIn, children }) => {
+    return isLoggedIn ? children : <Navigate to="/login" />;
+  };
 
 const AppContent = ({ userName, avatarName, handleAvatarChange, setAvatarName }) => {
   const location = useLocation();
