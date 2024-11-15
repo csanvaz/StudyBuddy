@@ -2,7 +2,6 @@ const express = require('express');
 const { OpenAI } = require('openai');
 const multer = require('multer');
 const fs = require('fs');
-//import { flashCardPrompt, mulitpleChoiceQuestionPrompt, askMyDocPrompt } from './prompts.js';
 const flashCardPrompt = require('./prompts.js');
 const mulitpleChoiceQuestionPrompt = require('./prompts.js');
 const askMyDocPrompt = require('./prompts.js');
