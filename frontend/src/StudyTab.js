@@ -1,19 +1,20 @@
 import React, { useState } from 'react';
 import ContentPopup from './ContentPopup';
 import './styles/StudyTab.css';
+import Flashcard from './components/flashCard';
 
 function StudyTab() {
     const [studyMaterials, setStudyMaterials] = useState([]);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [questionResponse, setQuestionResponse] = useState('');
+    const [currentTopic, setCurrentTopic] = useState('');
 
     const handleAddContent = (material) => {
         setStudyMaterials([...studyMaterials, material]);
         setIsPopupOpen(false);
-        fetchTopicQuestions(material.subject); // Fetch questions when content is added
+        fetchTopicQuestions(material.subject);
     };
 
-    // Function to make POST request to the backend
     const fetchTopicQuestions = async (topic) => {
         try {
             const response = await fetch('http://localhost:5001/api/topic-questions', {
@@ -26,6 +27,7 @@ function StudyTab() {
 
             const data = await response.json();
             setQuestionResponse(data.response);
+            setCurrentTopic(topic);
             console.log('Generated Questions:', data.response);
         } catch (error) {
             console.error('Error fetching questions:', error);
@@ -49,11 +51,10 @@ function StudyTab() {
                         </button>
                     ))}
                 </div>
-                {/* Display the response below */}
                 {questionResponse && (
-                    <div className="response-section">
-                        <h3>Generated Questions:</h3>
-                        <p>{questionResponse}</p>
+                    <div className="flashcard-section">
+                        <h3>Flashcards for {currentTopic}</h3>
+                        <Flashcard questions={questionResponse} topic={currentTopic} />
                     </div>
                 )}
             </div>
