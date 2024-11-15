@@ -17,10 +17,11 @@ app.use(express.json());
 
 // Function to generate questions
 async function generateQuestions(content, isFile = false) {
+    console.log("enetered generateQuestions");
     const systemPrompt = isFile 
         ? topicQuestionPrompt.replace('{TOPIC}', 'the content of the uploaded file')
         : topicQuestionPrompt.replace('{TOPIC}', content);
-
+    console.log("question prompt: ", topicQuestionPrompt);
     const chatCompletion = await client.chat.completions.create({
         messages: [
             {
@@ -42,6 +43,7 @@ async function generateQuestions(content, isFile = false) {
 app.post('/api/topic-questions', async (req, res) => {
     try {
         const topic = req.body.topic;
+        console.log("reg body", req.body.topic);
         const response = await generateQuestions(topic);
         console.log('topicQuestionPrompt:', topicQuestionPrompt);
         res.json({ response: response });
