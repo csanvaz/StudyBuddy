@@ -16,14 +16,14 @@ function StudyTab() {
     // Function to make POST request to the backend
     const fetchTopicQuestions = async (topic) => {
         try {
-            const response = await fetch('https://CS484FinalProjectEnvironment-env.eba-qkbmea2x.us-east-1.elasticbeanstalk.com/api/topic-questions', {
+            const response = await fetch('http://localhost:5001/api/topic-questions', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ topic }) 
+                body: JSON.stringify({ topic })
             });
-    
+
             const data = await response.json();
             setQuestionResponse(data.response);
             console.log('Generated Questions:', data.response);
@@ -31,7 +31,6 @@ function StudyTab() {
             console.error('Error fetching questions:', error);
         }
     };
-    
 
     return (
         <div className="study-tab-background">
@@ -44,7 +43,7 @@ function StudyTab() {
                         <button
                             key={index}
                             className="material-button"
-                            onClick={() => fetchTopicQuestions(material.index)}
+                            onClick={() => fetchTopicQuestions(material.subject)}
                         >
                             {material.subject}
                         </button>
