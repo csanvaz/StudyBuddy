@@ -61,6 +61,10 @@ async function generateQuestions(content, isFile = false) {
     return chatCompletion.choices[0].message.content;
 }
 
+app.get('/api/test', (req, res) => {
+    res.status(200).json({ message: 'Backend is working!' });
+});
+
 // Route for topic-based questions
 app.post('/api/topic-questions', async (req, res) => {
     try {
