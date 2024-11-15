@@ -2,7 +2,10 @@ const express = require('express');
 const { OpenAI } = require('openai');
 const multer = require('multer');
 const fs = require('fs');
-import { flashCardPrompt, mulitpleChoiceQuestionPrompt, askMyDocPrompt } from './prompts.js';
+//import { flashCardPrompt, mulitpleChoiceQuestionPrompt, askMyDocPrompt } from './prompts.js';
+const flashCardPrompt = require('./prompts.js');
+const mulitpleChoiceQuestionPrompt = require('./prompts.js');
+const askMyDocPrompt = require('./prompts.js');
 
 require('dotenv').config();
 
@@ -64,7 +67,7 @@ app.post('/api/topic-questions', async (req, res) => {
         const multipleChoice = req.body.
         console.log("reg body", req.body.topic);
         // console.log("topicQuestionPrompt: ", flashCardPrompt); 
-        const response = await generateQuestions(topic);
+        const response = await generateQuestions(topic, multipleChoice);
         // console.log('topicQuestionPrompt:', flashCardPrompt);
         res.json({ response: response });
     } catch (error) {
