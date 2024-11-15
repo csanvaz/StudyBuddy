@@ -29,7 +29,7 @@ app.get('/test', async (req, res) => {
 
 // Function to generate questions
 async function generateQuestions(content, isFile = false, multipleChoice = false) {
-    console.log("enetered generateQuestions");
+    console.log("entered generateQuestions");
      
     let systemPrompt;
     if (isFile) {
@@ -39,7 +39,7 @@ async function generateQuestions(content, isFile = false, multipleChoice = false
     } else {
         systemPrompt = flashCardPrompt.replace('{TOPIC}', content);
     }
-    console.log("question prompt: ", topicQuestionPrompt);
+    //console.log("question prompt: ", topicQuestionPrompt);
     const chatCompletion = await client.chat.completions.create({
         messages: [
             {
