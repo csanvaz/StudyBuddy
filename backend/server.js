@@ -22,6 +22,15 @@ app.use(cors());
 
 app.use(express.json());
 
+app.get('/test', async (req, res) => {
+    try {
+        const response = await fetch('https://jsonplaceholder.typicode.com/todos/1');
+        res.status(200).json({ message: 'API call successful!', data: response.data });
+    } catch (error) {
+        res.status(500).json({ message: 'API call failed!', error: error.message });
+    }
+});
+
 // Function to generate questions
 async function generateQuestions(content, isFile = false) {
     console.log("enetered generateQuestions");
@@ -117,7 +126,7 @@ app.post('/api/update-avatar', async (req, res) => {
 
 */
 
-const PORT = process.env.PORT || 5001;
+const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
