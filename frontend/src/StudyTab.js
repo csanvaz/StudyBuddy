@@ -8,21 +8,21 @@ function StudyTab() {
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [questionResponse, setQuestionResponse] = useState('');
     const [currentTopic, setCurrentTopic] = useState('');
+    const [showOptionPopup, setShowOptionPopup] = useState(false);
 
     const handleAddContent = (material) => {
         setStudyMaterials([...studyMaterials, material]);
         setIsPopupOpen(false);
-        fetchTopicQuestions(material.subject);
     };
 
     const fetchTopicQuestions = async (topic) => {
         try {
-            const response = await fetch('http://localhost:5001/api/topic-questions', {
+            const response = await fetch('https://CS484FinalProjectEnvironment-env.eba-qkbmea2x.us-east-1.elasticbeanstalk.com', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ topic })
+                body: JSON.stringify({ topic }),
             });
 
             const data = await response.json();
@@ -34,23 +34,81 @@ function StudyTab() {
         }
     };
 
+    const handleTopicClick = (topic) => {
+        setCurrentTopic(topic);
+        setShowOptionPopup(true); 
+    };
+
+    const handleOptionSelection = (option) => {
+        setShowOptionPopup(false); 
+
+        if (option === 'Flashcards') {
+            fetchTopicQuestions(currentTopic); // Continue to flashcards
+        } else {
+            alert(`${option} is coming soon!`); // Alert for other options
+        }
+    };
+
     return (
         <div className="study-tab-background">
             <div className="study-tab-sheet">
-                <button className="full-width-button" onClick={() => setIsPopupOpen(true)}>Add Content</button>
-                {isPopupOpen && <ContentPopup onAddContent={handleAddContent} onClose={() => setIsPopupOpen(false)} />}
+                <button
+                    className="full-width-button"
+                    onClick={() => setIsPopupOpen(true)}
+                >
+                    Add Content
+                </button>
+                {isPopupOpen && (
+                    <ContentPopup
+                        onAddContent={handleAddContent}
+                        onClose={() => setIsPopupOpen(false)}
+                    />
+                )}
                 <h2>Study Material</h2>
                 <div className="study-materials">
                     {studyMaterials.map((material, index) => (
                         <button
                             key={index}
                             className="material-button"
-                            onClick={() => fetchTopicQuestions(material.subject)}
+                            onClick={() => handleTopicClick(material.subject)}
                         >
                             {material.subject}
                         </button>
                     ))}
                 </div>
+
+                {showOptionPopup && (
+                    <div className="popup">
+                        <div className="popup-content">
+                            <h3>Select an Option for {currentTopic}</h3>
+                            <button
+                                className="menu-option"
+                                onClick={() => handleOptionSelection('Flashcards')}
+                            >
+                                Flashcards
+                            </button>
+                            <button
+                                className="menu-option"
+                                onClick={() => handleOptionSelection('Multiple Choice')}
+                            >
+                                Multiple Choice
+                            </button>
+                            <button
+                                className="menu-option"
+                                onClick={() => handleOptionSelection('Short Answer')}
+                            >
+                                Short Answer
+                            </button>
+                            <button
+                                className="menu-option"
+                                onClick={() => setShowOptionPopup(false)}
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                )}
+
                 {questionResponse && (
                     <div className="flashcard-section">
                         <h3>Flashcards for {currentTopic}</h3>
