@@ -1,5 +1,5 @@
 {
-  "name": "CS484-Backend",
+  "name": "cs484-backend",
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
