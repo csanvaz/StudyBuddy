@@ -61,10 +61,11 @@ async function generateQuestions(content, isFile = false, multipleChoice = false
 app.post('/api/topic-questions', async (req, res) => {
     try {
         const topic = req.body.topic;
+        const multipleChoice = req.body.
         console.log("reg body", req.body.topic);
-        console.log("topicQuestionPrompt: ", topicQuestionPrompt); 
+        // console.log("topicQuestionPrompt: ", flashCardPrompt); 
         const response = await generateQuestions(topic);
-        console.log('topicQuestionPrompt:', topicQuestionPrompt);
+        // console.log('topicQuestionPrompt:', flashCardPrompt);
         res.json({ response: response });
     } catch (error) {
         console.error('Detailed error:', error);
