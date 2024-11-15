@@ -2,24 +2,14 @@ const express = require('express');
 const { OpenAI } = require('openai');
 const multer = require('multer');
 const fs = require('fs');
-
 //import { topicQuestionPrompt } from './prompts.js';
 const topicQuestionPrompt = `<identity>You are an expert question generator, capable of creating diverse and engaging questions on any topic.</identity>
 
-<task>Generate 5 unique and thought-provoking questions about {TOPIC}. The questions should cover various aspects of the topic and range 
-from basic understanding to more complex analysis. Include multiple choice with the answer in a JSON reponse (how to keep track of question number?):
-{
-{
-"question": ""
-"A"
-"B"
-"C"
-"D"
-"Answer"
-}
-}
+<task>Generate 10 unique and thought-provoking questions about {TOPIC}. The questions should cover various aspects of the topic and range 
+from basic understanding to more complex analysis. Include a mix of question types such as multiple-choice, open-ended, and analytical
+questions. Make sure to give consice and accurate answers for each question created. Follow the structure below when creating the questions.</task>
 
-i would want it in one api call too, i'm using your api</task>`;
+<structure> Question 1. insert question here. Answer 1. insert answer here</structure>`;
 //const { topicQuestionPrompt } = require('./prompts.js');
 require('dotenv').config();
 //const { loginUser } = require('./loginUser');
@@ -32,18 +22,13 @@ app.use(cors());
 
 app.use(express.json());
 
-app.use(cors({
-    origin: 'https://main.d1v5rs7h6klasx.amplifyapp.com',
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    credentials: true,
-  }));
-
-
 // Function to generate questions
 async function generateQuestions(content, isFile = false) {
-    //console.log("enetered generateQuestions");
-    const systemPrompt = topicQuestionPrompt.replace('{TOPIC}', content);
-    //console.log("question prompt: ", topicQuestionPrompt);
+    console.log("enetered generateQuestions");
+    const systemPrompt = isFile 
+        ? topicQuestionPrompt.replace('{TOPIC}', 'the content of the uploaded file')
+        : topicQuestionPrompt.replace('{TOPIC}', content);
+    console.log("question prompt: ", topicQuestionPrompt);
     const chatCompletion = await client.chat.completions.create({
         messages: [
             {
@@ -61,18 +46,14 @@ async function generateQuestions(content, isFile = false) {
     return chatCompletion.choices[0].message.content;
 }
 
-app.get('/api/test', (req, res) => {
-    res.status(200).json({ message: 'Backend is working!' });
-});
-
 // Route for topic-based questions
 app.post('/api/topic-questions', async (req, res) => {
     try {
         const topic = req.body.topic;
-        //console.log("reg body", req.body.topic);
-        //console.log("topicQuestionPrompt: ", topicQuestionPrompt); 
+        console.log("reg body", req.body.topic);
+        console.log("topicQuestionPrompt: ", topicQuestionPrompt); 
         const response = await generateQuestions(topic);
-        //console.log('topicQuestionPrompt:', topicQuestionPrompt);
+        console.log('topicQuestionPrompt:', topicQuestionPrompt);
         res.json({ response: response });
     } catch (error) {
         console.error('Detailed error:', error);
