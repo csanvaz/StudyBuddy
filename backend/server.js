@@ -2,13 +2,16 @@ const express = require('express');
 const { OpenAI } = require('openai');
 const multer = require('multer');
 const fs = require('fs');
-import { topicQuestionPrompt } from './prompts.js';
+//import { topicQuestionPrompt } from './prompts.js';
+const { topicQuestionPrompt } = require('./prompts.js');
 require('dotenv').config();
-const { loginUser } = require('./loginUser');
+//const { loginUser } = require('./loginUser');
 
 const app = express();
 const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 const upload = multer({ dest: 'uploads/' });
+const cors = require('cors');
+app.use(cors());
 
 app.use(express.json());
 
@@ -40,6 +43,7 @@ app.post('/api/topic-questions', async (req, res) => {
     try {
         const topic = req.body.topic;
         const response = await generateQuestions(topic);
+        console.log('topicQuestionPrompt:', topicQuestionPrompt);
         res.json({ response: response });
     } catch (error) {
         console.error('Detailed error:', error);
@@ -66,7 +70,7 @@ app.post('/api/file-questions', upload.single('file'), async (req, res) => {
         res.status(500).json({ error: 'An error occurred', details: error.message });
     }
 });
-
+/*
 app.post('/api/register', async (req, res) => {
     const { username, email, password } = req.body;
     const result = await registerUser(username, email, password);
@@ -101,8 +105,9 @@ app.post('/api/update-avatar', async (req, res) => {
     }
 });
 
+*/
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
