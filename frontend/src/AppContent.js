@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route, useLocation, Link } from 'react-router-dom';
+import { Routes, Route, useLocation, Link, Navigate } from 'react-router-dom';
 import Home from './Home';
 import StudyTab from './StudyTab';
 import QuestTab from './QuestTab';
