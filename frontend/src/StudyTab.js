@@ -11,45 +11,34 @@ function StudyTab() {
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [questionResponse, setQuestionResponse] = useState('');
     const [currentTopic, setCurrentTopic] = useState('');
-    const [showOptionPopup, setShowOptionPopup] = useState(false);
 
-    const handleAddContent = (material) => {
+    const handleAddContent = async (material) => {
         setStudyMaterials([...studyMaterials, material]);
         setIsPopupOpen(false);
-    };
 
-    const fetchTopicQuestions = async (topic) => {
-        try {
-            const response = await fetch(backendUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ topic }),
-            });
+        if (material.generateFlashcards || material.generateQuiz) {
+            try {
+                const response = await fetch(backendUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ topic: material.subject }),
+                });
 
-            const data = await response.json();
-            setQuestionResponse(data.response);
-            setCurrentTopic(topic);
-            console.log('Generated Questions:', data.response);
-        } catch (error) {
-            console.error('Error fetching questions:', error);
+                const data = await response.json();
+                setQuestionResponse(data.response);
+                setCurrentTopic(material.subject);
+                console.log('Generated Questions:', data.response);
+            } catch (error) {
+                console.error('Error fetching questions:', error);
+            }
         }
     };
 
     const handleTopicClick = (topic) => {
         setCurrentTopic(topic);
-        setShowOptionPopup(true); 
-    };
-
-    const handleOptionSelection = (option) => {
-        setShowOptionPopup(false); 
-
-        if (option === 'Flashcards') {
-            fetchTopicQuestions(currentTopic); // Continue to flashcards
-        } else {
-            alert(`${option} is coming soon!`); // Alert for other options
-        }
+        // Fetch questions or handle topic click logic here if needed
     };
 
     return (
@@ -79,38 +68,6 @@ function StudyTab() {
                         </button>
                     ))}
                 </div>
-
-                {showOptionPopup && (
-                    <div className="popup">
-                        <div className="popup-content">
-                            <h3>Select an Option for {currentTopic}</h3>
-                            <button
-                                className="menu-option"
-                                onClick={() => handleOptionSelection('Flashcards')}
-                            >
-                                Flashcards
-                            </button>
-                            <button
-                                className="menu-option"
-                                onClick={() => handleOptionSelection('Multiple Choice')}
-                            >
-                                Multiple Choice
-                            </button>
-                            <button
-                                className="menu-option"
-                                onClick={() => handleOptionSelection('Short Answer')}
-                            >
-                                Short Answer
-                            </button>
-                            <button
-                                className="menu-option"
-                                onClick={() => setShowOptionPopup(false)}
-                            >
-                                Cancel
-                            </button>
-                        </div>
-                    </div>
-                )}
 
                 {questionResponse && (
                     <div className="flashcard-section">

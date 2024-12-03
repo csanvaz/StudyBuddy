@@ -5,9 +5,11 @@ function ContentPopup({ onAddContent, onClose }) {
     const [subject, setSubject] = useState('');
     const [content, setContent] = useState('');
     const [isFileUpload, setIsFileUpload] = useState(false);
+    const [generateFlashcards, setGenerateFlashcards] = useState(false);
+    const [generateQuiz, setGenerateQuiz] = useState(false);
 
     const handleSubmit = () => {
-        onAddContent({ subject, content });
+        onAddContent({ subject, content, generateFlashcards, generateQuiz });
     };
 
     const handleFileChange = (e) => {
@@ -52,6 +54,24 @@ function ContentPopup({ onAddContent, onClose }) {
                         onChange={(e) => setContent(e.target.value)}
                     ></textarea>
                 )}
+                <div className="checkbox-group">
+                    <label>
+                        <input
+                            type="checkbox"
+                            checked={generateFlashcards}
+                            onChange={(e) => setGenerateFlashcards(e.target.checked)}
+                        />
+                        Generate Flashcards
+                    </label>
+                    <label>
+                        <input
+                            type="checkbox"
+                            checked={generateQuiz}
+                            onChange={(e) => setGenerateQuiz(e.target.checked)}
+                        />
+                        Generate Quiz
+                    </label>
+                </div>
                 <button className="submit-button" onClick={handleSubmit}>Add Content</button>
                 <button className="close-button" onClick={onClose}>Close</button>
             </div>

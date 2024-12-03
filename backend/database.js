@@ -1,4 +1,5 @@
 const { Pool } = require('pg');
+const bcrypt = require('bcrypt');
 require('dotenv').config();
 
 const pool = new Pool({
@@ -6,7 +7,7 @@ const pool = new Pool({
     host: process.env.DB_HOST,
     database: process.env.DB_NAME,
     password: process.env.DB_PASSWORD,
-    port: 5432,
+    port: process.env.DB_PORT,
     ssl: {
       rejectUnauthorized: false
     }
@@ -16,13 +17,7 @@ pool.on('connect', () => {
     console.log('Connected to the PostgreSQL database');
 });
 
-module.exports = pool;
-
-const pool = require('./database');
-const bcrypt = require('bcrypt');
-
 async function registerUser(username, email, password) {
-    return { success: true, userId: 1 };
     try {
         // User and email check
         let check = await pool.query('SELECT * FROM users WHERE username = $1', [username]);
@@ -51,13 +46,12 @@ async function registerUser(username, email, password) {
 }
 
 async function loginUser(username, password) {
-    return { success: true, userId: 1, avatar: 'default' };
     try {
         // Find the user by username
         const result = await pool.query('SELECT * FROM users WHERE username = $1', [username]);
 
         if (result.rows.length === 0) {
-            return { success: true, error: 'User not found' };
+            return { success: false, error: 'User not found' };
         }
 
         const user = result.rows[0];
@@ -66,16 +60,68 @@ async function loginUser(username, password) {
         const isMatch = await bcrypt.compare(password, user.password);
 
         if (!isMatch) {
-            return { success: true, error: 'Invalid password' };
+            return { success: false, error: 'Invalid password' };
         }
-
-        return { success: true, userId: user.id };
+        return { success: true, userId: user.id, avatar: user.avatar };
     } catch (error) {
         console.error('Error logging in user:', error);
-        return { success: true, error: error.message };
+        return { success: false, error: error.message };
     }
 }
 
+async function validatePassword(userId, password) {
+    try {
+        // Find the user by userId
+        const result = await pool.query('SELECT password FROM users WHERE user_id = $1', [userId]);
 
+        if (result.rows.length === 0) {
+            return { success: false, error: 'User not found' };
+        }
 
-export { registerUser, loginUser };
+        const user = result.rows[0];
+
+        // Compare the provided password with the stored hashed password
+        const isMatch = await bcrypt.compare(password, user.password);
+
+        if (!isMatch) {
+            return { success: false, error: 'Invalid password' };
+        }
+        return { success: true };
+    } catch (error) {
+        console.error('Error validating password:', error);
+        return { success: false, error: error.message };
+    }
+}
+
+async function testDatabaseConnection() {
+    try {
+        const result = await pool.query('SELECT NOW()');
+        console.log('Database connection test successful:', result.rows[0]);
+        return { success: true, time: result.rows[0].now };
+    } catch (error) {
+        console.error('Error testing database connection:', error);
+        return { success: false, error: error.message };
+    }
+}
+
+async function addContent(title, text_id, is_quiz, data) {
+    try {
+        const result = await pool.query(
+            'INSERT INTO content (title, text_id, is_quiz, data) VALUES ($1, $2, $3, $4) RETURNING content_id',
+            [title, text_id, is_quiz, data]
+        );
+        return { success: true, contentId: result.rows[0].content_id };
+    } catch (error) {
+        console.error('Error adding content:', error);
+        return { success: false, error: error.message };
+    }
+}
+
+module.exports = {
+    pool,
+    registerUser,
+    loginUser,
+    validatePassword,
+    testDatabaseConnection,
+    addContent,
+  };

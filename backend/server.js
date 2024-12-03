@@ -3,6 +3,7 @@ const { OpenAI } = require('openai');
 const multer = require('multer');
 const fs = require('fs');
 const flashCardPrompt = require('./prompts.js');
+const { testDatabaseConnection, loginUser, registerUser, validatePassword } = require('./database');
 const mulitpleChoiceQuestionPrompt = require('./prompts.js');
 const askMyDocPrompt = require('./prompts.js');
 
@@ -33,6 +34,15 @@ app.get('/test', async (req, res) => {
         res.status(200).json({ message: 'API call successful!', data: response.data });
     } catch (error) {
         res.status(500).json({ message: 'API call failed!', error: error.message });
+    }
+});
+
+app.get('/test-database', async (req, res) => {
+    try {
+        const response = await testDatabaseConnection();
+        res.status(200).json({ message: 'Database connection successful!', data: response });
+    } catch (error) {
+        res.status(500).json({ message: 'Database connection failed!', error: error.message });
     }
 });
 
@@ -95,8 +105,8 @@ app.post('/api/file-questions', upload.single('file'), async (req, res) => {
         res.status(500).json({ error: 'An error occurred', details: error.message });
     }
 });
-/*
-app.post('/api/register', async (req, res) => {
+
+app.post('/register', async (req, res) => {
     const { username, email, password } = req.body;
     const result = await registerUser(username, email, password);
     if (result.success) {
@@ -106,22 +116,24 @@ app.post('/api/register', async (req, res) => {
     }
   });
   
-  app.post('/api/login', async (req, res) => {
+  app.post('/login', async (req, res) => {
     const { username, password } = req.body;
     const result = await loginUser(username, password);
     if (result.success) {
-        const userResult = await pool.query('SELECT avatar FROM users WHERE username = $1', [username]);
-        const avatar = userResult.rows[0]?.avatar || 'default';
-        
-        res.status(200).json({ userId: result.userId, avatar: avatar });
+        res.status(200).json({ userId: result.userId, avatar: result.avatar });
     } else {
         res.status(401).json({ error: result.error });
     }
 });
 
-app.post('/api/update-avatar', async (req, res) => {
-    const { userId, avatar } = req.body;
+app.post('/update-avatar', async (req, res) => {
+    const { userId, avatar, password } = req.body;
     try {
+        const validation = await validatePassword(userId, password);
+        if (!validation.success) {
+            return res.status(401).json({ error: 'Invalid password' });
+        }
+
         await pool.query('UPDATE users SET avatar = $1 WHERE user_id = $2', [avatar, userId]);
         res.status(200).json({ success: true, message: 'Avatar updated successfully' });
     } catch (error) {
@@ -130,7 +142,6 @@ app.post('/api/update-avatar', async (req, res) => {
     }
 });
 
-*/
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
