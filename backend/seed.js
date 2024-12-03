@@ -44,9 +44,9 @@ async function seedUsers() {
     try {
         const users = [
             {
-                username: 'test_user',
+                username: 'john',
                 email: 'john@example.com',
-                password: await bcrypt.hash('password123', 10),
+                password: await bcrypt.hash('123', 10),
                 avatar: 'default_avatar.png'
             },
             {

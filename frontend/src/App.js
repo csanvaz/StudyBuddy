@@ -57,7 +57,7 @@ const App = () => {
     }
   };
 
-  const handleAvatarChange = async () => {
+  const handleAvatarChange = async (avatarName) => {
     try{
       const response = await axios.post(`${backendURL}/update-avatar`, { userId: userId, avatar: avatarName, token: token });
       if (response.status === 200) {
@@ -67,12 +67,12 @@ const App = () => {
         alert(`Avatar update failed: ${response.data.error}`);
       }
     } catch (error) {
-      alert(`Avatar update failed: ${response.data.error}`);
+      console.error('Error during avatar update:', error);
+      alert('An error occurred during avatar update. Please try again.');
     }
   }
 
   return (
-    <Router>
       <Routes>
         <Route path="/login" element={<Login onLogin={handleLogin} />} />
         <Route path="/register" element={<Register onRegister={handleRegister} />} />
@@ -90,7 +90,6 @@ const App = () => {
         />
         <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
-    </Router>
   );
 };
 

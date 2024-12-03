@@ -3,7 +3,7 @@ const { OpenAI } = require('openai');
 const multer = require('multer');
 const fs = require('fs');
 const flashCardPrompt = require('./prompts.js');
-const { testDatabaseConnection, loginUser, registerUser, validatePassword } = require('./database');
+const { testDatabaseConnection, loginUser, registerUser, validatePassword, updateAvatar } = require('./database');
 const mulitpleChoiceQuestionPrompt = require('./prompts.js');
 const askMyDocPrompt = require('./prompts.js');
 

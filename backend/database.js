@@ -62,7 +62,7 @@ async function loginUser(username, password) {
         if (!isMatch) {
             return { success: false, error: 'Invalid password' };
         }
-        return { success: true, userId: user.id, avatar: user.avatar };
+        return { success: true, userId: user.user_id, avatar: user.avatar };
     } catch (error) {
         console.error('Error logging in user:', error);
         return { success: false, error: error.message };
