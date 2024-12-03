@@ -66,6 +66,19 @@ const App = () => {
       <Routes>
         <Route path="/login" element={<Login onLogin={handleLogin} />} />
         <Route path="/register" element={<Register onRegister={handleRegister}/>} />
+        <Route
+          path="/"
+          element={isLoggedIn ? (
+            <AppContent
+              userName={userName}
+              avatarName={avatarName}
+              handleAvatarChange={handleAvatarChange}
+              setAvatarName={setAvatarName}
+            />
+          ) : (
+            <Navigate to="/login" />
+          )}
+        />
         <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
     )
