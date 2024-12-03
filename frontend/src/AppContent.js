@@ -60,7 +60,6 @@ const AppContent = ({ userName, avatarName, handleAvatarChange }) => {
                   userName={userName}
                   avatarName={avatarName}
                   handleAvatarChange={handleAvatarChange}
-                  setAvatarName={setAvatarName}
                 />
               </PrivateRoute>
             }
