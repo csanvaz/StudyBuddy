@@ -1,15 +1,16 @@
 const { Pool } = require('pg');
+require('dotenv').config();
 
 const pool = new Pool({
-    user: 'yourUsername', // replace with your database username
-    host: 'yourDatabaseHost', // replace with your database host, e.g., 'your-db-instance.rds.amazonaws.com'
-    database: 'yourDatabaseName', // replace with your database name
-    password: 'yourPassword', // replace with your database password
-    port: 5432, // default PostgreSQL port
+    user: process.env.DB_USER,
+    host: process.env.DB_HOST,
+    database: process.env.DB_NAME,
+    password: process.env.DB_PASSWORD,
+    port: 5432,
     ssl: {
-        rejectUnauthorized: false,
-    },
-});
+      rejectUnauthorized: false
+    }
+  });
 
 pool.on('connect', () => {
     console.log('Connected to the PostgreSQL database');
