@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './styles/App.css';
-import { BrowserRouter as Router, Route, Routes, Link, useLocation, Navigate, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate, useNavigate } from 'react-router-dom';
 import Login from './Login';
 import Register from './Register';
 import multiavatar from '@multiavatar/multiavatar';
@@ -11,9 +11,12 @@ const backendURL = "http://localhost:8080";
 //const backendURL = "https://CS484FinalProjectEnvironment-env.eba-qkbmea2x.us-east-1.elasticbeanstalk.com"
 
 const App = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userName, setUserName] = useState("");
+  const [token, setToken] = useState("");
   const [avatarName, setAvatarName] = useState("default");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userId, setUserId] = useState("");
+  
 
   const navigate = useNavigate();
 
@@ -23,9 +26,11 @@ const App = () => {
 
       if (response.status === 200) {
         const data = response.data;
-        setIsLoggedIn(true);
         setUserName(username);
-        setAvatarName(data.avatar);
+        setToken(data.token);
+        setAvatarName(data.avatarName);
+        setIsLoggedIn(true);
+        setUserId(data.userId);
         navigate('/');
       } else {
         alert(`Login failed: ${response.data.error}`);
@@ -52,20 +57,25 @@ const App = () => {
     }
   };
 
-  const handleAvatarChange = () => multiavatar(avatarName);
+  const handleAvatarChange = async () => {
+    try{
+      const response = await axios.post(`${backendURL}/update-avatar`, { userId: userId, avatar: avatarName, token: token });
+      if (response.status === 200) {
+        multiavatar(avatarName);
+        setAvatarName(avatarName);
+      } else {
+        alert(`Avatar update failed: ${response.data.error}`);
+      }
+    } catch (error) {
+      alert(`Avatar update failed: ${response.data.error}`);
+    }
+  }
 
   return (
-    isLoggedIn ? (
-      <AppContent
-        userName={userName}
-        avatarName={avatarName}
-        handleAvatarChange={handleAvatarChange}
-        setAvatarName={setAvatarName}
-      />
-    ) : (
+    <Router>
       <Routes>
         <Route path="/login" element={<Login onLogin={handleLogin} />} />
-        <Route path="/register" element={<Register onRegister={handleRegister}/>} />
+        <Route path="/register" element={<Register onRegister={handleRegister} />} />
         <Route
           path="/"
           element={isLoggedIn ? (
@@ -73,7 +83,6 @@ const App = () => {
               userName={userName}
               avatarName={avatarName}
               handleAvatarChange={handleAvatarChange}
-              setAvatarName={setAvatarName}
             />
           ) : (
             <Navigate to="/login" />
@@ -81,7 +90,7 @@ const App = () => {
         />
         <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
-    )
+    </Router>
   );
 };
 

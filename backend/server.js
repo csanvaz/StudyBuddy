@@ -118,20 +118,18 @@ app.post('/register', async (req, res) => {
   
   app.post('/login', async (req, res) => {
     const { username, password } = req.body;
-    console.log("username: ", username);
-    console.log("password: ", password);
     const result = await loginUser(username, password);
     if (result.success) {
-        res.status(200).json({ userId: result.userId, avatar: result.avatar });
+        res.status(200).json({ userId: result.userId, avatar: result.avatar, token:password });
     } else {
         res.status(401).json({ error: result.error });
     }
 });
 
 app.post('/update-avatar', async (req, res) => {
-    const { userId, avatar, password } = req.body;
+    const { userId, avatar, token } = req.body;
     try {
-        const validation = await validatePassword(userId, password);
+        const validation = await validatePassword(userId, token);
         if (!validation.success) {
             return res.status(401).json({ error: 'Invalid password' });
         }

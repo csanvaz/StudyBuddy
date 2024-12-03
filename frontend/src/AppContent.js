@@ -18,7 +18,7 @@ const PrivateRoute = ({ isLoggedIn, children }) => {
     return isLoggedIn ? children : <Navigate to="/login" />;
   };
 
-const AppContent = ({ userName, avatarName, handleAvatarChange, setAvatarName }) => {
+const AppContent = ({ userName, avatarName, handleAvatarChange }) => {
   const location = useLocation();
 
   return (

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import * as GiIcons from 'react-icons/gi';
 import multiavatar from '@multiavatar/multiavatar';
 
-const Home = ({ userName, avatarName, handleAvatarChange, setAvatarName }) => {
+const Home = ({ userName, avatarName, handleAvatarChange }) => {
   const [inputValue, setInputValue] = useState(avatarName);
 
   const getXP = () => 150;
@@ -11,11 +11,6 @@ const Home = ({ userName, avatarName, handleAvatarChange, setAvatarName }) => {
 
   const handleInputChange = (e) => {
     setInputValue(e.target.value);
-  };
-
-  const handleGenerateAvatar = () => {
-    setAvatarName(inputValue);
-    handleAvatarChange();
   };
 
   return (
@@ -34,7 +29,7 @@ const Home = ({ userName, avatarName, handleAvatarChange, setAvatarName }) => {
             value={inputValue}
             onChange={handleInputChange}
           />
-          <button onClick={handleGenerateAvatar}>
+          <button onClick={() => handleAvatarChange(inputValue)}>
             Generate Avatar
           </button>
         </div>
