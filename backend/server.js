@@ -21,7 +21,7 @@ const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 const upload = multer({ dest: 'uploads/' });
 const cors = require('cors');
 app.use(cors({
-  origin: 'https://main.d1v5rs7h6klasx.amplifyapp.com',
+  origin: true,//'https://main.d1v5rs7h6klasx.amplifyapp.com',
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true,
 }));
@@ -118,6 +118,8 @@ app.post('/register', async (req, res) => {
   
   app.post('/login', async (req, res) => {
     const { username, password } = req.body;
+    console.log("username: ", username);
+    console.log("password: ", password);
     const result = await loginUser(username, password);
     if (result.success) {
         res.status(200).json({ userId: result.userId, avatar: result.avatar });
@@ -134,7 +136,11 @@ app.post('/update-avatar', async (req, res) => {
             return res.status(401).json({ error: 'Invalid password' });
         }
 
-        await pool.query('UPDATE users SET avatar = $1 WHERE user_id = $2', [avatar, userId]);
+        const updateResult = await updateAvatar(userId, avatar);
+        if (!updateResult.success) {
+            return res.status(500).json({ error: updateResult.error });
+        }
+
         res.status(200).json({ success: true, message: 'Avatar updated successfully' });
     } catch (error) {
         console.error('Error updating avatar:', error);

@@ -1,41 +1,20 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './styles/Login.css';
 
 const Login = ({ onLogin }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
   const handleLogin = () => {
     if (username && password) {
-      onLogin(username);
+      onLogin(username, password);
     }
   };
 
-  //stateful handlelogin
-  /*
-  const handleLogin = async (username, password) => {
-    const response = await fetch('/api/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password }),
-    });
-    const data = await response.json();
-    if (response.ok) {
-        // Pass the username and avatar name to set the logged-in state
-        setIsLoggedIn(true);
-        setUserName(username);
-        setAvatarName(data.avatar);
-    } else {
-        console.error('Login failed:', data.error);
-        alert('Login failed. Please check your credentials.');
-    }
-};
-
-};
-*/
-
   return (
-    <div className="login-page"> {/* Add this wrapper */}
+    <div className="login-page">
       <div className="login-container">
         <h2>Login</h2>
         <input
@@ -51,6 +30,7 @@ const Login = ({ onLogin }) => {
           onChange={(e) => setPassword(e.target.value)}
         />
         <button onClick={handleLogin}>Login</button>
+        <button onClick={() => navigate('/register')}>Go to Register</button>
       </div>
     </div>
   );

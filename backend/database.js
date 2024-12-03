@@ -35,7 +35,7 @@ async function registerUser(username, email, password) {
         // Insert the new user into the database with an avatar
         result = await pool.query(
             'INSERT INTO users (username, email, password, avatar) VALUES ($1, $2, $3, $4) RETURNING user_id',
-            [username, email, hashedPassword, avatar]
+            [username, email, hashedPassword, username]
         );
 
         return { success: true, userId: result.rows[0].user_id };
@@ -117,6 +117,16 @@ async function addContent(title, text_id, is_quiz, data) {
     }
 }
 
+async function updateAvatar(userId, avatar) {
+    try {
+        await pool.query('UPDATE users SET avatar = $1 WHERE user_id = $2', [avatar, userId]);
+        return { success: true, message: 'Avatar updated successfully' };
+    } catch (error) {
+        console.error('Error updating avatar:', error);
+        return { success: false, error: error.message };
+    }
+}
+
 module.exports = {
     pool,
     registerUser,
@@ -124,4 +134,5 @@ module.exports = {
     validatePassword,
     testDatabaseConnection,
     addContent,
+    updateAvatar,
   };
