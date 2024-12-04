@@ -17,30 +17,29 @@
   text-align: center;
 }
 
-.study-tab-sheet h2 {
-  font-size: 1.8rem;
-  color: #2c3e50;
+.study-materials {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Add more spacing between items */
+  margin-top: 20px;
+}
+
+.material-group {
   margin-bottom: 20px;
 }
 
-.study-materials {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-  justify-content: center;
-  margin-top: 20px;
+.material-item {
+  margin-bottom: 10px;
 }
 
 .material-button {
   background-color: #f5f7fa;
   padding: 15px 20px;
   border: 2px solid #dfe6e9;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  font-size: 1rem;
-  font-weight: bold;
-  color: #34495e;
+  border-radius: 5px;
   cursor: pointer;
+  width: 100%;
+  text-align: left;
   transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s;
 }
 
@@ -68,15 +67,6 @@
   background-color: #16a085;
 }
 
-.popup {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.6);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
+.flashcard-section {
+  margin-top: 20px;
 }

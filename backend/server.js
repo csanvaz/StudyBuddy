@@ -3,7 +3,7 @@ const { OpenAI } = require('openai');
 const multer = require('multer');
 const fs = require('fs');
 const flashCardPrompt = require('./prompts.js');
-const { testDatabaseConnection, loginUser, registerUser, validatePassword, updateAvatar, createContent } = require('./database');
+const { testDatabaseConnection, loginUser, registerUser, validatePassword, updateAvatar, createContent, getUserContent } = require('./database');
 const { v4: uuidv4 } = require('uuid');
 const flashCardPrompt1 = JSON.stringify(flashCardPrompt)
 
@@ -146,7 +146,6 @@ app.post('/update-avatar', async (req, res) => {
 
 app.post('/user-content', async (req, res) => {
     const { userId, token } = req.body;
-
     try {
         // Validate the user's password
         const validationResponse = await validatePassword(userId, token);

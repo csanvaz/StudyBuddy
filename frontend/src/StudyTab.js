@@ -4,8 +4,8 @@ import ContentPopup from './ContentPopup';
 import './styles/StudyTab.css';
 import Flashcard from './components/flashCard';
 
-//const backendURL = 'https://CS484FinalProjectEnvironment-env.eba-qkbmea2x.us-east-1.elasticbeanstalk.com';
 const backendURL = 'http://localhost:8080';
+//const backendURL = "https://CS484FinalProjectEnvironment-env.eba-qkbmea2x.us-east-1.elasticbeanstalk.com"
 
 function StudyTab({ userId, token }) {
     const [studyMaterials, setStudyMaterials] = useState([]);
@@ -16,10 +16,8 @@ function StudyTab({ userId, token }) {
     const fetchUserContent = async () => {
         try {
             const response = await axios.post(`${backendURL}/user-content`, {
-                params: {
-                    userId,
-                    token: token
-                }
+                userId,
+                token
             });
             setStudyMaterials(response.data.content);
         } catch (error) {
@@ -81,7 +79,7 @@ function StudyTab({ userId, token }) {
                 <div className="study-materials">
                     {Object.keys(groupedMaterials).map((textId) => (
                         <div key={textId} className="material-group">
-                            <h3>Text ID: {textId}</h3>
+                            <h3>{groupedMaterials[textId][0].title}</h3> {/* Title with the given title */}
                             {groupedMaterials[textId].map((material) => (
                                 <div key={material.content_id} className="material-item">
                                     <button
