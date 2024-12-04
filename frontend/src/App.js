@@ -83,12 +83,12 @@ const App = () => {
               userName={userName}
               avatarName={avatarName}
               handleAvatarChange={handleAvatarChange}
+              isLoggedIn={isLoggedIn}
             />
           ) : (
             <Navigate to="/login" />
           )}
         />
-        <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
   );
 };

@@ -1,25 +1,41 @@
-import React from 'react';
-import { Routes, Route, useLocation, Link, Navigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useLocation, Link } from 'react-router-dom';
 import Home from './Home';
 import StudyTab from './StudyTab';
 import QuestTab from './QuestTab';
 import * as GiIcons from "react-icons/gi";
 
-const MenuButton = ({ text, icon: Icon, isActive, path }) => {
+const MenuButton = ({ text, icon: Icon, isActive, onClick }) => {
   return (
-    <Link to={path} className={`menu-button ${isActive ? 'active' : ''}`}>
+    <button onClick={onClick} className={`menu-button ${isActive ? 'active' : ''}`}>
       {Icon && <Icon style={{ marginRight: '10px', fontSize: '20px' }} />}
       {text}
-    </Link>
+    </button>
   );
 };
 
-const PrivateRoute = ({ isLoggedIn, children }) => {
-    return isLoggedIn ? children : <Navigate to="/login" />;
-  };
-
-const AppContent = ({ userName, avatarName, handleAvatarChange }) => {
+const AppContent = ({ userName, avatarName, handleAvatarChange, isLoggedIn }) => {
   const location = useLocation();
+  const [currentTab, setCurrentTab] = useState('home');
+
+  const renderContent = () => {
+    switch (currentTab) {
+      case 'home':
+        return (
+          <Home
+            userName={userName}
+            avatarName={avatarName}
+            handleAvatarChange={handleAvatarChange}
+          />
+        );
+      case 'study':
+        return <StudyTab />;
+      case 'quest':
+        return <QuestTab />;
+      default:
+        return null;
+    }
+  };
 
   return (
     <div className="app">
@@ -33,54 +49,25 @@ const AppContent = ({ userName, avatarName, handleAvatarChange }) => {
         <MenuButton
           text="HOME"
           icon={GiIcons.GiHouse}
-          isActive={location.pathname === '/'}
-          path="/"
+          isActive={currentTab === 'home'}
+          onClick={() => setCurrentTab('home')}
         />
         <MenuButton
           text="STUDY"
           icon={GiIcons.GiBlackBook}
-          isActive={location.pathname === '/study'}
-          path="/study"
+          isActive={currentTab === 'study'}
+          onClick={() => setCurrentTab('study')}
         />
         <MenuButton
           text="QUEST"
           icon={GiIcons.GiHiking}
-          isActive={location.pathname === '/quest'}
-          path="/quest"
+          isActive={currentTab === 'quest'}
+          onClick={() => setCurrentTab('quest')}
         />
       </div>
 
       <div className="content">
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <PrivateRoute isLoggedIn={true}>
-                <Home
-                  userName={userName}
-                  avatarName={avatarName}
-                  handleAvatarChange={handleAvatarChange}
-                />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/study"
-            element={
-              <PrivateRoute isLoggedIn={true}>
-                <StudyTab />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/quest"
-            element={
-              <PrivateRoute isLoggedIn={true}>
-                <QuestTab />
-              </PrivateRoute>
-            }
-          />
-        </Routes>
+        {renderContent()}
       </div>
     </div>
   );
