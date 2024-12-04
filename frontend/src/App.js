@@ -28,7 +28,7 @@ const App = () => {
         const data = response.data;
         setUserName(username);
         setToken(data.token);
-        setAvatarName(data.avatarName);
+        setAvatarName(data.avatar);
         setIsLoggedIn(true);
         setUserId(data.userId);
         navigate('/');

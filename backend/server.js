@@ -118,6 +118,7 @@ app.post('/register', async (req, res) => {
     const { username, password } = req.body;
     const result = await loginUser(username, password);
     if (result.success) {
+        console.log(result.avatar);
         res.status(200).json({ userId: result.userId, avatar: result.avatar, token:password });
     } else {
         res.status(401).json({ error: result.error });
