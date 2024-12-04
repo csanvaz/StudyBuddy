@@ -3,7 +3,7 @@ const { OpenAI } = require('openai');
 const multer = require('multer');
 const fs = require('fs');
 const flashCardPrompt = require('./prompts.js');
-const { testDatabaseConnection, loginUser, registerUser, validatePassword, updateAvatar, createContent, getUserContent } = require('./database');
+const { testDatabaseConnection, loginUser, registerUser, validatePassword, updateAvatar, createContent, getUserContent, setLoginNow } = require('./database');
 const { v4: uuidv4 } = require('uuid');
 const flashCardPrompt1 = JSON.stringify(flashCardPrompt)
 const { sendEmail } = require('./emailService');
@@ -119,7 +119,12 @@ app.post('/register', async (req, res) => {
     const { username, password } = req.body;
     const result = await loginUser(username, password);
     if (result.success) {
-        await pool.query('UPDATE users SET last_login = NOW() WHERE user_id = $1', [result.userId]);
+        try{
+            await setLoginNow(result.userId);
+        }
+        catch(error){
+            console.error('Error updating last login:', error);
+        }
         res.status(200).json({ userId: result.userId, avatar: result.avatar, token:password });
     } else {
         res.status(401).json({ error: result.error });

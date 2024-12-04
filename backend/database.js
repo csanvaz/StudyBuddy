@@ -150,6 +150,15 @@ async function createContent(userId, title, text_id, is_quiz, data) {
     }
 }
 
+async function setLoginNow(userId) {
+    try {
+        await pool.query('UPDATE users SET last_login = NOW() WHERE user_id = $1', [userId]);
+        console.log(`User ${userId} login time set to now`);
+    } catch (error) {
+        console.error('Error setting login time:', error);
+    }
+}
+
 module.exports = {
     pool,
     registerUser,
@@ -160,4 +169,5 @@ module.exports = {
     updateAvatar,
     getUserContent,
     createContent,
+    setLoginNow
   };
