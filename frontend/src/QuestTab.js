@@ -6,9 +6,9 @@ function QuestPage() {
     const [activeShopIndex, setActiveShopIndex] = useState(0);
 
     const shopItems = [
-        { id: 1, icon: '/path/to/xp-icon.png', title: 'x3 XP', action: 'Wear' },
-        { id: 2, icon: '/path/to/shield-icon.png', title: 'Streak Protection', cost: 500 },
-        { id: 3, icon: '/path/to/another-item.png', title: 'Item 3', action: 'Buy' },
+        { id: 1, image1: '/path/to/image1.png', image2: '/path/to/image2.png', title: 'x3 XP', action: 'Wear' },
+        { id: 2, image1: '/path/to/image1.png', image2: '/path/to/image2.png', title: 'Streak Protection', cost: 500 },
+        { id: 3, image1: '/path/to/image1.png', image2: '/path/to/image2.png', title: 'Item 3', action: 'Buy' },
     ];
 
     const handleNextItem = () => {
@@ -35,7 +35,7 @@ function QuestPage() {
                         {/* Snake-like Path */}
                         <path
                             d="M350 450 C300 400, 200 500, 150 300 C100 100, 50 300, 10 100"
-                            stroke="#C0C0C0"
+                            stroke="#FFD700"
                             strokeWidth="2"
                             fill="none"
                             strokeDasharray="5,5"
@@ -64,6 +64,7 @@ function QuestPage() {
                                         cx={positions[index].x}
                                         cy={positions[index].y}
                                         r={circleSize} // Dynamic radius
+                                        className={`circle-border color-${index}`} // Dynamic class for borders
                                         fill={isCompleted ? 'gold' : '#C0C0C0'}
                                     />
                                     <text
@@ -71,7 +72,7 @@ function QuestPage() {
                                         y={positions[index].y + 5}
                                         textAnchor="middle"
                                         fontSize="14"
-                                        fill="white"
+                                        className={`circle-text color-${index}`} // Dynamic class for text
                                     >
                                         {index + 1}
                                     </text>
@@ -81,15 +82,9 @@ function QuestPage() {
                     </svg>
 
                     {/* Mystery Box */}
-                    <div
-                        className="mystery-box"
-                        style={{
-                            top: '20px', // Adjust positioning
-                            left: '40px', // Adjust positioning
-                        }}
-                    >
+                    <div className="mystery-box">
                         <img
-                            src="/path/to/mystery-box-icon.png"
+                            src={require('./assets/mystery-box-icon.png')}
                             alt="Mystery Box"
                         />
                     </div>
@@ -99,29 +94,37 @@ function QuestPage() {
             {/* Equipment and Avatar Section */}
             <div className="equipment-avatar-box">
                 <h2 className="box-title">Available Equipment</h2>
-                <div className="avatar-container">
-                    <img src="/path/to/avatar-placeholder.png" alt="Avatar" />
-                </div>
+                
+                {/* Avatar Placeholder */}
+                <div className="avatar-box">Avatar will be added here</div>
+
                 <div className="shop-grid">
-                    <div className="shop-item">
-                        <img
-                            src={shopItems[activeShopIndex].icon}
-                            alt={shopItems[activeShopIndex].title}
-                        />
-                        <p>{shopItems[activeShopIndex].title}</p>
-                        {shopItems[activeShopIndex].cost ? (
-                            <button>Buy ({shopItems[activeShopIndex].cost})</button>
-                        ) : (
-                            <button>{shopItems[activeShopIndex].action}</button>
-                        )}
-                    </div>
-                    <button className="next-button" onClick={handleNextItem}>
-                        ▶
-                    </button>
-                </div>
+    <div className="stat-square shop-square">
+        <img
+            src={require('./assets/3dglasses.png')}
+            alt="Image 1"
+        />
+        <p>Item 1</p>
+        <button className="shop-button">Wear</button>
+    </div>
+    <div className="stat-square shop-square">
+        <img
+            src={require('./assets/goldshield.png')}
+            alt="Image 2"
+        />
+        <p>Item 2</p>
+        <button className="shop-button">Buy (500)</button>
+    </div>
+    <button className="next-button" onClick={handleNextItem}>
+        ▶
+    </button>
+</div>
+
+
             </div>
         </div>
     );
 }
 
 export default QuestPage;
+
