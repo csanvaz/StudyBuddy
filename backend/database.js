@@ -127,6 +127,29 @@ async function updateAvatar(userId, avatar) {
     }
 }
 
+async function getUserContent(userId) {
+    try {
+        const result = await pool.query('SELECT * FROM content WHERE user_id = $1', [userId]);
+        return { success: true, content: result.rows };
+    } catch (error) {
+        console.error('Error fetching user content:', error);
+        return { success: false, error: error.message };
+    }
+}
+
+async function createContent(userId, title, text_id, is_quiz, data) {
+    try {
+        const result = await pool.query(
+            'INSERT INTO content (user_id, title, text_id, is_quiz, data) VALUES ($1, $2, $3, $4, $5) RETURNING content_id',
+            [userId, title, text_id, is_quiz, data]
+        );
+        return { success: true, contentId: result.rows[0].content_id };
+    } catch (error) {
+        console.error('Error creating content:', error);
+        return { success: false, error: error.message };
+    }
+}
+
 module.exports = {
     pool,
     registerUser,
@@ -135,4 +158,6 @@ module.exports = {
     testDatabaseConnection,
     addContent,
     updateAvatar,
+    getUserContent,
+    createContent,
   };
