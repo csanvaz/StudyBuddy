@@ -1,6 +1,7 @@
 .quest-page {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-between; /* Align boxes on left and right */
+  align-items: flex-start;
   padding: 20px;
   background: none;
   height: 100vh;
@@ -8,18 +9,15 @@
 }
 
 .weekly-quest {
-  text-align: center;
-}
-
-.weekly-quest h2 {
-  font-size: 24px;
-  text-transform: uppercase;
-  margin-bottom: 20px;
+  width: 35%; /* Adjust width of the quest box */
+  margin-top: 90px; /* Add space above to move it down */
+  margin-left: 50px;
+  position: relative;
 }
 
 .progress-container {
   position: relative;
-  width: 400px;
+  width: 100%; /* Make the path box responsive */
   height: 500px;
 }
 
@@ -29,7 +27,13 @@
   height: 100%;
 }
 
-/* Mystery Box */
+.progress-path path {
+  stroke: #c0c0c0;
+  stroke-width: 2;
+  fill: none;
+  stroke-dasharray: 5, 5; /* Dashed line styling */
+}
+
 .mystery-box {
   position: absolute;
   width: 60px;
@@ -40,32 +44,123 @@
 .mystery-box img {
   width: 100%;
   height: auto;
+  filter: drop-shadow(2px 2px 5px rgba(0, 0, 0, 0.3)); /* Shadow effect */
 }
 
-/* Hover Effect */
-.progress-node:hover circle {
-  transform: scale(1.1);
-  cursor: pointer;
+/* Styling for Circles */
+.progress-node {
   transition: transform 0.2s ease;
 }
 
-/* Default (silver) state */
-.progress-node.silver circle {
-  fill: #c0c0c0;
-  stroke: #a9a9a9;
-  stroke-width: 2;
+.progress-node:hover circle {
+  transform: scale(1.1); /* Hover effect */
+  cursor: pointer;
 }
 
-/* Completed (golden) state */
 .progress-node.gold circle {
   fill: gold;
-  stroke: #ffd700;
-  stroke-width: 2;
 }
 
-/* Node Text */
+.progress-node.silver circle {
+  fill: #c0c0c0;
+}
+
 .progress-node text {
   font-size: 14px;
   fill: white;
   font-weight: bold;
+}
+
+/* Equipment Avatar Box */
+.equipment-avatar-box {
+  width: 45%; /* Adjust width of the equipment box */
+  background-color: #d1d3c9;
+  border: 2px solid #428ce2;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 50px;
+  position: relative;
+  opacity: 0.7;
+}
+
+.box-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #404040;
+}
+
+.shop-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.shop-item img {
+  width: 60px;
+  margin-bottom: 10px;
+}
+
+.avatar-container img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  margin-bottom: 20px;
+}
+
+/* Stats Container inside the Equipment Box */
+.stats-container {
+  background-color: #d1d3c9;
+  border: 2px solid #428ce2;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 500px;
+  width: 100%;
+}
+
+.stats-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: #404040;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.stat-square {
+  background-color: white;
+  border: 2px solid #428ce2;
+  border-radius: 8px;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.xp-square {
+  color: #ef7971;
+}
+
+.streak-square {
+  color: #404040;
+}
+
+.gold-square {
+  color: #ef7971;
+}
+
+/* Stats Grid */
+.stats-grid {
+  display: flex;
+  gap: 30px;
+  justify-content: center;
 }
