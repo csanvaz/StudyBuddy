@@ -1,53 +1,71 @@
-.quest-tab-background {
-  background: url('') no-repeat center center fixed;
-  background-size: cover;
-  height: 100vh;
+.quest-page {
   display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.quest-tab-sheet {
-  background: white;
+  justify-content: space-between;
   padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  width: 80%;
-  max-width: 800px;
-  margin: 20px;
+  background: none;
+  height: 100vh;
+  font-family: 'Fredoka';
 }
 
-.full-width-button {
-  width: 100%;
-  padding: 15px;
-  margin-bottom: 20px;
-  background-color: #1abc9c;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
+.weekly-quest {
   text-align: center;
 }
 
-.full-width-button:hover {
-  background-color: #16a085;
+.weekly-quest h2 {
+  font-size: 24px;
+  text-transform: uppercase;
+  margin-bottom: 20px;
 }
 
-.quest-list {
-  list-style: none;
-  padding: 0;
+.progress-container {
+  position: relative;
+  width: 400px;
+  height: 500px;
 }
 
-.quest-list-item {
-  background-color: #f9f9f9;
-  padding: 15px;
-  margin-bottom: 10px;
-  border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.progress-path {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+/* Mystery Box */
+.mystery-box {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  transform: rotate(-10deg);
+}
+
+.mystery-box img {
+  width: 100%;
+  height: auto;
+}
+
+/* Hover Effect */
+.progress-node:hover circle {
+  transform: scale(1.1);
   cursor: pointer;
+  transition: transform 0.2s ease;
 }
 
-.quest-list-item:hover {
-  background-color: #f1f1f1;
+/* Default (silver) state */
+.progress-node.silver circle {
+  fill: #c0c0c0;
+  stroke: #a9a9a9;
+  stroke-width: 2;
+}
+
+/* Completed (golden) state */
+.progress-node.gold circle {
+  fill: gold;
+  stroke: #ffd700;
+  stroke-width: 2;
+}
+
+/* Node Text */
+.progress-node text {
+  font-size: 14px;
+  fill: white;
+  font-weight: bold;
 }
