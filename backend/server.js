@@ -6,7 +6,8 @@ const flashCardPrompt = require('./prompts.js');
 const { testDatabaseConnection, loginUser, registerUser, validatePassword, updateAvatar, createContent, getUserContent } = require('./database');
 const { v4: uuidv4 } = require('uuid');
 const flashCardPrompt1 = JSON.stringify(flashCardPrompt)
-
+const { sendEmail } = require('./emailService');
+const cron = require('node-cron');
 require('dotenv').config();
 
 //https://CS484FinalProjectEnvironment-env.eba-qkbmea2x.us-east-1.elasticbeanstalk.com/api/topic-questions
@@ -118,7 +119,7 @@ app.post('/register', async (req, res) => {
     const { username, password } = req.body;
     const result = await loginUser(username, password);
     if (result.success) {
-        console.log(result.avatar);
+        await pool.query('UPDATE users SET last_login = NOW() WHERE user_id = $1', [result.userId]);
         res.status(200).json({ userId: result.userId, avatar: result.avatar, token:password });
     } else {
         res.status(401).json({ error: result.error });
@@ -202,6 +203,25 @@ app.post('/create-content', async (req, res) => {
         console.error('Error creating content:', error);
         res.status(500).json({ error: 'An error occurred while creating content' });
     }
+});
+
+async function sendComeBackEmails() {
+    try {
+        const result = await pool.query('SELECT * FROM users WHERE last_login < NOW() - INTERVAL \'7 days\'');
+        const users = result.rows;
+
+        for (const user of users) {
+            //TODO TODO WRITE EMAIL GENERATOR
+            const emailContent = await generateEmailContent(user.user_id); 
+            await sendEmail(user.email, 'We miss you!', emailContent);
+        }
+    } catch (error) {
+        console.error('Error sending come back emails:', error);
+    }
+}
+
+cron.schedule('0 0 * * *', () => {
+    sendComeBackEmails();
 });
 
 

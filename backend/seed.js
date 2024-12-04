@@ -21,6 +21,7 @@ async function createTables() {
                 email VARCHAR(100) UNIQUE NOT NULL,
                 password VARCHAR(255) NOT NULL,
                 avatar VARCHAR(255)
+                last_login TIMESTAMP DEFAULT NOW()
             );
         `);
         console.log('Users table created successfully');
@@ -60,7 +61,7 @@ async function seedUsers() {
 
         for (const user of users) {
             await pool.query(
-                'INSERT INTO users (username, email, password, avatar) VALUES ($1, $2, $3, $4) ON CONFLICT (username) DO NOTHING',
+                'INSERT INTO users (username, email, password, avatar, last_login) VALUES ($1, $2, $3, $4, NOW()) ON CONFLICT (username) DO NOTHING',
                 [user.username, user.email, user.password, user.avatar]
             );
         }
