@@ -1,3 +1,4 @@
+/* Quest Page */
 .quest-page {
   display: flex;
   justify-content: space-between; /* Align boxes on left and right */
@@ -8,6 +9,7 @@
   font-family: 'Fredoka';
 }
 
+/* Weekly Quest Section */
 .weekly-quest {
   width: 35%; /* Adjust width of the quest box */
   margin-top: 90px; /* Add space above to move it down */
@@ -21,30 +23,36 @@
   height: 500px;
 }
 
-.progress-path {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-}
-
 .progress-path path {
-  stroke: #c0c0c0;
-  stroke-width: 2;
+  stroke: #FFD700; /* Gold dotted line */
+  stroke-width: 3;
   fill: none;
-  stroke-dasharray: 5, 5; /* Dashed line styling */
+  stroke-dasharray: 5, 5;
 }
 
+/* Mystery Box */
 .mystery-box {
   position: absolute;
-  width: 60px;
-  height: 60px;
-  transform: rotate(-10deg);
+  top: 30px;
+  left: -10px;
+  width: 80px; /* Size of the mystery box */
+  height: 80px;
+  animation: float 3s ease-in-out infinite; /* Apply floating animation */
+}
+
+/* Keyframes for floating animation */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0); /* Start and end position */
+  }
+  50% {
+    transform: translateY(-10px); /* Move up slightly at the midpoint */
+  }
 }
 
 .mystery-box img {
   width: 100%;
   height: auto;
-  filter: drop-shadow(2px 2px 5px rgba(0, 0, 0, 0.3)); /* Shadow effect */
 }
 
 /* Styling for Circles */
@@ -65,16 +73,89 @@
   fill: #c0c0c0;
 }
 
-.progress-node text {
-  font-size: 14px;
-  fill: white;
-  font-weight: bold;
+/* Border styling for each circle */
+.circle-border.color-0 {
+  stroke: purple;
+  stroke-width: 1; /* Thinner border */
+  stroke-opacity: 0.7; /* Slightly transparent */
+}
+
+.circle-border.color-1 {
+  stroke: red;
+  stroke-width: 1; /* Thinner border */
+  stroke-opacity: 0.7; /* Slightly transparent */
+}
+
+.circle-border.color-2 {
+  stroke: blue;
+  stroke-width: 1; /* Thinner border */
+  stroke-opacity: 0.7; /* Slightly transparent */
+}
+
+.circle-border.color-3 {
+  stroke: green;
+  stroke-width: 1; /* Thinner border */
+  stroke-opacity: 0.7; /* Slightly transparent */
+}
+
+.circle-border.color-4 {
+  stroke: red;
+  stroke-width: 1; /* Thinner border */
+  stroke-opacity: 0.7; /* Slightly transparent */
+}
+
+.circle-border.color-5 {
+  stroke: teal;
+  stroke-width: 1; /* Thinner border */
+  stroke-opacity: 0.7; /* Slightly transparent */
+}
+
+.circle-border.color-6 {
+  stroke: purple;
+  stroke-width: 1; /* Thinner border */
+  stroke-opacity: 0.7; /* Slightly transparent */
+}
+
+/* Text styling for numbers inside circles */
+.circle-text.color-0 {
+  fill: purple;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+}
+
+.circle-text.color-1 {
+  fill: red;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+}
+
+.circle-text.color-2 {
+  fill: blue;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+}
+
+.circle-text.color-3 {
+  fill: green;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+}
+
+.circle-text.color-4 {
+  fill: red;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+}
+
+.circle-text.color-5 {
+  fill: teal;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+}
+
+.circle-text.color-6 {
+  fill: purple;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); /* Subtle shadow */
 }
 
 /* Equipment Avatar Box */
 .equipment-avatar-box {
   width: 45%; /* Adjust width of the equipment box */
-  background-color: #d1d3c9;
+  background-color: rgba(209, 211, 201, 0.7); /* Semi-transparent background */
   border: 2px solid #428ce2;
   border-radius: 12px;
   padding: 20px;
@@ -83,84 +164,83 @@
   align-items: center;
   margin-top: 50px;
   position: relative;
-  opacity: 0.7;
 }
 
-.box-title {
-  font-size: 18px;
-  font-weight: bold;
-  margin-bottom: 20px;
-  color: #404040;
-}
 
-.shop-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  margin-top: 20px;
-}
-
-.shop-item img {
-  width: 60px;
-  margin-bottom: 10px;
-}
-
-.avatar-container img {
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  margin-bottom: 20px;
-}
-
-/* Stats Container inside the Equipment Box */
-.stats-container {
-  background-color: #d1d3c9;
+/* Avatar Placeholder */
+.avatar-box {
+  width: 100%;
+  background-color: #f7f7f7;
   border: 2px solid #428ce2;
   border-radius: 12px;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  max-width: 500px;
-  width: 100%;
-}
-
-.stats-title {
-  font-size: 18px;
+  padding: 15px;
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 16px;
   font-weight: bold;
   color: #404040;
-  text-align: center;
+}
+
+/* Shop Grid */
+.shop-grid {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
   margin-bottom: 20px;
 }
 
-.stat-square {
-  background-color: white;
-  border: 2px solid #428ce2;
-  border-radius: 8px;
-  width: 80px;
-  height: 80px;
+.stat-square.shop-square {
+  background-color: #f7f7f7; /* Light background for shop items */
+  border: 2px solid #428ce2; /* Same border style as stats */
+  border-radius: 12px;
+  width: 120px;
+  height: 150px;
   display: flex;
+  flex-direction: column; /* Stack image and text */
   align-items: center;
   justify-content: center;
-  font-size: 18px;
+  font-size: 14px;
   font-weight: bold;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
 }
 
-.xp-square {
-  color: #ef7971;
+.shop-square img {
+  width: auto; /* Maintain original width */
+  height: auto; /* Maintain original height */
+  max-width: 80%; /* Ensure it fits inside the square */
+  max-height: 80%; /* Limit height to fit within the square */
 }
 
-.streak-square {
-  color: #404040;
+
+.shop-button {
+  background-color: #428ce2;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 5px 10px;
+  margin-top: 10px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
-.gold-square {
-  color: #ef7971;
+.shop-button:hover {
+  background-color: #326bb5; /* Darker blue on hover */
 }
 
-/* Stats Grid */
-.stats-grid {
-  display: flex;
-  gap: 30px;
-  justify-content: center;
+.next-button {
+  background-color: #428ce2;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 5px 15px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.next-button:hover {
+  background-color: #326bb5; /* Darker blue on hover */
 }
