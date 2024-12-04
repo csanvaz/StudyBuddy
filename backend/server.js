@@ -3,8 +3,8 @@ const { OpenAI } = require('openai');
 const multer = require('multer');
 const fs = require('fs');
 const flashCardPrompt = require('./prompts.js');
-const { testDatabaseConnection, loginUser, registerUser, validatePassword, updateAvatar } = require('./database');
-
+const { testDatabaseConnection, loginUser, registerUser, validatePassword, updateAvatar, createContent } = require('./database');
+const { v4: uuidv4 } = require('uuid');
 const flashCardPrompt1 = JSON.stringify(flashCardPrompt)
 
 require('dotenv').config();
@@ -141,6 +141,66 @@ app.post('/update-avatar', async (req, res) => {
     } catch (error) {
         console.error('Error updating avatar:', error);
         res.status(500).json({ error: 'An error occurred', details: error.message });
+    }
+});
+
+app.post('/user-content', async (req, res) => {
+    const { userId, token } = req.body;
+
+    try {
+        // Validate the user's password
+        const validationResponse = await validatePassword(userId, token);
+        if (!validationResponse.success) {
+            return res.status(401).json({ error: 'Invalid password' });
+        }
+
+        // Fetch the user's content
+        const contentResponse = await getUserContent(userId);
+        if (contentResponse.success) {
+            res.status(200).json({ content: contentResponse.content });
+        } else {
+            res.status(500).json({ error: contentResponse.error });
+        }
+    } catch (error) {
+        console.error('Error fetching user content:', error);
+        res.status(500).json({ error: 'An error occurred while fetching user content' });
+    }
+});
+
+app.post('/create-content', async (req, res) => {
+    const { userId, title, text, makeQuiz, makeCards, token } = req.body;
+
+    try {
+        // Validate the user's password
+        const validationResponse = await validatePassword(userId, token);
+        if (!validationResponse.success) {
+            return res.status(401).json({ error: 'Invalid password' });
+        }
+
+        const text_id = uuidv4();
+
+        // Create quiz content if requested
+        if (makeQuiz) {
+            const quizData = {/*TODO TODO MAKE OPENAI API REQUEST USE TEXT ONLY*/};
+            const quizResponse = await createContent(userId, title, text_id, true, quizData);
+            if (!quizResponse.success) {
+                return res.status(500).json({ error: quizResponse.error });
+            }
+        }
+
+        // Create flashcard content if requested
+        if (makeCards) {
+            const flashcardData = { /*TODO TODO MAKE OPENAI API REQUEST USE TEXT ONLY*/ };
+            const flashcardResponse = await createContent(userId, title, text_id, false, flashcardData);
+            if (!flashcardResponse.success) {
+                return res.status(500).json({ error: flashcardResponse.error });
+            }
+        }
+
+        res.status(201).json({ message: 'Content created successfully', text_id });
+    } catch (error) {
+        console.error('Error creating content:', error);
+        res.status(500).json({ error: 'An error occurred while creating content' });
     }
 });
 

@@ -27,6 +27,7 @@ async function createTables() {
 
         await pool.query(`
             CREATE TABLE IF NOT EXISTS content (
+                user_id INTEGER REFERENCES users(user_id),
                 title VARCHAR(255),
                 content_id SERIAL PRIMARY KEY,
                 text_id UUID NOT NULL,
@@ -76,12 +77,14 @@ async function seedContent() {
 
         const content = [
             {
+                user_id: 1,
                 title: "Math Quiz",
                 text_id: text_id,
                 is_quiz: true,
                 data: { question: "What is 2 + 2?", options: ["3", "4", "5"], answer: "4" }
             },
             {
+                user_id: 1,
                 title: "Geography Question",
                 text_id: text_id,
                 is_quiz: false,

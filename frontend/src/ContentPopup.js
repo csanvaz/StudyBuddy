@@ -1,24 +1,13 @@
 import React, { useState } from 'react';
-import './styles/Popup.css';
 
 function ContentPopup({ onAddContent, onClose }) {
     const [subject, setSubject] = useState('');
-    const [content, setContent] = useState('');
-    const [isFileUpload, setIsFileUpload] = useState(false);
+    const [text, setText] = useState('');
     const [generateFlashcards, setGenerateFlashcards] = useState(false);
     const [generateQuiz, setGenerateQuiz] = useState(false);
 
     const handleSubmit = () => {
-        onAddContent({ subject, content, generateFlashcards, generateQuiz });
-    };
-
-    const handleFileChange = (e) => {
-        const file = e.target.files[0];
-        const reader = new FileReader();
-        reader.onload = (event) => {
-            setContent(event.target.result);
-        };
-        reader.readAsText(file);
+        onAddContent({ subject, text, generateFlashcards, generateQuiz });
     };
 
     return (
@@ -31,30 +20,12 @@ function ContentPopup({ onAddContent, onClose }) {
                     value={subject}
                     onChange={(e) => setSubject(e.target.value)}
                 />
-                <div className="toggle-buttons">
-                    <button
-                        className={!isFileUpload ? 'active' : ''}
-                        onClick={() => setIsFileUpload(false)}
-                    >
-                        Paste Text
-                    </button>
-                    <button
-                        className={isFileUpload ? 'active' : ''}
-                        onClick={() => setIsFileUpload(true)}
-                    >
-                        Upload File
-                    </button>
-                </div>
-                {isFileUpload ? (
-                    <input type="file" onChange={handleFileChange} />
-                ) : (
-                    <textarea
-                        placeholder="Paste text here"
-                        value={content}
-                        onChange={(e) => setContent(e.target.value)}
-                    ></textarea>
-                )}
-                <div className="checkbox-group">
+                <textarea
+                    placeholder="Paste text here"
+                    value={text}
+                    onChange={(e) => setText(e.target.value)}
+                ></textarea>
+                <div>
                     <label>
                         <input
                             type="checkbox"

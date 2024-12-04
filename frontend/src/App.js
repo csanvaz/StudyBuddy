@@ -84,6 +84,8 @@ const App = () => {
               avatarName={avatarName}
               handleAvatarChange={handleAvatarChange}
               isLoggedIn={isLoggedIn}
+              token={token}
+              userId={userId}
             />
           ) : (
             <Navigate to="/login" />

@@ -14,8 +14,7 @@ const MenuButton = ({ text, icon: Icon, isActive, onClick }) => {
   );
 };
 
-const AppContent = ({ userName, avatarName, handleAvatarChange, isLoggedIn }) => {
-  const location = useLocation();
+const AppContent = ({ userName, avatarName, handleAvatarChange, userId, token }) => {
   const [currentTab, setCurrentTab] = useState('home');
 
   const renderContent = () => {
@@ -29,7 +28,7 @@ const AppContent = ({ userName, avatarName, handleAvatarChange, isLoggedIn }) =>
           />
         );
       case 'study':
-        return <StudyTab />;
+        return <StudyTab userId={userId} token={token}/>;
       case 'quest':
         return <QuestTab />;
       default:
