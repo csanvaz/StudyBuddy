@@ -6,7 +6,7 @@ const flashCardPrompt = require('./prompts.js');
 const { testDatabaseConnection, loginUser, registerUser, validatePassword, updateAvatar, createContent, getUserContent, setLoginNow } = require('./database');
 const { v4: uuidv4 } = require('uuid');
 const flashCardPrompt1 = JSON.stringify(flashCardPrompt)
-const { sendEmail } = require('./emailService');
+const { sendEmail, sendWelcomeEmail } = require('./emailService');
 const cron = require('node-cron');
 require('dotenv').config();
 
@@ -109,9 +109,10 @@ app.post('/register', async (req, res) => {
     const { username, email, password } = req.body;
     const result = await registerUser(username, email, password);
     if (result.success) {
-      res.status(201).json({ userId: result.userId });
+        sendWelcomeEmail(username, email);
+        res.status(201).json({ userId: result.userId });
     } else {
-      res.status(400).json({ error: result.error });
+        res.status(400).json({ error: result.error });
     }
   });
   
