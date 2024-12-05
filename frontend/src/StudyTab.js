@@ -12,6 +12,7 @@ function StudyTab({ userId, token }) {
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [currentTopic, setCurrentTopic] = useState('');
     const [currentContent, setCurrentContent] = useState(null);
+    const [deletedMaterials, setDeletedMaterials] = useState(new Set());  // Track deleted materials
 
     const fetchUserContent = async () => {
         try {
@@ -20,7 +21,6 @@ function StudyTab({ userId, token }) {
                 token
             });
             setStudyMaterials(response.data.content);
-            console.log(response.data.content)
         } catch (error) {
             console.error('Error fetching user content:', error.response ? error.response.data : error.message);
         }
@@ -54,14 +54,13 @@ function StudyTab({ userId, token }) {
     };
 
     const handleDeleteContent = (contentId) => {
-        // Mark the material as deleted by setting the 'deleted' flag
+        // Remove the material and its associated flashcard content from state
         setStudyMaterials((prevMaterials) =>
-            prevMaterials.map((material) =>
-                material.content_id === contentId
-                    ? { ...material, deleted: true }
-                    : material
-            )
+            prevMaterials.filter((material) => material.content_id !== contentId)
         );
+
+        // Add the material to the deletedMaterials set
+        setDeletedMaterials((prevDeleted) => new Set(prevDeleted).add(contentId));
 
         // If the deleted material was the currently displayed one, clear the content
         if (currentContent && currentContent.content_id === contentId) {
@@ -117,7 +116,7 @@ function StudyTab({ userId, token }) {
                         </div>
                     ))}
                 </div>
-                {currentContent && !currentContent.deleted && (
+                {currentContent && !deletedMaterials.has(currentContent.content_id) && (
                     <div className="flashcard-section">
                         {currentContent.is_quiz ? (
                             <div>Quiz content goes here</div>

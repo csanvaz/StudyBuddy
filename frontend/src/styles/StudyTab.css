@@ -29,6 +29,9 @@
 }
 
 .material-item {
+  display: flex;
+  justify-content: space-between;  /* Align items horizontally */
+  align-items: center;  /* Center items vertically */
   margin-bottom: 10px;
 }
 
@@ -38,15 +41,30 @@
   border: 2px solid #dfe6e9;
   border-radius: 5px;
   cursor: pointer;
-  width: 100%;
   text-align: left;
   transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s;
+  width: 80%;  /* Make the material button bigger */
 }
 
 .material-button:hover {
   background-color: #ecf0f1;
   transform: scale(1.05);
   box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+.delete-button {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 15%;  /* Make the delete button smaller */
+  margin-left: 10px;
+}
+
+.delete-button:hover {
+  background-color: #c0392b;
 }
 
 .full-width-button {
