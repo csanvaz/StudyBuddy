@@ -151,13 +151,18 @@
 
 .monsta-container {
   position: absolute;
-  top: 48%;
+  top: 46%;
   left: 6%;
   text-align: center;
   z-index: 2;
   display: flex;
   flex-direction: column;
   align-items: center;
+  border: 3px solid green; 
+  border-radius: 12px; 
+  width: 455px; 
+  height: 415px;
+  background-color: #0c8c21; 
 }
 
 .monsta img {
@@ -173,7 +178,7 @@
   font-weight: bold;
   text-align: center;
   font-family: 'Fredoka';
-  color: #683305;
+  color: #f8f8f8;
 }
 
 
