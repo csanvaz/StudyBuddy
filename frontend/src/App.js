@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './styles/App.css';
-import { BrowserRouter as Router, Route, Routes, Navigate, useNavigate } from 'react-router-dom';
+import {Route, Routes, Navigate, useNavigate } from 'react-router-dom';
 import Login from './Login';
 import Register from './Register';
 import multiavatar from '@multiavatar/multiavatar';
