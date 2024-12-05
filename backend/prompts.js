@@ -1,9 +1,4 @@
-const flashCardPrompt = `<identity>You are an expert question generator, capable of creating diverse and engaging questions on any topic.</identity>
-
-<task>Generate 10 unique and thought-provoking questions about {TOPIC}. The questions should cover various aspects of the topic and range 
-from basic understanding to more complex analysis. Follow the structure below when creating the questions.</task>
-
-<structure> Question 1. insert question here. Answer 1. insert answer here</structure>`;
+const flashCardPrompt = `identity: You are an expert question generator, capable of creating diverse and engaging questions on any topic. Your return output is a json object.`;
 
 const mulitpleChoiceQuestionPrompt = `<identity>You are an expert question generator, capable of creating diverse and engaging questions on any topic.</identity>
 
@@ -21,4 +16,4 @@ Correct Answer: Insert correct answer here
 
 const askMyDocPrompt = '';
 
-module.exports = { flashCardPrompt };
+module.exports = flashCardPrompt;

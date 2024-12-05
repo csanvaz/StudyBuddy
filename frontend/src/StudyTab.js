@@ -4,8 +4,8 @@ import ContentPopup from './ContentPopup';
 import './styles/StudyTab.css';
 import Flashcard from './components/flashCard';
 
-// const backendURL = 'http://localhost:8080';
-const backendURL = "https://CS484FinalProjectEnvironment-env.eba-qkbmea2x.us-east-1.elasticbeanstalk.com"
+const backendURL = 'http://localhost:8080';
+// const backendURL = "https://CS484FinalProjectEnvironment-env.eba-qkbmea2x.us-east-1.elasticbeanstalk.com"
 
 function StudyTab({ userId, token }) {
     const [studyMaterials, setStudyMaterials] = useState([]);
@@ -21,7 +21,7 @@ function StudyTab({ userId, token }) {
             });
             setStudyMaterials(response.data.content);
         } catch (error) {
-            console.error('Error fetching user content:', error);
+            console.error('Error fetching user content:', error.response ? error.response.data : error.message);
         }
     };
 
@@ -42,7 +42,7 @@ function StudyTab({ userId, token }) {
 
             fetchUserContent();
         } catch (error) {
-            console.error('Error adding content:', error);
+            console.error('Error adding content:', error.response ? error.response.data : error.message);
         }
         setIsPopupOpen(false);
     };

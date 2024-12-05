@@ -5,7 +5,7 @@ const fs = require('fs');
 const flashCardPrompt = require('./prompts.js');
 const { testDatabaseConnection, loginUser, registerUser, validatePassword, updateAvatar, createContent, getUserContent, setLoginNow } = require('./database');
 const { v4: uuidv4 } = require('uuid');
-const flashCardPrompt1 = JSON.stringify(flashCardPrompt)
+const flashCardPrompt1 = JSON.stringify(flashCardPrompt);
 const { sendEmail, sendWelcomeEmail } = require('./emailService');
 const cron = require('node-cron');
 require('dotenv').config();
@@ -47,29 +47,95 @@ app.get('/test-database', async (req, res) => {
 });
 
 // Function to generate questions
-async function generateQuestions(content, isFile = false) {
-    console.log("enetered generateQuestions");
-    const systemPrompt = isFile 
-        ? flashCardPrompt.replace('{TOPIC}', 'the content of the uploaded file')
-        : String(flashCardPrompt1).replace('{TOPIC}', content);
-    console.log("system prompt: ", systemPrompt);
-    //console.log("question prompt: ", topicQuestionPrompt);
-    const chatCompletion = await client.chat.completions.create({
-        messages: [
-            {
-                "role": "system",
-                "content": systemPrompt,
-            },
-            {
-                "role": "user",
-                "content": isFile ? content : `Generate questions about ${content}`,
-            }
-        ],
-        model: "gpt-3.5-turbo",
-    });
+// async function generateQuestions(content, isFile = false) {
+//     console.log("enetered generateQuestions");
+//     const systemPrompt = isFile 
+//         ? flashCardPrompt.replace('{TOPIC}', 'the content of the uploaded file')
+//         : String(flashCardPrompt1).replace('{TOPIC}', content);
+//     console.log("system prompt: ", systemPrompt);
+//     //console.log("question prompt: ", topicQuestionPrompt);
+//     const chatCompletion = await client.chat.completions.create({
+//         messages: [
+//             {
+//                 "role": "system",
+//                 "content": systemPrompt,
+//             },
+//             {
+//                 "role": "user",
+//                 "content": isFile ? content : `Generate questions about ${content}`,
+//             }
+//         ],
+//         model: "gpt-3.5-turbo",
+//     });
+//     console.log("finished api call");
+//     return chatCompletion.choices[0].message.content;
+// }
 
-    return chatCompletion.choices[0].message.content;
+// Function to generate quiz questions
+// // Function to generate quiz questions
+async function generateQuestions(content) {
+    console.log("Entered generateQuestions");
+    console.log("Topic picked is " + content);
+
+    // Use the flashCardPrompt with the content as the topic
+    const systemPrompt = flashCardPrompt.replace('{TOPIC}', content);
+    console.log("System prompt: ", systemPrompt);
+
+    try {
+        // Make the API call to OpenAI to generate the quiz questions
+        const chatCompletion = await client.chat.completions.create({
+            messages: [
+                {
+                    role: "system",
+                    content: systemPrompt,
+                },
+                {
+                    role: "user",
+                    content: `Generate 10 quiz questions about ${content}`,
+                }
+            ],
+            model: "gpt-3.5-turbo",
+        });
+
+        // Log the full chatCompletion response for debugging
+        console.log("Finished API call");
+        console.log("Full chatCompletion response:", JSON.stringify(chatCompletion, null, 2));
+
+        // Extract the content from the chat response
+        const chatResponse = chatCompletion.choices[0].message.content;
+
+        // Log the content of the response
+        console.log("Chat response content:", chatResponse);
+
+        // If chatResponse is in text format, you might want to parse it to JSON if it contains JSON-like data
+        let parsedResponse = null;
+        try {
+            parsedResponse = JSON.parse(chatResponse);  // Try to parse the response if it's a JSON string
+            console.log("Parsed response:", parsedResponse);
+        } catch (err) {
+            console.log("Response is not valid JSON, returning as plain text.");
+            parsedResponse = chatResponse; // If it's not valid JSON, return it as plain text
+        }
+
+        // Return the response as a structured JSON object
+        return {
+            success: true,
+            message: "Questions generated successfully",
+            data: parsedResponse || chatResponse,
+            chatCompletion: chatCompletion,  // Returning the full chatCompletion for further inspection
+        };
+
+    } catch (error) {
+        console.error("Error generating quiz questions:", error);
+        return {
+            success: false,
+            error: error.message,
+            chatCompletion: null,  // No response if there was an error
+        };
+    }
 }
+
+
 
 // Route for topic-based questions
 app.post('/api/topic-questions', async (req, res) => {
@@ -177,7 +243,7 @@ app.post('/user-content', async (req, res) => {
 
 app.post('/create-content', async (req, res) => {
     const { userId, title, text, makeQuiz, makeCards, token } = req.body;
-
+    console.log("enetered create content");
     try {
         // Validate the user's password
         const validationResponse = await validatePassword(userId, token);
@@ -189,7 +255,7 @@ app.post('/create-content', async (req, res) => {
 
         // Create quiz content if requested
         if (makeQuiz) {
-            const quizData = {/*TODO TODO MAKE OPENAI API REQUEST USE TEXT ONLY*/};
+            const quizData = {}; 
             const quizResponse = await createContent(userId, title, text_id, true, quizData);
             if (!quizResponse.success) {
                 return res.status(500).json({ error: quizResponse.error });
@@ -198,7 +264,8 @@ app.post('/create-content', async (req, res) => {
 
         // Create flashcard content if requested
         if (makeCards) {
-            const flashcardData = { /*TODO TODO MAKE OPENAI API REQUEST USE TEXT ONLY*/ };
+            console.log("enetered flashcards");
+            const flashcardData = await generateQuestions(text);
             const flashcardResponse = await createContent(userId, title, text_id, false, flashcardData);
             if (!flashcardResponse.success) {
                 return res.status(500).json({ error: flashcardResponse.error });

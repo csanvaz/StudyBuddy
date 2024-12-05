@@ -7,9 +7,12 @@ const Flashcard = ({ questions, topic }) => {
   const [parsedQuestions, setParsedQuestions] = useState([]);
 
   useEffect(() => {
-    // Parse the questions string into an array of question-answer pairs
+    // Function to check if the input is a non-empty string
+    const isValidQuestionsString = (str) => {
+      return typeof str === 'string' && str.trim().length > 0;
+    };
+
     const parseQuestions = (questionsString) => {
-      //console.log('questions:', questionsString);
       const pairs = questionsString.split('Question').slice(1);
       return pairs.map(pair => {
         const [question, answer] = pair.split('Answer');
@@ -20,8 +23,11 @@ const Flashcard = ({ questions, topic }) => {
       });
     };
 
-    if (questions) {
+    // Check if questions is a valid string before parsing
+    if (isValidQuestionsString(questions)) {
       setParsedQuestions(parseQuestions(questions));
+    } else {
+      setParsedQuestions([]); // or handle invalid input appropriately
     }
   }, [questions]);
 
@@ -42,7 +48,7 @@ const Flashcard = ({ questions, topic }) => {
   };
 
   if (parsedQuestions.length === 0) {
-    return <div>Loading questions...</div>;
+    return <div>No valid questions available. Please provide valid input.</div>;
   }
 
   const currentQuestion = parsedQuestions[currentIndex];
