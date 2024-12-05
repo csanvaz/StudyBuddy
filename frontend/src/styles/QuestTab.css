@@ -152,8 +152,7 @@
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); /* Subtle shadow */
 }
 
-/* Equipment Avatar Box */
-.equipment-avatar-box {
+.equipment-box {
   width: 45%; /* Adjust width of the equipment box */
   background-color: rgba(209, 211, 201, 0.7); /* Semi-transparent background */
   border: 2px solid #428ce2;
@@ -167,8 +166,7 @@
 }
 
 
-/* Avatar Placeholder */
-.avatar-box {
+.av-box {
   width: 100%;
   background-color: #f7f7f7;
   border: 2px solid #428ce2;
@@ -183,8 +181,9 @@
 
 /* Shop Grid */
 .shop-grid {
-  display: flex;
-  gap: 20px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 items per row */
+  gap: 20px; /* Spacing between items */
   justify-content: center;
   margin-bottom: 20px;
 }
@@ -212,15 +211,17 @@
   max-height: 80%; /* Limit height to fit within the square */
 }
 
-
 .shop-button {
+  display: flex; /* Enable Flexbox */
+  align-items: center; /* Vertically center items */
+  justify-content: center; /* Horizontally center items */
   background-color: #428ce2;
   color: white;
   border: none;
   border-radius: 8px;
   padding: 5px 10px;
   margin-top: 10px;
-  font-size: 12px;
+  font-size: 14px; /* Increased font size for better alignment */
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
@@ -244,3 +245,40 @@
 .next-button:hover {
   background-color: #326bb5; /* Darker blue on hover */
 }
+
+/* Responsive Adjustments */
+@media (max-width: 1024px) {
+  .shop-grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Adjust for medium screens */
+  }
+}
+
+@media (max-width: 768px) {
+  .quest-page {
+    flex-direction: column;
+    align-items: center;
+    height: auto; /* Remove fixed height for smaller screens */
+  }
+
+  .weekly-quest {
+    width: 90%; /* Increase width on smaller screens */
+    margin-left: 0;
+    margin-top: 20px;
+  }
+
+  .equipment-box {
+    width: 90%; /* Increase width on smaller screens */
+    margin-top: 20px;
+  }
+
+  .shop-grid {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* Adjust for small screens */
+  }
+}
+
+@media (max-width: 480px) {
+  .shop-grid {
+    grid-template-columns: 1fr; /* Single column on very small screens */
+  }
+}
+

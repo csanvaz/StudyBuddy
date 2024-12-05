@@ -9,6 +9,8 @@ const flashCardPrompt1 = JSON.stringify(flashCardPrompt);
 const { sendEmail, sendWelcomeEmail } = require('./emailService');
 const cron = require('node-cron');
 require('dotenv').config();
+const { pool } = require('./database');
+const { getShopItems, getGold, updateGold } = require('./database');
 const { getShopItems } = require('./database');
 
 //https://CS484FinalProjectEnvironment-env.eba-qkbmea2x.us-east-1.elasticbeanstalk.com/api/topic-questions
@@ -238,6 +240,38 @@ app.post('/user-content', async (req, res) => {
     } catch (error) {
         console.error('Error fetching user content:', error);
         res.status(500).json({ error: 'An error occurred while fetching user content' });
+    }
+});
+
+app.get('/user/:userName/gold', async (req, res) => {
+    const { userName } = req.params;
+    try {
+        const result = await getGold(userName);
+        if (result.success) {
+            res.json({ success: true, gold: result.gold });
+        } else {
+            res.status(404).json({ success: false, message: 'User not found' });
+        }
+    } catch (error) {
+        console.error('Error fetching gold:', error);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+});
+
+app.post('/update-gold', async (req, res) => {
+    const { username, goldEarned } = req.body;
+    console.log("Request body:", req.body);
+    try {
+        const result = await updateGold(username, goldEarned);
+        console.log("Result:", result);
+        if (result.success) {
+            res.json({ success: true, gold: result.gold });
+        } else {
+            res.status(404).json({ success: false, message: 'User not found' });
+        }
+    } catch (error) {
+        console.error('Error updating gold:', error);
+        res.status(500).json({ success: false, message: 'Server error' });
     }
 });
 
