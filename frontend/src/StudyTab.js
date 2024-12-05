@@ -50,7 +50,7 @@ function StudyTab({ userId, token }) {
     };
 
     const handleSelectContent = (content) => {
-        setCurrentContent(content.data.data.questions);
+        setCurrentContent(content);
         setCurrentTopic(content.title);
     };
 
@@ -119,9 +119,9 @@ function StudyTab({ userId, token }) {
                 {currentContent && !deletedMaterials.has(currentContent.content_id) && (
                     <div className="flashcard-section">
                         {currentContent.is_quiz ? (
-                            <QuizCard questionData={currentContent} />  // Show quiz component
+                            <QuizCard questionData={currentContent.data.data.questions} /> // Pass the full array of questions
                         ) : (
-                            <Flashcard questions={currentContent} topic={currentTopic} />
+                            <Flashcard questions={currentContent.data.data.questions} topic={currentTopic} />
                         )}
                     </div>
                 )}

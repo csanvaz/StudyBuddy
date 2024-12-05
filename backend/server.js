@@ -46,69 +46,6 @@ app.get('/test-database', async (req, res) => {
     }
 });
 
-// Function to generate quiz questions
-// async function generateQuestions(content) {
-//     console.log("Entered generateQuestions");
-//     console.log("Topic picked is " + content);
-
-//     // Preparing to create quizzes based on topic
-//     const userInquiry = flashCardTask.replace('{TOPIC}', content);
-//     console.log("Task prompt: ", userInquiry);
-
-//     try {
-//         // Make the API call to OpenAI to generate the quiz questions
-//         const chatCompletion = await client.chat.completions.create({
-//             messages: [
-//                 {
-//                     role: "system",
-//                     content: flashCardPrompt,
-//                 },
-//                 {
-//                     role: "user",
-//                     content: userInquiry,
-//                 }
-//             ],
-//             model: "gpt-3.5-turbo",
-//         });
-
-//         // Log the full chatCompletion response for debugging
-//         // console.log("Finished API call");
-//         // console.log("Full chatCompletion response:", JSON.stringify(chatCompletion, null, 2));
-
-//         // Extract the quiz questions from the chat response
-//         const chatResponse = chatCompletion.choices[0].message.content;
-
-//         // Log the content of the response
-//         console.log("Chat response content:", chatResponse);
-
-//         // If chatResponse is in text format, you might want to parse it to JSON if it contains JSON-like data
-//         let parsedResponse = null;
-//         try {
-//             parsedResponse = JSON.parse(chatResponse);  // Try to parse the response if it's a JSON string
-//             console.log("Parsed response:", parsedResponse);
-//         } catch (err) {
-//             console.log("Response is not valid JSON, returning as plain text.");
-//             parsedResponse = chatResponse; // If it's not valid JSON, return it as plain text
-//         }
-
-//         // Return the response as a structured JSON object
-//         return {
-//             success: true,
-//             message: "Questions generated successfully",
-//             data: parsedResponse || chatResponse,
-//             chatCompletion: chatCompletion,  // Returning the full chatCompletion for further inspection
-//         };
-
-//     } catch (error) {
-//         console.error("Error generating quiz questions:", error);
-//         return {
-//             success: false,
-//             error: error.message,
-//             chatCompletion: null,  // No response if there was an error
-//         };
-//     }
-// }
-
 // Function to generate content based on type (quiz or flashcard)
 async function generateQuestions(content, isQuiz) {
     console.log("Entered generateQuestions");
