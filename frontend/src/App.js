@@ -6,9 +6,7 @@ import Register from './Register';
 import multiavatar from '@multiavatar/multiavatar';
 import AppContent from './AppContent.js';
 import axios from 'axios';
-
-const backendURL = "http://localhost:8080";
-// const backendURL = "https://CS484FinalProjectEnvironment-env.eba-qkbmea2x.us-east-1.elasticbeanstalk.com"
+import backendURL from './config';
 
 const App = () => {
   const [userName, setUserName] = useState("");
