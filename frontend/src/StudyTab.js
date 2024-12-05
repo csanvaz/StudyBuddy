@@ -5,8 +5,8 @@ import './styles/StudyTab.css';
 import Flashcard from './components/flashCard';
 import QuizCard from './components/quizCard'
 
-const backendURL = 'http://localhost:8080';
-// const backendURL = "https://CS484FinalProjectEnvironment-env.eba-qkbmea2x.us-east-1.elasticbeanstalk.com"
+// const backendURL = 'http://localhost:8080';
+const backendURL = "https://CS484FinalProjectEnvironment-env.eba-qkbmea2x.us-east-1.elasticbeanstalk.com"
 
 function StudyTab({ userId, token }) {
     const [studyMaterials, setStudyMaterials] = useState([]);
