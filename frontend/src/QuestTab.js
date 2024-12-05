@@ -1,18 +1,20 @@
 // QuestPage.jsx
 import React, { useState, useEffect } from 'react';
 import './styles/QuestTab.css';
+import { GiGoldBar } from 'react-icons/gi'; // Import the gold bar icon
 
 // Fixed import of images
 const images = {
-  '/assets/3dglasses.png': require('./assets/3dglasses.png'),
-  '/assets/goldshield.png': require('./assets/goldshield.png'),
-  '/assets/mystery-box-icon.png': require('./assets/mystery-box-icon.png'),
   '/assets/2dglasses.png': require('./assets/2dglasses.png'),
+  '/assets/goldshield.png': require('./assets/goldshield.png'),
   '/assets/diamond_shield.png': require('./assets/diamond_shield.png'),
   '/assets/sliceofpie.png': require('./assets/sliceofpie.png'),
+  '/assets/3dglasses.png': require('./assets/3dglasses.png'),
   '/assets/bookmark.png': require('./assets/bookmark.png'),
   '/assets/timemachine.png': require('./assets/timemachine.png'),
   '/assets/bookmark2.png': require('./assets/bookmark2.png'),
+  '/assets/mystery-box-icon.png': require('./assets/mystery-box-icon.png'),
+  '/assets/default.png': require('./assets/default.png'), // Fallback image
   // Add other images here...
 };
 
@@ -64,10 +66,11 @@ function QuestPage() {
 
       const result = await response.json();
       console.log(`Purchase successful:`, result);
+      alert(`You have successfully purchased ${result.item.title}!`);
       // Optionally, update the UI or state based on the purchase
     } catch (error) {
       console.error('Error purchasing item:', error);
-      // Optionally, display an error message to the user
+      alert('Failed to purchase the item. Please try again later.');
     }
   };
 
@@ -141,13 +144,12 @@ function QuestPage() {
         </div>
       </div>
 
-      {/* Equipment and Avatar Section */}
-      <div className="equipment-avatar-box">
+      {/* Equipment Section */}
+      <div className="equipment-box">
         <h2 className="box-title">Available Equipment</h2>
 
-        {/* Avatar Placeholder */}
-        <div className="avatar-box">
-          <p>Avatar will be added here</p>
+        <div className="av-box">
+          <p>Complete weekly quests to receive gold!</p>
         </div>
 
         {/* Dynamic Shop Grid */}
@@ -164,12 +166,13 @@ function QuestPage() {
                   />
                 </div>
                 <p>{item.title}</p>
-                <p>Cost: {item.cost} gold</p>
                 <button
                   className="shop-button"
                   onClick={() => handlePurchase(item.id, item.special_ability)}
+                  aria-label={`Buy ${item.title} for ${item.cost} gold`}
                 >
-                  {item.action}
+                  <GiGoldBar style={{ color: 'gold', fontSize: '24px', marginRight: '8px' }} />
+                  {item.cost}
                 </button>
               </div>
             ))
