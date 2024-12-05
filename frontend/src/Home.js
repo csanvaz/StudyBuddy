@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import * as GiIcons from 'react-icons/gi';
 import multiavatar from '@multiavatar/multiavatar';
 
-const backendURL = "http://localhost:8080";
-// const backendURL = "https://CS484FinalProjectEnvironment-env.eba-qkbmea2x.us-east-1.elasticbeanstalk.com"
+// const backendURL = "http://localhost:8080";
+const backendURL = "https://CS484FinalProjectEnvironment-env.eba-qkbmea2x.us-east-1.elasticbeanstalk.com"
 
 const Home = ({ userName, avatarName, handleAvatarChange }) => {
   const [inputValue, setInputValue] = useState(avatarName);

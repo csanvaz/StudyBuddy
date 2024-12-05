@@ -3,8 +3,8 @@ import React, { useState, useEffect } from 'react';
 import './styles/QuestTab.css';
 import { GiGoldBar } from 'react-icons/gi'; // Import the gold bar icon
 
-const backendURL = "http://localhost:8080";
-// const backendURL = "https://CS484FinalProjectEnvironment-env.eba-qkbmea2x.us-east-1.elasticbeanstalk.com"
+// const backendURL = "http://localhost:8080";
+const backendURL = "https://CS484FinalProjectEnvironment-env.eba-qkbmea2x.us-east-1.elasticbeanstalk.com"
 
 // Fixed import of images
 const images = {
