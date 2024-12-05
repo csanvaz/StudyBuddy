@@ -2,7 +2,7 @@ const express = require('express');
 const { OpenAI } = require('openai');
 const multer = require('multer');
 const fs = require('fs');
-const flashCardPrompt = require('./prompts.js');
+const {flashCardPrompt, flashCardTask} = require('./prompts.js');
 const { testDatabaseConnection, loginUser, registerUser, validatePassword, updateAvatar, createContent, getUserContent, setLoginNow } = require('./database');
 const { v4: uuidv4 } = require('uuid');
 const { sendEmail, sendWelcomeEmail } = require('./emailService');
@@ -51,9 +51,9 @@ async function generateQuestions(content) {
     console.log("Entered generateQuestions");
     console.log("Topic picked is " + content);
 
-    // Use the flashCardPrompt with the content as the topic
-    const systemPrompt = flashCardPrompt.replace('{TOPIC}', content);
-    console.log("System prompt: ", systemPrompt);
+    // Preparing to create quizzes based on topic
+    const userInquiry = flashCardTask.replace('{TOPIC}', content);
+    console.log("Task prompt: ", userInquiry);
 
     try {
         // Make the API call to OpenAI to generate the quiz questions
@@ -61,11 +61,11 @@ async function generateQuestions(content) {
             messages: [
                 {
                     role: "system",
-                    content: systemPrompt,
+                    content: flashCardPrompt,
                 },
                 {
                     role: "user",
-                    content: `Generate 10 quiz questions about ${content}`,
+                    content: userInquiry,
                 }
             ],
             model: "gpt-3.5-turbo",

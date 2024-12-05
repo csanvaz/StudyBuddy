@@ -1,5 +1,7 @@
 const flashCardPrompt = `identity: You are an expert question generator, capable of creating diverse and engaging questions on any topic. Your return output is a json object.`;
 
+const flashCardTask = 'task: Your task is to create 10 questions about {TOPIC} each with an answer. The output will be a json object that stores the question and the answer'
+
 const mulitpleChoiceQuestionPrompt = `<identity>You are an expert question generator, capable of creating diverse and engaging questions on any topic.</identity>
 
 <task>Generate 10 unique and thought-provoking questions about {TOPIC}. The questions should cover various aspects of the topic and range 
@@ -16,4 +18,9 @@ Correct Answer: Insert correct answer here
 
 const askMyDocPrompt = '';
 
-module.exports = flashCardPrompt;
+module.exports = { 
+    flashCardPrompt, 
+    flashCardTask, 
+    mulitpleChoiceQuestionPrompt, 
+    askMyDocPrompt 
+};

@@ -1,56 +1,30 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import '../styles/Flashcard.css';
 
-const Flashcard = ({ questions, topic }) => {
+const Flashcard = ({ questions = [], topic = 'Unknown Topic' }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
-  const [parsedQuestions, setParsedQuestions] = useState([]);
 
-  useEffect(() => {
-    const parseQuestions = (questionsData) => {
-      if (typeof questionsData === 'string') {
-        try {
-          questionsData = JSON.parse(questionsData);
-        } catch (error) {
-          console.error("Failed to parse questions string:", error);
-          return [];
-        }
-      }
-
-      if (questionsData && questionsData.quiz_questions) {
-        return questionsData.quiz_questions.map(q => ({
-          question: q.question,
-          answer: q.answer
-        }));
-      }
-
-      return [];
-    };
-
-    setParsedQuestions(parseQuestions(questions));
-  }, [questions]);
-
-  const flipCard = () => {
-    setIsFlipped(!isFlipped);
-  };
+  const flipCard = () => setIsFlipped(!isFlipped);
 
   const nextQuestion = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % parsedQuestions.length);
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % questions.length);
     setIsFlipped(false);
   };
 
   const prevQuestion = () => {
-    setCurrentIndex((prevIndex) => 
-      prevIndex === 0 ? parsedQuestions.length - 1 : prevIndex - 1
+    setCurrentIndex((prevIndex) =>
+      prevIndex === 0 ? questions.length - 1 : prevIndex - 1
     );
     setIsFlipped(false);
   };
 
-  if (parsedQuestions.length === 0) {
-    return <div>No valid questions available. Please provide valid input.</div>;
+  // Safeguard against empty or undefined questions array
+  if (!Array.isArray(questions) || questions.length === 0) {
+    return <div>No questions available.</div>;
   }
 
-  const currentQuestion = parsedQuestions[currentIndex];
+  const currentQuestion = questions[currentIndex];
 
   return (
     <div className="flashcard-container">
@@ -58,11 +32,11 @@ const Flashcard = ({ questions, topic }) => {
       <div className={`flashcard ${isFlipped ? 'flipped' : ''}`}>
         <div className="flashcard-inner">
           <div className="flashcard-front">
-            <p>{currentQuestion.question}</p>
+            <p>{currentQuestion?.question || 'Question not available'}</p>
             <button onClick={flipCard}>Show Answer</button>
           </div>
           <div className="flashcard-back">
-            <p>{currentQuestion.answer}</p>
+            <p>{currentQuestion?.answer || 'Answer not available'}</p>
             <button onClick={flipCard}>Show Question</button>
           </div>
         </div>

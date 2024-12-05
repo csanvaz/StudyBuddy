@@ -19,6 +19,10 @@ function StudyTab({ userId, token }) {
                 userId,
                 token
             });
+      
+            // Log the content more clearly
+            console.log("Fetching Material:", JSON.stringify(response.data.content[0].data.data.questions, null, 2));
+
             setStudyMaterials(response.data.content);
         } catch (error) {
             console.error('Error fetching user content:', error.response ? error.response.data : error.message);
@@ -48,7 +52,7 @@ function StudyTab({ userId, token }) {
     };
 
     const handleSelectContent = (content) => {
-        setCurrentContent(content);
+        setCurrentContent(content.data.data.questions);
         setCurrentTopic(content.title);
     };
 
@@ -99,7 +103,7 @@ function StudyTab({ userId, token }) {
                         {currentContent.is_quiz ? (
                             <div>Quiz content goes here</div>
                         ) : (
-                            <Flashcard questions={currentContent.data} topic={currentTopic} />
+                            <Flashcard questions={currentContent} topic={currentTopic} />
                         )}
                     </div>
                 )}
