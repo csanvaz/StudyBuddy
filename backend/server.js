@@ -11,6 +11,7 @@ const cron = require('node-cron');
 require('dotenv').config();
 const { pool } = require('./database');
 const { getShopItems, getGold, updateGold } = require('./database');
+const { getShopItems } = require('./database');
 
 //https://CS484FinalProjectEnvironment-env.eba-qkbmea2x.us-east-1.elasticbeanstalk.com/api/topic-questions
 //origin:
