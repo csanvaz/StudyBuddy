@@ -1,13 +1,61 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import * as GiIcons from 'react-icons/gi';
 import multiavatar from '@multiavatar/multiavatar';
 
+//CHANGE THE FETCH PATHS FOR LOCAL TESTING // PROD
+
 const Home = ({ userName, avatarName, handleAvatarChange }) => {
   const [inputValue, setInputValue] = useState(avatarName);
+  const [gold, setGold] = useState(0);
+
+  useEffect(() => {
+    getGold();
+  }, [userName]);
 
   const getXP = () => 150;
   const getStreak = () => 5;
-  const getGold = () => 100;
+  //const getGold = () => 100;
+
+  // CHANGE FETCH URL TO USE THE CORRECT ENDPOINT
+  const getGold = async () => {
+    try {
+        const response = await fetch(`http://localhost:8080/user/${userName}/gold`);
+        const data = await response.json();
+        if (data.success) {
+            setGold(data.gold);
+        } else {
+            console.error('Failed to fetch gold:', data.message);
+        }
+    } catch (error) {
+        console.error('Error fetching gold:', error);
+    }
+  };
+
+  // CHANGE FETCH URL TO USE THE CORRECT ENDPOINT
+  const updateGold = async (goldEarned) => {
+    try {
+        const response = await fetch('http://localhost:8080/update-gold', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ username: userName, goldEarned }),
+        });
+        const data = await response.json();
+        if (data.success) {
+            setGold(data.gold);
+        } else {
+            console.error('Failed to update gold:', data.message);
+        }
+    } catch (error) {
+        console.error('Error updating gold:', error);
+    }
+  };
+
+  const handleAddGold = () => {
+    const goldEarned = 10;
+    updateGold(goldEarned);
+  };
 
   const handleInputChange = (e) => {
     setInputValue(e.target.value);
@@ -40,9 +88,12 @@ const Home = ({ userName, avatarName, handleAvatarChange }) => {
             <div className="stat-square streak-square">Streak: {getStreak()}</div>
             <div className="stat-square gold-square">
               <GiIcons.GiGoldBar style={{ color: '#ef7971', fontSize: '24px', marginRight: '8px' }} />
-              {getGold()}
+              Gold: {gold}
             </div>
           </div>
+            <button onClick={handleAddGold} className="add-gold-button">
+                Add 10 Gold
+            </button>
         </div>
       </div>
     </div>

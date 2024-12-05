@@ -2,15 +2,15 @@ const { Pool } = require('pg');
 const bcrypt = require('bcrypt');
 require('dotenv').config();
 
+//change to ssl: false for local development
 const pool = new Pool({
     user: process.env.DB_USER,
     host: process.env.DB_HOST,
     database: process.env.DB_NAME,
     password: process.env.DB_PASSWORD,
     port: process.env.DB_PORT,
-    ssl: {
-      rejectUnauthorized: false
-    }
+    //ssl: false 
+    ssl: { rejectUnauthorized: false }
   });
 
 pool.on('connect', () => {

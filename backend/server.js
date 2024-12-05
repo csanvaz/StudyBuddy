@@ -9,6 +9,7 @@ const flashCardPrompt1 = JSON.stringify(flashCardPrompt)
 const { sendEmail, sendWelcomeEmail } = require('./emailService');
 const cron = require('node-cron');
 require('dotenv').config();
+const { pool } = require('./database');
 
 //https://CS484FinalProjectEnvironment-env.eba-qkbmea2x.us-east-1.elasticbeanstalk.com/api/topic-questions
 //origin:
@@ -171,6 +172,41 @@ app.post('/user-content', async (req, res) => {
     } catch (error) {
         console.error('Error fetching user content:', error);
         res.status(500).json({ error: 'An error occurred while fetching user content' });
+    }
+});
+
+app.get('/user/:userName/gold', async (req, res) => {
+    const { userName } = req.params;
+    try {
+        const result = await pool.query('SELECT gold FROM users WHERE username = $1', [userName]);
+        if (result.rowCount > 0) {
+            res.json({ success: true, gold: result.rows[0].gold });
+        } else {
+            res.status(404).json({ success: false, message: 'User not found' });
+        }
+    } catch (error) {
+        console.error('Error fetching gold:', error);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+});
+
+app.post('/update-gold', async (req, res) => {
+    const { username, goldEarned } = req.body;
+    console.log("Request body:", req.body);
+    try {
+        const result = await pool.query(
+            'UPDATE users SET gold = gold + $1 WHERE username = $2 RETURNING gold',
+            [goldEarned, username]
+        );
+        console.log("Result:", result);
+        if (result.rowCount > 0) {
+            res.json({ success: true, gold: result.rows[0].gold });
+        } else {
+            res.status(404).json({ success: false, message: 'User not found' });
+        }
+    } catch (error) {
+        console.error('Error updating gold:', error);
+        res.status(500).json({ success: false, message: 'Server error' });
     }
 });
 
