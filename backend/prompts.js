@@ -4,8 +4,15 @@ const flashCardTask = 'task: Your task is to create 10 questions about {TOPIC}, 
 
 const quizTask = `task: Generate 10 unique and thought-provoking multiple-choice questions about {TOPIC}. 
 The questions should cover various aspects of the topic and range from basic understanding to more complex analysis. 
-Each question should have 4 possible answers, with only one correct answer. The output should have a question, the different answer choices, and the correct answer. 
-Format the result as a JSON object.`;
+Each question should have 4 possible answers, with only one correct answer. The answer has to be only one of the answer options.
+The output should be in the following format:
+
+[
+  {
+    "question": store the question here,
+    "choices": [store the answer choices here],
+    "correct_answer": insert the correct answer here
+  }]`;
 
 const askMyDocPrompt = '';
 
