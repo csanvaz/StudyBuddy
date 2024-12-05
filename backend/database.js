@@ -201,6 +201,22 @@ async function updateGold(userName, goldEarned) {
     }
 }
 
+async function deleteContent(contentId) {
+    try {
+        // First, delete associated flashcards
+        await pool.query('DELETE FROM flashcards WHERE content_id = $1', [contentId]);
+
+        // Then, delete the content itself
+        await pool.query('DELETE FROM content WHERE content_id = $1', [contentId]);
+
+        return { success: true, message: 'Content and associated flashcards deleted successfully' };
+    } catch (error) {
+        console.error('Error deleting content:', error);
+        return { success: false, error: error.message };
+    }
+}
+
+
 module.exports = {
     pool,
     registerUser,

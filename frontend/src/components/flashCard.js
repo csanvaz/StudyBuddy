@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import '../styles/Flashcard.css';
 
-const Flashcard = ({ questions = [], topic = 'Unknown Topic' }) => {
+const Flashcard = ({ questions = [], topic = 'Unknown Topic', isVisible = true }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
 
@@ -19,9 +19,9 @@ const Flashcard = ({ questions = [], topic = 'Unknown Topic' }) => {
     setIsFlipped(false);
   };
 
-  // Safeguard against empty or undefined questions array
-  if (!Array.isArray(questions) || questions.length === 0) {
-    return <div>No questions available.</div>;
+  // If the flashcards should not be visible, return null to render nothing
+  if (!isVisible || !Array.isArray(questions) || questions.length === 0) {
+    return null;
   }
 
   const currentQuestion = questions[currentIndex];

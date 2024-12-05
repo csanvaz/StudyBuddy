@@ -19,11 +19,8 @@ function StudyTab({ userId, token }) {
                 userId,
                 token
             });
-      
-            // Log the content more clearly
-            console.log("Fetching Material:", JSON.stringify(response.data.content[0].data.data.questions, null, 2));
-
             setStudyMaterials(response.data.content);
+            console.log(response.data.content)
         } catch (error) {
             console.error('Error fetching user content:', error.response ? error.response.data : error.message);
         }
@@ -56,6 +53,23 @@ function StudyTab({ userId, token }) {
         setCurrentTopic(content.title);
     };
 
+    const handleDeleteContent = (contentId) => {
+        // Mark the material as deleted by setting the 'deleted' flag
+        setStudyMaterials((prevMaterials) =>
+            prevMaterials.map((material) =>
+                material.content_id === contentId
+                    ? { ...material, deleted: true }
+                    : material
+            )
+        );
+
+        // If the deleted material was the currently displayed one, clear the content
+        if (currentContent && currentContent.content_id === contentId) {
+            setCurrentContent(null);  // Remove the current content
+            setCurrentTopic('');      // Remove the current topic
+        }
+    };
+
     const groupedMaterials = studyMaterials.reduce((acc, material) => {
         if (!acc[material.text_id]) {
             acc[material.text_id] = [];
@@ -83,7 +97,7 @@ function StudyTab({ userId, token }) {
                 <div className="study-materials">
                     {Object.keys(groupedMaterials).map((textId) => (
                         <div key={textId} className="material-group">
-                            <h3>{groupedMaterials[textId][0].title}</h3> {/* Title with the given title */}
+                            <h3>{groupedMaterials[textId][0].title}</h3>
                             {groupedMaterials[textId].map((material) => (
                                 <div key={material.content_id} className="material-item">
                                     <button
@@ -92,14 +106,19 @@ function StudyTab({ userId, token }) {
                                     >
                                         {material.title} ({material.is_quiz ? 'Quiz' : 'Flashcards'})
                                     </button>
+                                    <button
+                                        className="delete-button"
+                                        onClick={() => handleDeleteContent(material.content_id)}
+                                    >
+                                        Delete
+                                    </button>
                                 </div>
                             ))}
                         </div>
                     ))}
                 </div>
-                {currentContent && (
+                {currentContent && !currentContent.deleted && (
                     <div className="flashcard-section">
-                        <h3>{currentContent.title}</h3>
                         {currentContent.is_quiz ? (
                             <div>Quiz content goes here</div>
                         ) : (
