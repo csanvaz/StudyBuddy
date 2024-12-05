@@ -51,7 +51,7 @@ const Register = ({ onRegister }) => {
       hasError = true;
       setPasswordError('Password required');
     }
-    else if (!validatePassword(email)){
+    else if (!validatePassword(password)){
       hasError = true;
       setPasswordError('Password must be at least 10 characters long, contain an uppercase letter and a special character.');
     }
