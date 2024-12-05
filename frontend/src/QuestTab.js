@@ -1,24 +1,42 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './styles/QuestTab.css';
+
+// Dynamic import of images
+const images = {
+    '/assets/3dglasses.png': require('./assets/3dglasses.png'),
+    '/assets/goldshield.png': require('./assets/goldshield.png'),
+    '/assets/mystery-box-icon.png': require('./assets/mystery-box-icon.png'),
+};
 
 function QuestPage() {
     const [completedQuests, setCompletedQuests] = useState(0); // Tracks completed activities
-    const [activeShopIndex, setActiveShopIndex] = useState(0);
+    const [shopItems, setShopItems] = useState([]); // Dynamic shop items
 
-    const shopItems = [
-        { id: 1, image1: '/path/to/image1.png', image2: '/path/to/image2.png', title: 'x3 XP', action: 'Wear' },
-        { id: 2, image1: '/path/to/image1.png', image2: '/path/to/image2.png', title: 'Streak Protection', cost: 500 },
-        { id: 3, image1: '/path/to/image1.png', image2: '/path/to/image2.png', title: 'Item 3', action: 'Buy' },
-    ];
+    // Fetch shop items from the backend
+    useEffect(() => {
+        const fetchShopItems = async () => {
+            try {
+                const response = await fetch('http://localhost:8080/api/shop-items');
+                const data = await response.json();
+                console.log('Fetched shop items:', data); // Debugging log
+                setShopItems(data); // Update state with fetched shop items
+            } catch (error) {
+                console.error('Error fetching shop items:', error);
+            }
+        };
 
-    const handleNextItem = () => {
-        setActiveShopIndex((prevIndex) => (prevIndex + 1) % shopItems.length);
-    };
+        fetchShopItems();
+    }, []); // Empty dependency array ensures this runs once on mount
 
     const handleCompleteQuest = (index) => {
         if (index === completedQuests) {
             setCompletedQuests(completedQuests + 1); // Mark the current quest as completed
         }
+    };
+
+    const handlePurchase = (itemId, specialAbility) => {
+        console.log(`Purchased item ${itemId} with ability: ${specialAbility}`);
+        // Implement purchase logic here 
     };
 
     return (
@@ -82,12 +100,13 @@ function QuestPage() {
                     </svg>
 
                     {/* Mystery Box */}
-                    <div className="mystery-box">
-                        <img
-                            src={require('./assets/mystery-box-icon.png')}
-                            alt="Mystery Box"
-                        />
-                    </div>
+<div className="mystery-box" title="It's a mystery box. Complete your weekly quest to receive a prize!">
+    <img
+        src={images['/assets/mystery-box-icon.png']}
+        alt="Mystery Box"
+    />
+</div>
+
                 </div>
             </div>
 
@@ -96,31 +115,32 @@ function QuestPage() {
                 <h2 className="box-title">Available Equipment</h2>
                 
                 {/* Avatar Placeholder */}
-                <div className="avatar-box">Avatar will be added here</div>
+                <div className="avatar-box">
+                    <p>Avatar will be added here</p>
+                </div>
 
+                {/* Dynamic Shop Grid */}
                 <div className="shop-grid">
-    <div className="stat-square shop-square">
-        <img
-            src={require('./assets/3dglasses.png')}
-            alt="Image 1"
-        />
-        <p>Item 1</p>
-        <button className="shop-button">Wear</button>
-    </div>
-    <div className="stat-square shop-square">
-        <img
-            src={require('./assets/goldshield.png')}
-            alt="Image 2"
-        />
-        <p>Item 2</p>
-        <button className="shop-button">Buy (500)</button>
-    </div>
-    <button className="next-button" onClick={handleNextItem}>
-        ▶
-    </button>
-</div>
-
-
+                    {shopItems.length > 0 ? (
+                        shopItems.map((item) => (
+                            <div className="stat-square shop-square" key={item.id}>
+                                <div className="image-container" title={item.title2}>
+                                    <img src={images[item.image]} alt={item.title} />
+                                </div>
+                                <p>{item.title}</p>
+                                <p>Cost: {item.cost} gold</p>
+                                <button
+                                    className="shop-button"
+                                    onClick={() => handlePurchase(item.id, item.special_ability)}
+                                >
+                                    {item.action}
+                                </button>
+                            </div>
+                        ))
+                    ) : (
+                        <p>No shop items available</p>
+                    )}
+                </div>
             </div>
         </div>
     );
