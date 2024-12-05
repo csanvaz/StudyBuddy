@@ -152,8 +152,7 @@
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); /* Subtle shadow */
 }
 
-/* Equipment Avatar Box */
-.equipment-avatar-box {
+.equipment-box {
   width: 45%; /* Adjust width of the equipment box */
   background-color: rgba(209, 211, 201, 0.7); /* Semi-transparent background */
   border: 2px solid #428ce2;
@@ -167,8 +166,7 @@
 }
 
 
-/* Avatar Placeholder */
-.avatar-box {
+.av-box {
   width: 100%;
   background-color: #f7f7f7;
   border: 2px solid #428ce2;
@@ -268,7 +266,7 @@
     margin-top: 20px;
   }
 
-  .equipment-avatar-box {
+  .equipment-box {
     width: 90%; /* Increase width on smaller screens */
     margin-top: 20px;
   }
