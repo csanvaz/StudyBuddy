@@ -6,6 +6,7 @@ async function dropTables() {
     try {
         await pool.query('DROP TABLE IF EXISTS content');
         await pool.query('DROP TABLE IF EXISTS users');
+        await pool.query('DROP TABLE IF EXISTS shop_items');
         console.log('Tables dropped successfully');
     } catch (error) {
         console.error('Error dropping tables:', error);
@@ -37,6 +38,19 @@ async function createTables() {
             );
         `);
         console.log('Content table created successfully');
+
+         // Shop Items Table
+         await pool.query(`
+            CREATE TABLE IF NOT EXISTS shop_items (
+                id SERIAL PRIMARY KEY,
+                title VARCHAR(255) NOT NULL, -- Display title
+                title2 VARCHAR(255) NOT NULL, -- Hover message
+                image VARCHAR(255) NOT NULL, -- Image path
+                action VARCHAR(50),
+                cost INT NOT NULL, -- Price of the item
+                special_ability VARCHAR(255) -- Special perks/abilities
+            );
+        `);
     } catch (error) {
         console.error('Error creating tables:', error);
     }
@@ -106,11 +120,56 @@ async function seedContent() {
     }
 }
 
+async function seedShopItems() {
+    try {
+        const shopItems = [
+            {
+                title: "3D Glasses",
+                title2: "Triple XP for 1 hour",
+                image: "/assets/3dglasses.png",
+                action: "Buy",
+                cost: 100,
+                special_ability: "Triple XP for 1 hour"
+            },
+            {
+                title: "Golden Shield",
+                title2: "Protect your streak for 3 days",
+                image: "/assets/goldshield.png",
+                action: "Buy",
+                cost: 500,
+                special_ability: "Protect your streak for 3 days"
+            },
+            {
+                title: "Golden Shield",
+                title2: "Reduce damage by 10%",
+                image: "/assets/goldshield.png",
+                action: "Buy",
+                cost: 300,
+                special_ability: "add more"
+            }
+        ];
+
+        for (const item of shopItems) {
+            await pool.query(
+                'INSERT INTO shop_items (title, title2, image, action, cost, special_ability) VALUES ($1, $2, $3, $4, $5, $6)',
+                [item.title, item.title2, item.image, item.action, item.cost, item.special_ability]
+            );
+        }
+
+        console.log('Shop items seeded successfully');
+    } catch (error) {
+        console.error('Error seeding shop items:', error);
+    }
+}
+
+
+
 async function seedDatabase() {
     await dropTables();
     await createTables();
     await seedUsers();
     await seedContent();
+    await seedShopItems(); // shop items
     pool.end();
 }
 
