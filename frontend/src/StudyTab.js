@@ -3,6 +3,7 @@ import axios from 'axios';
 import ContentPopup from './ContentPopup';
 import './styles/StudyTab.css';
 import Flashcard from './components/flashCard';
+import QuizCard from './components/quizCard'
 
 const backendURL = 'http://localhost:8080';
 // const backendURL = "https://CS484FinalProjectEnvironment-env.eba-qkbmea2x.us-east-1.elasticbeanstalk.com"
@@ -118,7 +119,7 @@ function StudyTab({ userId, token }) {
                 {currentContent && !deletedMaterials.has(currentContent.content_id) && (
                     <div className="flashcard-section">
                         {currentContent.is_quiz ? (
-                            <div>Quiz content goes here</div>
+                            <QuizCard questionData={currentContent} />  // Show quiz component
                         ) : (
                             <Flashcard questions={currentContent} topic={currentTopic} />
                         )}
