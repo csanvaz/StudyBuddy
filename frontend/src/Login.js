@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './styles/Login.css';
 
-const Login = ({ onLogin }) => {
+const Login = ({ onLogin, loginError }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
@@ -16,6 +16,7 @@ const Login = ({ onLogin }) => {
   return (
     <div className="login-page">
       <div className="login-container">
+        {loginError && <div className="error-message">{loginError}</div>}
         <h2>Login</h2>
         <input
           type="text"

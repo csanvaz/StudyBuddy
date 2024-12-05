@@ -16,7 +16,7 @@ const App = () => {
   const [avatarName, setAvatarName] = useState("default");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userId, setUserId] = useState("");
-  
+  const [loginError, setLoginError] = useState("");
 
   const navigate = useNavigate();
 
@@ -31,13 +31,13 @@ const App = () => {
         setAvatarName(data.avatar);
         setIsLoggedIn(true);
         setUserId(data.userId);
+        setLoginError('');
         navigate('/');
       } else {
-        alert(`Login failed: ${response.data.error}`);
+        setLoginError('Invalid credentials, please try again');
       }
     } catch (error) {
-      console.error('Error during login:', error);
-      alert('An error occurred during login. Please try again.');
+      setLoginError('Invalid credentials, please try again');
     }
   };
 
@@ -74,7 +74,7 @@ const App = () => {
 
   return (
       <Routes>
-        <Route path="/login" element={<Login onLogin={handleLogin} />} />
+        <Route path="/login" element={<Login onLogin={handleLogin} loginError={loginError} />} />
         <Route path="/register" element={<Register onRegister={handleRegister} />} />
         <Route
           path="/"
