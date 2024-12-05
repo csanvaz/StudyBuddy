@@ -124,28 +124,68 @@ async function seedShopItems() {
     try {
         const shopItems = [
             {
+                title: "2D Glasses",
+                title2: "Double XP for 1 hour",
+                image: "/assets/2dglasses.png",
+                action: "Buy",
+                cost: 100,
+                special_ability: "Double XP for 1 hour"
+            },
+            {
+                title: "Golden Shield",
+                title2: "Protect your streak for 1 day",
+                image: "/assets/goldshield.png",
+                action: "Buy",
+                cost: 100,
+                special_ability: "Protect your streak for 1 day"
+            },
+            {
+                title: "Diamond Shield",
+                title2: "Protect your streak for 3 days",
+                image: "/assets/diamond_shield.png",
+                action: "Buy",
+                cost: 200,
+                special_ability: "Protect your streak for 3 day"
+            },
+            {
+                title: "Slice of Pie",
+                title2: "Complete your daily quiz in one bite",
+                image: "/assets/sliceofpie.png",
+                action: "Buy",
+                cost: 150,
+                special_ability: "Protect your streak for 3 day"
+            },
+            {
                 title: "3D Glasses",
                 title2: "Triple XP for 1 hour",
                 image: "/assets/3dglasses.png",
                 action: "Buy",
-                cost: 100,
+                cost: 200,
                 special_ability: "Triple XP for 1 hour"
             },
             {
-                title: "Golden Shield",
-                title2: "Protect your streak for 3 days",
-                image: "/assets/goldshield.png",
+                title: "Bookmark",
+                title2: "Complete your tomorrow's quiz today",
+                image: "/assets/bookmark.png",
                 action: "Buy",
-                cost: 500,
-                special_ability: "Protect your streak for 3 days"
+                cost: 150,
+                special_ability: "Complete your tomorrow's quiz today"
             },
             {
-                title: "Golden Shield",
-                title2: "Reduce damage by 10%",
-                image: "/assets/goldshield.png",
+                title: "Time Machine",
+                title2: "Missed a streak yesterday? Restore it today!",
+                image: "/assets/timemachine.png",
                 action: "Buy",
-                cost: 300,
-                special_ability: "add more"
+                cost: 150,
+                special_ability: "Restore your missed streak"
+            },
+            {
+                title: "Crazy Bookmark",
+                title2: "Complete your next two days quizes today",
+                image: "/assets/bookmark2.png",
+                action: "Buy",
+                cost: 150,
+                special_ability: "Complete your next two days quizes today"
             }
         ];
 
