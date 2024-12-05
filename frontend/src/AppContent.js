@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import Home from './Home';
 import StudyTab from './StudyTab';
@@ -14,8 +14,13 @@ const MenuButton = ({ text, icon: Icon, isActive, onClick }) => {
   );
 };
 
-const AppContent = ({ userName, avatarName, handleAvatarChange, userId, token }) => {
-  const [currentTab, setCurrentTab] = useState('home');
+const AppContent = ({ userName, avatarName, handleAvatarChange, userId, token, onLogout}) => {
+  const [currentTab, setCurrentTab] = useState(localStorage.getItem("currentTab") || 'home');
+
+  //save current tab
+  useEffect(() => {
+    localStorage.setItem('currentTab', currentTab);
+  }, [currentTab]);
 
   const renderContent = () => {
     switch (currentTab) {
@@ -36,6 +41,7 @@ const AppContent = ({ userName, avatarName, handleAvatarChange, userId, token })
     }
   };
 
+  
   return (
     <div className="app">
       <div className="mountain-background">
@@ -62,6 +68,12 @@ const AppContent = ({ userName, avatarName, handleAvatarChange, userId, token })
           icon={GiIcons.GiHiking}
           isActive={currentTab === 'quest'}
           onClick={() => setCurrentTab('quest')}
+        />
+        <MenuButton
+          text="LOGOUT"
+          icon={GiIcons.GiExitDoor}
+          isActive={false} 
+          onClick={onLogout}
         />
       </div>
 
