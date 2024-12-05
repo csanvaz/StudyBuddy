@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import * as GiIcons from 'react-icons/gi';
 import multiavatar from '@multiavatar/multiavatar';
 
-//CHANGE THE FETCH PATHS FOR LOCAL TESTING // PROD
+const backendURL = "http://localhost:8080";
+// const backendURL = "https://CS484FinalProjectEnvironment-env.eba-qkbmea2x.us-east-1.elasticbeanstalk.com"
 
 const Home = ({ userName, avatarName, handleAvatarChange }) => {
   const [inputValue, setInputValue] = useState(avatarName);
@@ -13,7 +14,7 @@ const Home = ({ userName, avatarName, handleAvatarChange }) => {
   useEffect(() => {
     const fetchGold = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/user/${userName}/gold`);
+        const response = await fetch(`${backendURL}/user/${userName}/gold`);
         const data = await response.json();
         if (data.success) {
           setGold(data.gold);
@@ -36,7 +37,7 @@ const Home = ({ userName, avatarName, handleAvatarChange }) => {
   const handleAddGold = async () => {
     const goldEarned = 500;
     try {
-      const response = await fetch('http://localhost:8080/update-gold', {
+      const response = await fetch(`${backendURL}/update-gold`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
