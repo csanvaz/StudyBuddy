@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import ContentPopup from './ContentPopup';
 import './styles/StudyTab.css';
@@ -15,7 +15,7 @@ function StudyTab({ userId, token }) {
     const [currentContent, setCurrentContent] = useState(null);
     const [deletedMaterials, setDeletedMaterials] = useState(new Set());  // Track deleted materials
 
-    const fetchUserContent = async () => {
+    const fetchUserContent = useCallback(async () => {
         try {
             const response = await axios.post(`${backendURL}/user-content`, {
                 userId,
@@ -25,11 +25,11 @@ function StudyTab({ userId, token }) {
         } catch (error) {
             console.error('Error fetching user content:', error.response ? error.response.data : error.message);
         }
-    };
+    },[userId, token]);
 
     useEffect(() => {
         fetchUserContent();
-    }, [userId, token]);
+    }, [fetchUserContent]);
 
     const handleAddContent = async (material) => {
         try {
