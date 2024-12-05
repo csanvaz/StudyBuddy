@@ -6,6 +6,9 @@ const Register = ({ onRegister }) => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [generalError, setGeneralError] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
   const navigate = useNavigate();
 
   const validateEmail = (email) => {
@@ -13,14 +16,32 @@ const Register = ({ onRegister }) => {
     return re.test(String(email).toLowerCase());
   };
 
+  const validatePassword = (password) => {
+    const hasMinLength = password.length >= 10;
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+    return hasMinLength && hasUpperCase && hasSpecialChar;
+  };
+
   const handleRegister = () => {
+    setGeneralError('');
+    setEmailError('');
+    setPasswordError('');
+
     if (!username || !email || !password) {
-      alert('Please fill in all fields');
+      setGeneralError('Please fill in all fields');
       return;
     }
 
     if (!validateEmail(email)) {
-      alert('Please enter a valid email address');
+      setEmailError('Please enter a valid email address');
+      return;
+    }
+
+    if (!validatePassword(password)) {
+      setPasswordError(
+        'Password must be at least 10 characters, include one uppercase letter, and one special character.'
+      );
       return;
     }
 
@@ -31,6 +52,7 @@ const Register = ({ onRegister }) => {
     <div className="login-page">
       <div className="login-container">
         <h2>Register</h2>
+        {generalError && <div className="error-message">{generalError}</div>}
         <input
           type="text"
           placeholder="Username"
@@ -41,14 +63,22 @@ const Register = ({ onRegister }) => {
           type="email"
           placeholder="Email"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={(e) => {
+            setEmail(e.target.value);
+            if (emailError) setEmailError('');
+          }}
         />
+        {emailError && <div className="error-message">{emailError}</div>}
         <input
           type="password"
           placeholder="Password"
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={(e) => {
+            setPassword(e.target.value);
+            if (passwordError) setPasswordError('');
+          }}
         />
+        {passwordError && <div className="error-message">{passwordError}</div>}
         <button onClick={handleRegister}>Register</button>
         <button onClick={() => navigate('/login')}>Back to Login</button>
       </div>
