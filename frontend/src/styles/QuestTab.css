@@ -183,8 +183,9 @@
 
 /* Shop Grid */
 .shop-grid {
-  display: flex;
-  gap: 20px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 items per row */
+  gap: 20px; /* Spacing between items */
   justify-content: center;
   margin-bottom: 20px;
 }
@@ -211,7 +212,6 @@
   max-width: 80%; /* Ensure it fits inside the square */
   max-height: 80%; /* Limit height to fit within the square */
 }
-
 
 .shop-button {
   background-color: #428ce2;
@@ -243,4 +243,40 @@
 
 .next-button:hover {
   background-color: #326bb5; /* Darker blue on hover */
+}
+
+/* Responsive Adjustments */
+@media (max-width: 1024px) {
+  .shop-grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Adjust for medium screens */
+  }
+}
+
+@media (max-width: 768px) {
+  .quest-page {
+    flex-direction: column;
+    align-items: center;
+    height: auto; /* Remove fixed height for smaller screens */
+  }
+
+  .weekly-quest {
+    width: 90%; /* Increase width on smaller screens */
+    margin-left: 0;
+    margin-top: 20px;
+  }
+
+  .equipment-avatar-box {
+    width: 90%; /* Increase width on smaller screens */
+    margin-top: 20px;
+  }
+
+  .shop-grid {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* Adjust for small screens */
+  }
+}
+
+@media (max-width: 480px) {
+  .shop-grid {
+    grid-template-columns: 1fr; /* Single column on very small screens */
+  }
 }
