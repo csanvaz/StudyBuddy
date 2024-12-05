@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './styles/App.css';
 import { BrowserRouter as Router, Route, Routes, Navigate, useNavigate } from 'react-router-dom';
 import Login from './Login';
@@ -17,8 +17,26 @@ const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userId, setUserId] = useState("");
   const [loginError, setLoginError] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
   const navigate = useNavigate();
+
+  //fetch state from storage
+  useEffect(() => {
+    const savedToken = localStorage.getItem('token');
+    const savedUserName = localStorage.getItem('userName');
+    const savedAvatarName = localStorage.getItem('avatarName');
+    const savedUserId = localStorage.getItem('userId');
+
+    if (savedToken && savedUserName && savedAvatarName && savedUserId) {
+      setToken(savedToken);
+      setUserName(savedUserName);
+      setAvatarName(savedAvatarName);
+      setUserId(savedUserId);
+      setIsLoggedIn(true);
+    }
+    setIsLoading(false);
+  }, []);
 
   const handleLogin = async (username, password) => {
     try {
@@ -31,6 +49,13 @@ const App = () => {
         setAvatarName(data.avatar);
         setIsLoggedIn(true);
         setUserId(data.userId);
+
+        //save state
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('userName', username);
+        localStorage.setItem('avatarName', data.avatar);
+        localStorage.setItem('userId', data.userId);
+
         setLoginError('');
         navigate('/');
       } else {
@@ -74,6 +99,22 @@ const App = () => {
     }
   }
 
+  const handleLogout = () => {
+    //clear all state
+    setIsLoggedIn(false);
+    setUserName('');
+    setToken('');
+    setAvatarName('default');
+    setIsLoggedIn(false);
+    setUserId('');
+    localStorage.clear();
+    navigate('/login');
+  };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
   return (
       <Routes>
         <Route path="/login" element={<Login onLogin={handleLogin} loginError={loginError} />} />
@@ -88,6 +129,7 @@ const App = () => {
               isLoggedIn={isLoggedIn}
               token={token}
               userId={userId}
+              onLogout={handleLogout}
             />
           ) : (
             <Navigate to="/login" />
