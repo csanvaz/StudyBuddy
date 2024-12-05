@@ -7,28 +7,27 @@ const Flashcard = ({ questions, topic }) => {
   const [parsedQuestions, setParsedQuestions] = useState([]);
 
   useEffect(() => {
-    // Function to check if the input is a non-empty string
-    const isValidQuestionsString = (str) => {
-      return typeof str === 'string' && str.trim().length > 0;
+    const parseQuestions = (questionsData) => {
+      if (typeof questionsData === 'string') {
+        try {
+          questionsData = JSON.parse(questionsData);
+        } catch (error) {
+          console.error("Failed to parse questions string:", error);
+          return [];
+        }
+      }
+
+      if (questionsData && questionsData.quiz_questions) {
+        return questionsData.quiz_questions.map(q => ({
+          question: q.question,
+          answer: q.answer
+        }));
+      }
+
+      return [];
     };
 
-    const parseQuestions = (questionsString) => {
-      const pairs = questionsString.split('Question').slice(1);
-      return pairs.map(pair => {
-        const [question, answer] = pair.split('Answer');
-        return {
-          question: question.trim().replace(/^\d+\./, '').trim(),
-          answer: answer.trim().replace(/^\d+\./, '').trim()
-        };
-      });
-    };
-
-    // Check if questions is a valid string before parsing
-    if (isValidQuestionsString(questions)) {
-      setParsedQuestions(parseQuestions(questions));
-    } else {
-      setParsedQuestions([]); // or handle invalid input appropriately
-    }
+    setParsedQuestions(parseQuestions(questions));
   }, [questions]);
 
   const flipCard = () => {

@@ -93,7 +93,6 @@ function StudyTab({ userId, token }) {
                         </div>
                     ))}
                 </div>
-
                 {currentContent && (
                     <div className="flashcard-section">
                         <h3>{currentContent.title}</h3>

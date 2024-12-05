@@ -5,7 +5,6 @@ const fs = require('fs');
 const flashCardPrompt = require('./prompts.js');
 const { testDatabaseConnection, loginUser, registerUser, validatePassword, updateAvatar, createContent, getUserContent, setLoginNow } = require('./database');
 const { v4: uuidv4 } = require('uuid');
-const flashCardPrompt1 = JSON.stringify(flashCardPrompt);
 const { sendEmail, sendWelcomeEmail } = require('./emailService');
 const cron = require('node-cron');
 require('dotenv').config();
@@ -48,33 +47,7 @@ app.get('/test-database', async (req, res) => {
     }
 });
 
-// Function to generate questions
-// async function generateQuestions(content, isFile = false) {
-//     console.log("enetered generateQuestions");
-//     const systemPrompt = isFile 
-//         ? flashCardPrompt.replace('{TOPIC}', 'the content of the uploaded file')
-//         : String(flashCardPrompt1).replace('{TOPIC}', content);
-//     console.log("system prompt: ", systemPrompt);
-//     //console.log("question prompt: ", topicQuestionPrompt);
-//     const chatCompletion = await client.chat.completions.create({
-//         messages: [
-//             {
-//                 "role": "system",
-//                 "content": systemPrompt,
-//             },
-//             {
-//                 "role": "user",
-//                 "content": isFile ? content : `Generate questions about ${content}`,
-//             }
-//         ],
-//         model: "gpt-3.5-turbo",
-//     });
-//     console.log("finished api call");
-//     return chatCompletion.choices[0].message.content;
-// }
-
 // Function to generate quiz questions
-// // Function to generate quiz questions
 async function generateQuestions(content) {
     console.log("Entered generateQuestions");
     console.log("Topic picked is " + content);
