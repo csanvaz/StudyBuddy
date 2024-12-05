@@ -144,13 +144,12 @@ function QuestPage() {
         </div>
       </div>
 
-      {/* Equipment and Avatar Section */}
-      <div className="equipment-avatar-box">
+      {/* Equipment Section */}
+      <div className="equipment-box">
         <h2 className="box-title">Available Equipment</h2>
 
-        {/* Avatar Placeholder */}
-        <div className="avatar-box">
-          <p>Avatar will be added here</p>
+        <div className="av-box">
+          <p>Complete weekly quests to receive gold!</p>
         </div>
 
         {/* Dynamic Shop Grid */}
@@ -187,4 +186,3 @@ function QuestPage() {
 }
 
 export default QuestPage;
-
