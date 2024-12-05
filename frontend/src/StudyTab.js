@@ -96,7 +96,6 @@ function StudyTab({ userId, token }) {
                 <div className="study-materials">
                     {Object.keys(groupedMaterials).map((textId) => (
                         <div key={textId} className="material-group">
-                            <h3>{groupedMaterials[textId][0].title}</h3>
                             {groupedMaterials[textId].map((material) => (
                                 <div key={material.content_id} className="material-item">
                                     <button
