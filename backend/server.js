@@ -325,7 +325,7 @@ app.post('/create-content', async (req, res) => {
 
         // Create quiz content if requested
         if (makeQuiz) {
-            const quizData = {}; 
+            const quizData = await generateQuestions(text, makeQuiz); 
             const quizResponse = await createContent(userId, title, text_id, true, quizData);
             if (!quizResponse.success) {
                 return res.status(500).json({ error: quizResponse.error });
@@ -335,7 +335,7 @@ app.post('/create-content', async (req, res) => {
         // Create flashcard content if requested
         if (makeCards) {
             console.log("enetered flashcards");
-            const flashcardData = await generateQuestions(text);
+            const flashcardData = await generateQuestions(text, makeCards);
             const flashcardResponse = await createContent(userId, title, text_id, false, flashcardData);
             if (!flashcardResponse.success) {
                 return res.status(500).json({ error: flashcardResponse.error });
