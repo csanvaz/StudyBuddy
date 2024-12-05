@@ -6,7 +6,7 @@ const Register = ({ onRegister }) => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [generalError, setGeneralError] = useState('');
+  const [usernameError, setUserNameError] = useState(false);
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [registrationSuccess, setRegistrationSuccess] = useState(false);
@@ -25,26 +25,41 @@ const Register = ({ onRegister }) => {
   };
 
   const handleRegister = () => {
-    setGeneralError('');
-    setEmailError('');
-    setPasswordError('');
+    
+    let hasError = false;
 
-    if (!username || !email || !password) {
-      setGeneralError('Please fill in all fields');
-      return;
+    if (!username){
+      hasError = true;
+      setUserNameError(true);
+    } else {
+      setUserNameError(false);
     }
 
-    if (!validateEmail(email)) {
-      setEmailError('Please enter a valid email address');
-      return;
+    if (!email){
+      hasError = true;
+      setEmailError('Email required');
+    }
+    else if (!validateEmail(email)){
+      hasError = true;
+      setEmailError('Please enter a valid email');
+    }
+    else{
+      setEmailError('');
     }
 
-    if (!validatePassword(password)) {
-      setPasswordError(
-        'Password must be at least 10 characters, include one uppercase letter, and one special character.'
-      );
-      return;
+    if (!password){
+      hasError = true;
+      setPasswordError('Password required');
     }
+    else if (!validatePassword(email)){
+      hasError = true;
+      setPasswordError('Password must be at least 10 characters long, contain an uppercase letter and a special character.');
+    }
+    else{
+      setPasswordError('');
+    }
+
+    if (hasError) return;
 
     onRegister(username, email, password, () => setRegistrationSuccess(true));
   };
@@ -59,13 +74,14 @@ const Register = ({ onRegister }) => {
         ) : (
           <>
             <h2>Register</h2>
-            {generalError && <div className="error-message">{generalError}</div>}
             <input
               type="text"
               placeholder="Username"
               value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              onChange={(e) => {setUsername(e.target.value); if (usernameError) setUserNameError(false);}}
+              style={{ borderColor: usernameError ? 'red' : '' }}
             />
+            {usernameError && <div className="error-message">Username is required</div>}
             <input
               type="email"
               placeholder="Email"
@@ -74,6 +90,7 @@ const Register = ({ onRegister }) => {
                 setEmail(e.target.value);
                 if (emailError) setEmailError('');
               }}
+              style={{ borderColor: emailError ? 'red' : '' }}
             />
             {emailError && <div className="error-message">{emailError}</div>}
             <input
@@ -84,6 +101,7 @@ const Register = ({ onRegister }) => {
                 setPassword(e.target.value);
                 if (passwordError) setPasswordError('');
               }}
+              style={{ borderColor: passwordError ? 'red' : '' }}
             />
             {passwordError && <div className="error-message">{passwordError}</div>}
             <button onClick={handleRegister}>Register</button>
