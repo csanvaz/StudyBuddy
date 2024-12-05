@@ -21,7 +21,7 @@ const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 const upload = multer({ dest: 'uploads/' });
 const cors = require('cors');
 app.use(cors({
-  origin: true,//'https://main.d1v5rs7h6klasx.amplifyapp.com',
+  origin: true,//'https://main.d3mw78ay7wmpwg.amplifyapp.com/',
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true,
 }));
@@ -285,6 +285,12 @@ app.post('/create-content', async (req, res) => {
         res.status(500).json({ error: 'An error occurred while creating content' });
     }
 });
+
+/*
+app.get('/api/purchase', async (req, res) => {
+    const { userId, itemId, token, gold } = req.body;
+)
+*/
 
 async function sendComeBackEmails() {
     try {
