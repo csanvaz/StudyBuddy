@@ -2,7 +2,7 @@ const express = require('express');
 const { OpenAI } = require('openai');
 const multer = require('multer');
 const fs = require('fs');
-const {flashCardPrompt, flashCardTask, } = require('./prompts.js');
+const {systemIdentity, flashCardTask, quizTask} = require('./prompts.js');
 const { testDatabaseConnection, loginUser, registerUser, validatePassword, updateAvatar, createContent, getUserContent, setLoginNow } = require('./database');
 const { v4: uuidv4 } = require('uuid');
 const { sendEmail, sendWelcomeEmail } = require('./emailService');
@@ -47,21 +47,88 @@ app.get('/test-database', async (req, res) => {
 });
 
 // Function to generate quiz questions
-async function generateQuestions(content) {
+// async function generateQuestions(content) {
+//     console.log("Entered generateQuestions");
+//     console.log("Topic picked is " + content);
+
+//     // Preparing to create quizzes based on topic
+//     const userInquiry = flashCardTask.replace('{TOPIC}', content);
+//     console.log("Task prompt: ", userInquiry);
+
+//     try {
+//         // Make the API call to OpenAI to generate the quiz questions
+//         const chatCompletion = await client.chat.completions.create({
+//             messages: [
+//                 {
+//                     role: "system",
+//                     content: flashCardPrompt,
+//                 },
+//                 {
+//                     role: "user",
+//                     content: userInquiry,
+//                 }
+//             ],
+//             model: "gpt-3.5-turbo",
+//         });
+
+//         // Log the full chatCompletion response for debugging
+//         // console.log("Finished API call");
+//         // console.log("Full chatCompletion response:", JSON.stringify(chatCompletion, null, 2));
+
+//         // Extract the quiz questions from the chat response
+//         const chatResponse = chatCompletion.choices[0].message.content;
+
+//         // Log the content of the response
+//         console.log("Chat response content:", chatResponse);
+
+//         // If chatResponse is in text format, you might want to parse it to JSON if it contains JSON-like data
+//         let parsedResponse = null;
+//         try {
+//             parsedResponse = JSON.parse(chatResponse);  // Try to parse the response if it's a JSON string
+//             console.log("Parsed response:", parsedResponse);
+//         } catch (err) {
+//             console.log("Response is not valid JSON, returning as plain text.");
+//             parsedResponse = chatResponse; // If it's not valid JSON, return it as plain text
+//         }
+
+//         // Return the response as a structured JSON object
+//         return {
+//             success: true,
+//             message: "Questions generated successfully",
+//             data: parsedResponse || chatResponse,
+//             chatCompletion: chatCompletion,  // Returning the full chatCompletion for further inspection
+//         };
+
+//     } catch (error) {
+//         console.error("Error generating quiz questions:", error);
+//         return {
+//             success: false,
+//             error: error.message,
+//             chatCompletion: null,  // No response if there was an error
+//         };
+//     }
+// }
+
+// Function to generate content based on type (quiz or flashcard)
+async function generateQuestions(content, isQuiz) {
     console.log("Entered generateQuestions");
     console.log("Topic picked is " + content);
+    console.log("Is quiz: " + isQuiz);
 
-    // Preparing to create quizzes based on topic
-    const userInquiry = flashCardTask.replace('{TOPIC}', content);
+    // Select the appropriate task based on isQuiz
+    const selectedTask = isQuiz ? quizTask : flashCardTask;
+
+    // Replace {TOPIC} in the task with the actual topic
+    const userInquiry = selectedTask.replace('{TOPIC}', content);
     console.log("Task prompt: ", userInquiry);
 
     try {
-        // Make the API call to OpenAI to generate the quiz questions
+        // Make the API call to OpenAI to generate the content
         const chatCompletion = await client.chat.completions.create({
             messages: [
                 {
                     role: "system",
-                    content: flashCardPrompt,
+                    content: systemIdentity,
                 },
                 {
                     role: "user",
@@ -72,19 +139,14 @@ async function generateQuestions(content) {
         });
 
         // Log the full chatCompletion response for debugging
-        // console.log("Finished API call");
-        // console.log("Full chatCompletion response:", JSON.stringify(chatCompletion, null, 2));
-
-        // Extract the quiz questions from the chat response
         const chatResponse = chatCompletion.choices[0].message.content;
 
-        // Log the content of the response
         console.log("Chat response content:", chatResponse);
 
-        // If chatResponse is in text format, you might want to parse it to JSON if it contains JSON-like data
+        // Parse the response if it's JSON-like data
         let parsedResponse = null;
         try {
-            parsedResponse = JSON.parse(chatResponse);  // Try to parse the response if it's a JSON string
+            parsedResponse = JSON.parse(chatResponse); // Try to parse the response if it's a JSON string
             console.log("Parsed response:", parsedResponse);
         } catch (err) {
             console.log("Response is not valid JSON, returning as plain text.");
@@ -94,20 +156,21 @@ async function generateQuestions(content) {
         // Return the response as a structured JSON object
         return {
             success: true,
-            message: "Questions generated successfully",
+            message: "Content generated successfully",
             data: parsedResponse || chatResponse,
-            chatCompletion: chatCompletion,  // Returning the full chatCompletion for further inspection
+            chatCompletion: chatCompletion, // Return the full chatCompletion for further inspection
         };
 
     } catch (error) {
-        console.error("Error generating quiz questions:", error);
+        console.error("Error generating content:", error);
         return {
             success: false,
             error: error.message,
-            chatCompletion: null,  // No response if there was an error
+            chatCompletion: null, // No response if there was an error
         };
     }
 }
+
 
 
 
