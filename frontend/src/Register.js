@@ -9,6 +9,7 @@ const Register = ({ onRegister }) => {
   const [generalError, setGeneralError] = useState('');
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
+  const [registrationSuccess, setRegistrationSuccess] = useState(false);
   const navigate = useNavigate();
 
   const validateEmail = (email) => {
@@ -45,45 +46,54 @@ const Register = ({ onRegister }) => {
       return;
     }
 
-    onRegister(username, email, password);
+    onRegister(username, email, password, () => setRegistrationSuccess(true));
   };
 
   return (
     <div className="login-page">
       <div className="login-container">
-        <h2>Register</h2>
-        {generalError && <div className="error-message">{generalError}</div>}
-        <input
-          type="text"
-          placeholder="Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => {
-            setEmail(e.target.value);
-            if (emailError) setEmailError('');
-          }}
-        />
-        {emailError && <div className="error-message">{emailError}</div>}
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => {
-            setPassword(e.target.value);
-            if (passwordError) setPasswordError('');
-          }}
-        />
-        {passwordError && <div className="error-message">{passwordError}</div>}
-        <button onClick={handleRegister}>Register</button>
-        <button onClick={() => navigate('/login')}>Back to Login</button>
+        {registrationSuccess ? (
+          <div className="success-message">
+            Registered successfully! Redirecting to login...
+          </div>
+        ) : (
+          <>
+            <h2>Register</h2>
+            {generalError && <div className="error-message">{generalError}</div>}
+            <input
+              type="text"
+              placeholder="Username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                if (emailError) setEmailError('');
+              }}
+            />
+            {emailError && <div className="error-message">{emailError}</div>}
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                if (passwordError) setPasswordError('');
+              }}
+            />
+            {passwordError && <div className="error-message">{passwordError}</div>}
+            <button onClick={handleRegister}>Register</button>
+            <button onClick={() => navigate('/login')}>Back to Login</button>
+          </>
+        )}
       </div>
     </div>
   );
+
 };
 
 export default Register;

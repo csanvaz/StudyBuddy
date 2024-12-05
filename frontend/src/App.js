@@ -41,13 +41,15 @@ const App = () => {
     }
   };
 
-  const handleRegister = async (username, email, password) => {
+  const handleRegister = async (username, email, password, onSuccess) => {
     try {
       const response = await axios.post(`${backendURL}/register`, { username, email, password });
 
       if (response.status === 201) {
-        alert('Registration successful! Please log in.');
-        navigate('/login');
+        onSuccess();
+        setTimeout(() => {
+          navigate('/login');
+        }, 2000);
       } else {
         alert(`Registration failed: ${response.data.error}`);
       }
