@@ -2,7 +2,7 @@ const express = require('express');
 const { OpenAI } = require('openai');
 const multer = require('multer');
 const fs = require('fs');
-const {flashCardPrompt, flashCardTask} = require('./prompts.js');
+const {flashCardPrompt, flashCardTask, } = require('./prompts.js');
 const { testDatabaseConnection, loginUser, registerUser, validatePassword, updateAvatar, createContent, getUserContent, setLoginNow } = require('./database');
 const { v4: uuidv4 } = require('uuid');
 const { sendEmail, sendWelcomeEmail } = require('./emailService');
@@ -72,10 +72,10 @@ async function generateQuestions(content) {
         });
 
         // Log the full chatCompletion response for debugging
-        console.log("Finished API call");
-        console.log("Full chatCompletion response:", JSON.stringify(chatCompletion, null, 2));
+        // console.log("Finished API call");
+        // console.log("Full chatCompletion response:", JSON.stringify(chatCompletion, null, 2));
 
-        // Extract the content from the chat response
+        // Extract the quiz questions from the chat response
         const chatResponse = chatCompletion.choices[0].message.content;
 
         // Log the content of the response
@@ -108,6 +108,7 @@ async function generateQuestions(content) {
         };
     }
 }
+
 
 
 
