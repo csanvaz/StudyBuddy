@@ -22,14 +22,6 @@ const Login = ({ onLogin, loginError }) => {
   return (
     <div className="login-page">
 
-      <div className="monsta-container">
-        <div className="monsta">
-          <img src={require('./assets/monsta.png')} alt="Monsta" />
-        </div>
-        <div className="monsta-text">Join us today and study away!</div>
-      </div>
-
-
       <div className="background-elements">
         <div className="quote" style={{ top: '10%', left: '5%' }}>
           "This platform is revolutionizing the way students learn. A must-visit for anyone eager to excel in their studies."

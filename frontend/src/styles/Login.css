@@ -165,7 +165,7 @@
   background-color: #0c8c21; 
 }
 
-.monsta img {
+/*.monsta img {
   width: 300px;
   height: auto;
 }
@@ -180,6 +180,14 @@
   font-family: 'Fredoka';
   color: #f8f8f8;
 }
+<div className="monsta-container">
+        <div className="monsta">
+          <img src={require('./assets/monsta.png')} alt="Monsta" />
+        </div>
+        <div className="monsta-text">Join us today and study away!</div>
+      </div>
+
+*/
 
 
 
