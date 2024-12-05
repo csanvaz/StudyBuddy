@@ -10,6 +10,7 @@ const { sendEmail, sendWelcomeEmail } = require('./emailService');
 const cron = require('node-cron');
 require('dotenv').config();
 const { pool } = require('./database');
+const { getShopItems } = require('./database');
 
 //https://CS484FinalProjectEnvironment-env.eba-qkbmea2x.us-east-1.elasticbeanstalk.com/api/topic-questions
 //origin:
@@ -261,6 +262,21 @@ async function sendComeBackEmails() {
         console.error('Error sending come back emails:', error);
     }
 }
+
+app.get('/api/shop-items', async (req, res) => {
+    try {
+        const result = await getShopItems(); // Fetch shop items from the database
+        if (result.success) {
+            res.json(result.items); // Send the items to the frontend
+        } else {
+            res.status(500).json({ error: result.error }); // Handle errors
+        }
+    } catch (error) {
+        console.error('Error fetching shop items:', error);
+        res.status(500).json({ error: 'An error occurred while fetching shop items' });
+    }
+});
+
 
 cron.schedule('0 0 * * *', () => {
     sendComeBackEmails();

@@ -159,6 +159,16 @@ async function setLoginNow(userId) {
     }
 }
 
+async function getShopItems() {
+    try {
+        const result = await pool.query('SELECT * FROM shop_items'); // Query the shop_items table
+        return { success: true, items: result.rows }; // Return the rows (shop items)
+    } catch (error) {
+        console.error('Error fetching shop items:', error);
+        return { success: false, error: error.message };
+    }
+}
+
 module.exports = {
     pool,
     registerUser,
@@ -169,5 +179,6 @@ module.exports = {
     updateAvatar,
     getUserContent,
     createContent,
-    setLoginNow
+    setLoginNow,
+    getShopItems
   };
