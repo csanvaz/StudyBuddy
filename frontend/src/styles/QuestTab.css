@@ -214,13 +214,16 @@
 }
 
 .shop-button {
+  display: flex; /* Enable Flexbox */
+  align-items: center; /* Vertically center items */
+  justify-content: center; /* Horizontally center items */
   background-color: #428ce2;
   color: white;
   border: none;
   border-radius: 8px;
   padding: 5px 10px;
   margin-top: 10px;
-  font-size: 12px;
+  font-size: 14px; /* Increased font size for better alignment */
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
@@ -280,3 +283,4 @@
     grid-template-columns: 1fr; /* Single column on very small screens */
   }
 }
+
