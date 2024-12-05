@@ -10,7 +10,7 @@ const { sendEmail, sendWelcomeEmail } = require('./emailService');
 const cron = require('node-cron');
 require('dotenv').config();
 const { pool } = require('./database');
-const { getShopItems } = require('./database');
+const { getShopItems, getGold, updateGold } = require('./database');
 
 //https://CS484FinalProjectEnvironment-env.eba-qkbmea2x.us-east-1.elasticbeanstalk.com/api/topic-questions
 //origin:
@@ -179,9 +179,9 @@ app.post('/user-content', async (req, res) => {
 app.get('/user/:userName/gold', async (req, res) => {
     const { userName } = req.params;
     try {
-        const result = await pool.query('SELECT gold FROM users WHERE username = $1', [userName]);
-        if (result.rowCount > 0) {
-            res.json({ success: true, gold: result.rows[0].gold });
+        const result = await getGold(userName);
+        if (result.success) {
+            res.json({ success: true, gold: result.gold });
         } else {
             res.status(404).json({ success: false, message: 'User not found' });
         }
@@ -195,13 +195,10 @@ app.post('/update-gold', async (req, res) => {
     const { username, goldEarned } = req.body;
     console.log("Request body:", req.body);
     try {
-        const result = await pool.query(
-            'UPDATE users SET gold = gold + $1 WHERE username = $2 RETURNING gold',
-            [goldEarned, username]
-        );
+        const result = await updateGold(username, goldEarned);
         console.log("Result:", result);
-        if (result.rowCount > 0) {
-            res.json({ success: true, gold: result.rows[0].gold });
+        if (result.success) {
+            res.json({ success: true, gold: result.gold });
         } else {
             res.status(404).json({ success: false, message: 'User not found' });
         }

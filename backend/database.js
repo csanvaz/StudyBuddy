@@ -9,8 +9,8 @@ const pool = new Pool({
     database: process.env.DB_NAME,
     password: process.env.DB_PASSWORD,
     port: process.env.DB_PORT,
-    //ssl: false 
-    ssl: { rejectUnauthorized: false }
+    ssl: false 
+    //ssl: { rejectUnauthorized: false }
   });
 
 pool.on('connect', () => {
@@ -169,6 +169,38 @@ async function getShopItems() {
     }
 }
 
+async function getGold(userName) {
+    try {
+        const result = await pool.query('SELECT gold FROM users WHERE username = $1', [userName]);
+        if (result.rows.length > 0) {
+            return { success: true, gold: result.rows[0].gold }; // Return the gold of the user
+        } else {
+            return { success: false, message: 'User not found' };
+        }
+    } catch (error) {
+        console.error('Error fetching gold:', error);
+        return { success: false, error: error.message };
+    }
+}
+
+// Update the user's gold in the database
+async function updateGold(userName, goldEarned) {
+    try {
+        const result = await pool.query(
+            'UPDATE users SET gold = gold + $1 WHERE username = $2 RETURNING gold',
+            [goldEarned, userName]
+        );
+        if (result.rows.length > 0) {
+            return { success: true, gold: result.rows[0].gold }; // Return the updated gold
+        } else {
+            return { success: false, message: 'User not found' };
+        }
+    } catch (error) {
+        console.error('Error updating gold:', error);
+        return { success: false, error: error.message };
+    }
+}
+
 module.exports = {
     pool,
     registerUser,
@@ -180,5 +212,7 @@ module.exports = {
     getUserContent,
     createContent,
     setLoginNow,
-    getShopItems
+    getShopItems,
+    getGold,
+    updateGold
   };

@@ -8,8 +8,24 @@ const Home = ({ userName, avatarName, handleAvatarChange }) => {
   const [inputValue, setInputValue] = useState(avatarName);
   const [gold, setGold] = useState(0);
 
+
+  // CHANGE FETCH URL TO USE THE CORRECT ENDPOINT
   useEffect(() => {
-    getGold();
+    const fetchGold = async () => {
+      try {
+        const response = await fetch(`http://localhost:8080/user/${userName}/gold`);
+        const data = await response.json();
+        if (data.success) {
+          setGold(data.gold);
+        } else {
+          console.error('Error fetching gold:', data.message);
+        }
+      } catch (error) {
+        console.error('Error fetching gold:', error);
+      }
+    };
+
+    fetchGold();
   }, [userName]);
 
   const getXP = () => 150;
@@ -17,44 +33,25 @@ const Home = ({ userName, avatarName, handleAvatarChange }) => {
   //const getGold = () => 100;
 
   // CHANGE FETCH URL TO USE THE CORRECT ENDPOINT
-  const getGold = async () => {
+  const handleAddGold = async () => {
+    const goldEarned = 500;
     try {
-        const response = await fetch(`http://localhost:8080/user/${userName}/gold`);
-        const data = await response.json();
-        if (data.success) {
-            setGold(data.gold);
-        } else {
-            console.error('Failed to fetch gold:', data.message);
-        }
+      const response = await fetch('http://localhost:8080/update-gold', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username: userName, goldEarned }),
+      });
+      const data = await response.json();
+      if (data.success) {
+        setGold(data.gold);
+      } else {
+        console.error('Error updating gold:', data.message);
+      }
     } catch (error) {
-        console.error('Error fetching gold:', error);
+      console.error('Error updating gold:', error);
     }
-  };
-
-  // CHANGE FETCH URL TO USE THE CORRECT ENDPOINT
-  const updateGold = async (goldEarned) => {
-    try {
-        const response = await fetch('http://localhost:8080/update-gold', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ username: userName, goldEarned }),
-        });
-        const data = await response.json();
-        if (data.success) {
-            setGold(data.gold);
-        } else {
-            console.error('Failed to update gold:', data.message);
-        }
-    } catch (error) {
-        console.error('Error updating gold:', error);
-    }
-  };
-
-  const handleAddGold = () => {
-    const goldEarned = 10;
-    updateGold(goldEarned);
   };
 
   const handleInputChange = (e) => {
