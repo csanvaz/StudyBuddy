@@ -3,6 +3,9 @@ import React, { useState, useEffect } from 'react';
 import './styles/QuestTab.css';
 import { GiGoldBar } from 'react-icons/gi'; // Import the gold bar icon
 
+// const backendURL = "http://localhost:8080";
+const backendURL = "https://CS484FinalProjectEnvironment-env.eba-qkbmea2x.us-east-1.elasticbeanstalk.com"
+
 // Fixed import of images
 const images = {
   '/assets/2dglasses.png': require('./assets/2dglasses.png'),
@@ -26,7 +29,7 @@ function QuestPage() {
   useEffect(() => {
     const fetchShopItems = async () => {
       try {
-        const response = await fetch('http://localhost:8080/api/shop-items');
+        const response = await fetch(`${backendURL}/api/shop-items`);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -52,7 +55,7 @@ function QuestPage() {
     // Implement purchase logic here 
     // Example: Send a request to the backend to process the purchase
     try {
-      const response = await fetch('http://localhost:8080/api/purchase', {
+      const response = await fetch(`${backendURL}/api/purchase`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
