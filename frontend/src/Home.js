@@ -165,9 +165,6 @@ const Home = ({ userName, avatarName, handleAvatarChange, userId }) => {
               Gold: {gold}
             </div>
           </div>
-            <button onClick={handleAddGold} className="add-gold-button">
-                Add 500 Gold
-            </button>
         </div>
       </div>
     </div>
