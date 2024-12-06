@@ -266,6 +266,58 @@ async function getStreak(userName) {
     }
 }
 
+async function updateStreak(userName, streak) {
+    try {
+        const result = await pool.query(
+            'UPDATE users SET streak = $1 WHERE user_id = $2 RETURNING streak',
+            [streak, userName]
+        );
+        if (result.rows.length > 0) {
+            return { success: true, streak: result.rows[0].streak }; 
+        } else {
+            return { success: false, message: 'User not found' };
+        }
+    } catch (error) {
+        console.error('Error updating streak:', error);
+        return { success: false, error: error.message };
+    }
+}
+
+async function updateXP(userName, xp) {
+    try {
+        const result = await pool.query(
+            'UPDATE users SET xp = $1 WHERE user_id = $2 RETURNING xp',
+            [xp, userName]
+        );
+        if (result.rows.length > 0) {
+            return { success: true, xp: result.rows[0].xp }; 
+        } else {
+            return { success: false, message: 'User not found' };
+        }
+    } catch (error) {
+        console.error('Error updating xp:', error);
+        return { success: false, error: error.message };
+    }
+}
+
+async function deleteContent(userId, contentId) {
+    try {
+        // Verify that the content belongs to the user
+        const contentCheck = await pool.query('SELECT * FROM content WHERE content_id = $1 AND user_id = $2', [contentId, userId]);
+        if (contentCheck.rows.length === 0) {
+            return { success: false, message: 'Content not found or does not belong to the user' };
+        }
+
+        // Delete the content
+        await pool.query('DELETE FROM content WHERE content_id = $1', [contentId]);
+
+        return { success: true, message: 'Content deleted successfully' };
+    } catch (error) {
+        console.error('Error deleting content:', error);
+        return { success: false, error: error.message };
+    }
+}
+
 module.exports = {
     pool,
     registerUser,
@@ -283,5 +335,7 @@ module.exports = {
     deleteContent,
     updatePassword,
     getXP,
-    getStreak
+    getStreak,
+    updateStreak,
+    updateXP
   };

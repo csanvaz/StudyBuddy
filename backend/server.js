@@ -3,7 +3,7 @@ const { OpenAI } = require('openai');
 const multer = require('multer');
 const fs = require('fs');
 const {systemIdentity, flashCardTask, quizTask} = require('./prompts.js');
-const { testDatabaseConnection, loginUser, registerUser, validatePassword, updateAvatar, createContent, getUserContent, setLoginNow, getShopItems, getGold, getXP, updatePassword, getStreak } = require('./database');
+const { testDatabaseConnection, loginUser, registerUser, validatePassword, updateAvatar, createContent, getUserContent, setLoginNow, getShopItems, getGold, getXP, updatePassword, getStreak, updateStreak, updateXP } = require('./database');
 const { v4: uuidv4 } = require('uuid');
 const { sendEmail, sendWelcomeEmail } = require('./emailService');
 const cron = require('node-cron');
@@ -251,6 +251,36 @@ app.get('/user/:userName/xp', async (req, res) => {
     }
 });
 
+app.post('/set/:userId/xp', async (req, res) => {
+    const { userId, xp } = req.body;
+    try {
+        const result = await updateXP(userId, xp);
+        if (result.success) {
+            res.json({ success: true, message: 'XP updated successfully' });
+        } else {
+            res.status(404).json({ success: false, message: 'User not found' });
+        }
+    } catch (error) {
+        console.error('Error updating xp:', error);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+});
+
+app.post('/set/:userId/streak', async (req, res) => {
+    const { userId, streak } = req.body;
+    try {
+        const result = await updateStreak(userId, streak);
+        if (result.success) {
+            res.json({ success: true, message: 'Streak updated successfully' });
+        } else {
+            res.status(404).json({ success: false, message: 'User not found' });
+        }
+    } catch (error) {
+        console.error('Error updating streak:', error);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+});
+
 app.get('/user/:userName/streak', async (req, res) => {
     const { userName } = req.params;
     try {
@@ -474,6 +504,29 @@ app.post('/change-password', async (req, res) => {
         }
     } catch (error) {
         console.error('Error changing password:', error);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+});
+
+app.post('/delete-content', async (req, res) => {
+    const { userId, password, contentId } = req.body;
+
+    try {
+        // Validate the user's password
+        const validationResponse = await validatePassword(userId, password);
+        if (!validationResponse.success) {
+            return res.status(401).json({ error: 'Invalid password' });
+        }
+
+        // Delete the content
+        const deleteResponse = await deleteContent(userId, contentId);
+        if (deleteResponse.success) {
+            res.status(200).json({ success: true, message: 'Content deleted successfully' });
+        } else {
+            res.status(400).json({ success: false, message: deleteResponse.message });
+        }
+    } catch (error) {
+        console.error('Error deleting content:', error);
         res.status(500).json({ success: false, message: 'Server error' });
     }
 });

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './styles/Popup.css';
 
 function ContentPopup({ onAddContent, onClose }) {
     const [subject, setSubject] = useState('');
@@ -14,18 +15,22 @@ function ContentPopup({ onAddContent, onClose }) {
         <div className="popup">
             <div className="popup-inner">
                 <h3>Add New Content</h3>
-                <input
-                    type="text"
-                    placeholder="Subject"
-                    value={subject}
-                    onChange={(e) => setSubject(e.target.value)}
-                />
-                <textarea
-                    placeholder="Paste text here"
-                    value={text}
-                    onChange={(e) => setText(e.target.value)}
-                ></textarea>
-                <div>
+                <div className="input-container">
+                    <input
+                        type="text"
+                        placeholder="Subject"
+                        value={subject}
+                        onChange={(e) => setSubject(e.target.value)}
+                        className="input-field"
+                    />
+                    <textarea
+                        placeholder="Paste text here"
+                        value={text}
+                        onChange={(e) => setText(e.target.value)}
+                        className="textarea-field"
+                    ></textarea>
+                </div>
+                <div className="checkbox-container">
                     <label>
                         <input
                             type="checkbox"
@@ -43,8 +48,10 @@ function ContentPopup({ onAddContent, onClose }) {
                         Generate Quiz
                     </label>
                 </div>
-                <button className="submit-button" onClick={handleSubmit}>Add Content</button>
-                <button className="close-button" onClick={onClose}>Close</button>
+                <div className="button-container">
+                    <button className="submit-button" onClick={handleSubmit}>Add Content</button>
+                    <button className="close-button" onClick={onClose}>Close</button>
+                </div>
             </div>
         </div>
     );
