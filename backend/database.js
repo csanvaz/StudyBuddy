@@ -300,6 +300,24 @@ async function updateXP(userName, xp) {
     }
 }
 
+async function deleteContent(userId, contentId) {
+    try {
+        // Verify that the content belongs to the user
+        const contentCheck = await pool.query('SELECT * FROM content WHERE content_id = $1 AND user_id = $2', [contentId, userId]);
+        if (contentCheck.rows.length === 0) {
+            return { success: false, message: 'Content not found or does not belong to the user' };
+        }
+
+        // Delete the content
+        await pool.query('DELETE FROM content WHERE content_id = $1', [contentId]);
+
+        return { success: true, message: 'Content deleted successfully' };
+    } catch (error) {
+        console.error('Error deleting content:', error);
+        return { success: false, error: error.message };
+    }
+}
+
 module.exports = {
     pool,
     registerUser,
