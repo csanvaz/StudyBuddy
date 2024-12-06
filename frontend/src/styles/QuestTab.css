@@ -282,3 +282,54 @@
   }
 }
 
+.user-items {
+  margin-top: 50px;
+  text-align: center;
+}
+
+.user-items-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+.user-item {
+  position: relative;
+  border: 2px solid #ddd;
+  border-radius: 10px;
+  padding: 10px;
+  width: 120px;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.user-item:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.item-image img,
+.image-container img {
+  width: 50px;  /* Adjust to your desired size */
+  height: auto; /* Maintain aspect ratio */
+  object-fit: contain; /* Ensures the image fits within the defined size */
+}
+.special-ability {
+  display: none;
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 5px;
+  border-radius: 5px;
+  font-size: 12px;
+}
+
+.user-item:hover .special-ability {
+  display: block;
+}
+
