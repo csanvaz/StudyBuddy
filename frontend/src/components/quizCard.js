@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import '../styles/QuizCard.css';
-import backendURL from './config';
+import backendURL from '../config';
 
 function QuizCard({ questionData = [], userId }) {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0); // Track current question
@@ -33,7 +33,7 @@ function QuizCard({ questionData = [], userId }) {
     const updateHomeXP = async (userId, score) => {
         console.log("Updating Home XP", score);
         try {
-            const response = await fetch(`${backendURL}`, {
+            const response = await fetch(`${backendURL}/set/:userId/xp`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

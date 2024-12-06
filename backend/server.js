@@ -253,6 +253,7 @@ app.get('/user/:userName/xp', async (req, res) => {
 
 app.post('/set/:userId/xp', async (req, res) => {
     const { userId, xp } = req.body;
+    console.log("Adding XP Points", userId, xp);
     try {
         const result = await updateXP(userId, xp);
         if (result.success) {
