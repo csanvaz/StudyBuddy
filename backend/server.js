@@ -508,6 +508,29 @@ app.post('/change-password', async (req, res) => {
     }
 });
 
+app.post('/delete-content', async (req, res) => {
+    const { userId, password, contentId } = req.body;
+
+    try {
+        // Validate the user's password
+        const validationResponse = await validatePassword(userId, password);
+        if (!validationResponse.success) {
+            return res.status(401).json({ error: 'Invalid password' });
+        }
+
+        // Delete the content
+        const deleteResponse = await deleteContent(userId, contentId);
+        if (deleteResponse.success) {
+            res.status(200).json({ success: true, message: 'Content deleted successfully' });
+        } else {
+            res.status(400).json({ success: false, message: deleteResponse.message });
+        }
+    } catch (error) {
+        console.error('Error deleting content:', error);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+});
+
 cron.schedule('0 0 * * *', () => {
     sendComeBackEmails();
 });
