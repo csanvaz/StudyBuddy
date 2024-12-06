@@ -3,13 +3,12 @@ const { OpenAI } = require('openai');
 const multer = require('multer');
 const fs = require('fs');
 const {systemIdentity, flashCardTask, quizTask} = require('./prompts.js');
-const { testDatabaseConnection, loginUser, registerUser, validatePassword, updateAvatar, createContent, getUserContent, setLoginNow } = require('./database');
+const { testDatabaseConnection, loginUser, registerUser, validatePassword, updateAvatar, createContent, getUserContent, setLoginNow, getShopItems, getGold, updateGold, updatePassword } = require('./database');
 const { v4: uuidv4 } = require('uuid');
 const { sendEmail, sendWelcomeEmail } = require('./emailService');
 const cron = require('node-cron');
 require('dotenv').config();
 const { pool } = require('./database');
-const { getShopItems, getGold, updateGold } = require('./database');
 
 //https://CS484FinalProjectEnvironment-env.eba-qkbmea2x.us-east-1.elasticbeanstalk.com/api/topic-questions
 //origin:
@@ -413,6 +412,29 @@ app.post('/user/:id/add-item', async (req, res) => {
     } catch (error) {
         console.error('Error adding item to user:', error);
         res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+app.post('/change-password', async (req, res) => {
+    const { userId, currentPassword, newPassword } = req.body;
+
+    try {
+        // Validate the current password
+        const validationResponse = await validatePassword(userId, currentPassword);
+        if (!validationResponse.success) {
+            return res.status(401).json({ error: 'Invalid current password' });
+        }
+
+        // Update the password
+        const updateResponse = await updatePassword(userId, newPassword);
+        if (updateResponse.success) {
+            res.status(200).json({ success: true, message: 'Password changed successfully' });
+        } else {
+            res.status(500).json({ success: false, message: updateResponse.message });
+        }
+    } catch (error) {
+        console.error('Error changing password:', error);
+        res.status(500).json({ success: false, message: 'Server error' });
     }
 });
 

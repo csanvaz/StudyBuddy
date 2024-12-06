@@ -3,6 +3,7 @@ import Home from './Home';
 import StudyTab from './StudyTab';
 import QuestTab from './QuestTab';
 import * as GiIcons from "react-icons/gi";
+import SettingsTab from './SettingsTab';
 
 const MenuButton = ({ text, icon: Icon, isActive, onClick }) => {
   return (
@@ -35,6 +36,8 @@ const AppContent = ({ userName, avatarName, handleAvatarChange, userId, token, o
         return <StudyTab userId={userId} token={token}/>;
       case 'quest':
         return <QuestTab />;
+        case 'settings':
+          return <SettingsTab userId={userId}/>;
       default:
         return null;
     }
@@ -67,6 +70,12 @@ const AppContent = ({ userName, avatarName, handleAvatarChange, userId, token, o
           icon={GiIcons.GiHiking}
           isActive={currentTab === 'quest'}
           onClick={() => setCurrentTab('quest')}
+        />
+        <MenuButton
+        text="SETTINGS"
+        icon={GiIcons.GiSettingsKnobs}
+        isActive={currentTab === 'settings'}
+        onClick={() => setCurrentTab('settings')}
         />
         <MenuButton
           text="LOGOUT"
