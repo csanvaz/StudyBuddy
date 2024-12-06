@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import '../styles/QuizCard.css';
-import backendURL from './config';
+import backendURL from '../config';
 
 function QuizCard({ questionData = [], userId }) {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0); // Track current question

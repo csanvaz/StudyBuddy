@@ -90,11 +90,40 @@ function QuestPage({ userId }) {
 
       const result = await response.json();
       setSuccessMessage(`You have successfully purchased ${result.title}!`);
+      window.location.reload(); 
       } catch (error) {
       console.error('Error purchasing item:', error);
       setErrorMessage(error.message);
       }
   };
+
+ const handleItemUse = async (item) => {
+  console.log('Item clicked:', item);
+  console.log(`Using item: ${item.title}`);
+  console.log("item id", item.item_id);
+
+  try {
+    const response = await fetch(`${backendURL}/api/update-items/${userId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ itemId: item.item_id }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Unknown error');
+    }
+
+    const result = await response.json();
+    setUserItems(result.updatedItems);
+    console.log(`You used item: ${item.title}`);
+  } catch (error) {
+    console.error('Error using item:', error);
+    setErrorMessage(error.message); 
+  }
+};
 
   return (
     <div className="quest-page">
@@ -172,6 +201,32 @@ function QuestPage({ userId }) {
 
         <div className="av-box">
           <p>Complete weekly quests to receive gold!</p>
+        </div>
+
+        {/* User Items Section */}
+        <div className="user-items">
+          <h2>Your Items</h2>
+          <div className="user-items-container">
+            {userItems.map(item => (
+              <div
+                key={item.id}
+                className="user-item"
+                onClick={() => handleItemUse(item)}
+                title={`Click to use ${item.title}`}
+              >
+                <div className="item-image">
+                  <img
+                    src={images[item.image] || images['/assets/default.png']}
+                    alt={item.title}
+                    loading="lazy"
+                    onError={(e) => { e.target.src = images['/assets/default.png']; }}
+                  />
+                </div>
+                <p>{item.title}</p>
+                <div className="special-ability">{item.specialAbility}</div>
+              </div>
+            ))}
+          </div>
         </div>
         
         {/* Display error message if it exists */}

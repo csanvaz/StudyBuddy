@@ -485,6 +485,58 @@ app.post('/user/:id/add-item', async (req, res) => {
     }
 });
 
+app.post('/api/update-items/:userId', async (req, res) => {
+    const { userId } = req.params;
+    const { itemId } = req.body;
+
+    if (!itemId) {
+        return res.status(400).json({ success: false, message: 'Item ID is required' });
+    }
+
+    try {
+        const userItemCheck = await pool.query(
+            `SELECT ui.user_id, si.title
+             FROM user_items ui
+             JOIN shop_items si ON si.id = ui.item_id
+             WHERE ui.user_id = $1 AND si.id = $2`,
+            [userId, itemId]
+        );
+
+        if (userItemCheck.rows.length === 0) {
+            return res.status(404).json({ success: false, message: 'Item not found for this user' });
+        }
+
+        await pool.query(
+            'DELETE FROM user_items WHERE user_id = $1 AND item_id = $2',
+            [userId, itemId]
+        );
+
+        // perform actions based on the item's special ability
+        // (for now, simply log it.)
+        const itemDetails = userItemCheck.rows[0];
+        console.log(`User ${userId} used item: ${itemDetails.title}`);
+
+        const updatedItems = await pool.query(
+            `
+            SELECT si.id AS item_id, si.title, si.special_ability
+            FROM user_items ui
+            JOIN shop_items si ON si.id = ui.item_id
+            WHERE ui.user_id = $1
+            `,
+            [userId]
+        );
+
+        res.json({
+            success: true,
+            message: 'Item used and removed successfully',
+            updatedItems: updatedItems.rows,
+        });
+    } catch (error) {
+        console.error('Error updating items:', error);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+});
+
 app.post('/change-password', async (req, res) => {
     const { userId, currentPassword, newPassword } = req.body;
 
