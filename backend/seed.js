@@ -212,7 +212,7 @@ async function seedShopItems() {
                 image: "/assets/bookmark.png",
                 action: "Buy",
                 cost: 150,
-                special_ability: "Complete your tomorrow's quiz today"
+                special_ability: "Add a day to streak"
             },
             {
                 title: "Time Machine",
@@ -228,7 +228,7 @@ async function seedShopItems() {
                 image: "/assets/bookmark2.png",
                 action: "Buy",
                 cost: 150,
-                special_ability: "Complete your next two days quizes today"
+                special_ability: "Add two days to streak"
             }
         ];
 

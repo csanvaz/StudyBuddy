@@ -521,6 +521,18 @@ app.post('/api/update-items/:userId', async (req, res) => {
             console.log('XP multiplier set to 3');
         }
 
+        if (specialAbility === 'Add a day to streak'){
+            console.log('Special ability activated: Add a day to streak');
+            await pool.query(`UPDATE users SET streak = streak + 1 WHERE user_id = $1`, [userId]);
+            console.log('Streak increased by 1');
+        }
+
+        if (specialAbility === 'Add two days to streak'){
+            console.log('Special ability activated: Add two days to streak');
+            await pool.query(`UPDATE users SET streak = streak + 2 WHERE user_id = $1`, [userId]);
+            console.log('Streak increased by 2');
+        }
+
         await pool.query(
             'DELETE FROM user_items WHERE user_id = $1 AND item_id = $2',
             [userId, itemId]
