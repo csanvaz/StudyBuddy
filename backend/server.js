@@ -13,9 +13,6 @@ const crypto = require('crypto');
 const bcrypt = require('bcrypt');
 const { seedUserProgress } = require('./database');
 
-//https://CS484FinalProjectEnvironment-env.eba-qkbmea2x.us-east-1.elasticbeanstalk.com/api/topic-questions
-//origin:
-//https://main.d1v5rs7h6klasx.amplifyapp.com
 // SET ORIGIN TO TRUE FOR LOCAL TESTING
 
 const app = express();
