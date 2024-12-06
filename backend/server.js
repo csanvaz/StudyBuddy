@@ -47,13 +47,23 @@ app.get('/test-database', async (req, res) => {
 });
 
 // Function to generate content based on type (quiz or flashcard)
-async function generateQuestions(content, isQuiz) {
+async function generateQuestions(content, Quiz, flashCard) {
     console.log("Entered generateQuestions");
     console.log("Topic picked is " + content);
-    console.log("Is quiz: " + isQuiz);
+    console.log("Quiz ", Quiz);
+    console.log("flashCard ", flashCard);
 
     // Select the appropriate task based on isQuiz
-    const selectedTask = isQuiz ? quizTask : flashCardTask;
+    let selectedTask = "";
+    
+    if(Quiz){
+        selectedTask = quizTask
+    }
+
+    if(flashCard){
+        selectedTask = flashCardTask;
+    }
+   
 
     // Replace {TOPIC} in the task with the actual topic
     const userInquiry = selectedTask.replace('{TOPIC}', content);
@@ -251,6 +261,8 @@ app.post('/update-gold', async (req, res) => {
 app.post('/create-content', async (req, res) => {
     const { userId, title, text, makeQuiz, makeCards, token } = req.body;
     console.log("enetered create content");
+
+
     try {
         // Validate the user's password
         const validationResponse = await validatePassword(userId, token);
@@ -262,7 +274,7 @@ app.post('/create-content', async (req, res) => {
 
         // Create quiz content if requested
         if (makeQuiz) {
-            const quizData = await generateQuestions(text, makeQuiz); 
+            const quizData = await generateQuestions(text, makeQuiz, makeCards); 
             const quizResponse = await createContent(userId, title, text_id, true, quizData);
             if (!quizResponse.success) {
                 return res.status(500).json({ error: quizResponse.error });
@@ -272,7 +284,7 @@ app.post('/create-content', async (req, res) => {
         // Create flashcard content if requested
         if (makeCards) {
             console.log("enetered flashcards");
-            const flashcardData = await generateQuestions(text, makeCards);
+            const flashcardData = await generateQuestions(text, makeQuiz, makeCards);
             const flashcardResponse = await createContent(userId, title, text_id, false, flashcardData);
             if (!flashcardResponse.success) {
                 return res.status(500).json({ error: flashcardResponse.error });
