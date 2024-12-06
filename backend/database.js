@@ -283,11 +283,11 @@ async function updateStreak(userName, streak) {
     }
 }
 
-async function updateXP(userName, xp) {
+async function updateXP(userName, xpIncrement) {
     try {
         const result = await pool.query(
-            'UPDATE users SET xp = $1 WHERE user_id = $2 RETURNING xp',
-            [xp, userName]
+            'UPDATE users SET xp = xp + $1 WHERE user_id = $2 RETURNING xp',
+            [xpIncrement, userName]
         );
         if (result.rows.length > 0) {
             return { success: true, xp: result.rows[0].xp }; 
