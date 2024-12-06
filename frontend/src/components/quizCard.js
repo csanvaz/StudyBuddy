@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import '../styles/QuizCard.css';
+import backendURL from './config';
 
-function QuizCard({ questionData = [] }) {
+function QuizCard({ questionData = [], userId }) {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0); // Track current question
     const [selectedAnswer, setSelectedAnswer] = useState(null); // Track selected answer
     const [isCorrect, setIsCorrect] = useState(null); // Track correctness of the answer
@@ -28,8 +29,34 @@ function QuizCard({ questionData = [] }) {
         }
     };
 
+    // Send score update to the backend
+    const updateHomeXP = async (userId, score) => {
+        console.log("Updating Home XP", score);
+        try {
+            const response = await fetch(`${backendURL}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ userId: userId, score: score }),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Unknown error');
+            } else {
+                console.log('XP points sent successfully!');
+            }
+        } catch (error) {
+            console.error('Failed to send XP Points', error);
+        }
+    };
+
     // Move to the next question
     const handleNextQuestion = () => {
+        // Send the updated score to the backend
+        updateHomeXP(userId, score);
+
         // Reset all necessary states for the next question
         setIsCorrect(null); // Reset correctness
         setSelectedAnswer(null); // Reset selected answer
