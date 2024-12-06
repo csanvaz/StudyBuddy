@@ -117,7 +117,7 @@ function QuestPage({ userId }) {
     }
 
     const result = await response.json();
-    setUserItems(result.updatedItems);
+    fetchUserItems()
     console.log(`You used item: ${item.title}`);
   } catch (error) {
     console.error('Error using item:', error);
