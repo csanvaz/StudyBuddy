@@ -181,6 +181,13 @@ function QuestPage({ userId }) {
           </div>
         )}
 
+        {/* Display success message if it exists */}
+        {successMessage && (
+          <div className="success-message" style={{ color: 'green', margin: '10px 0' }}>
+            <strong>Success:</strong> {successMessage}
+          </div>
+        )}
+
         {/* Dynamic Shop Grid */}
         <div className="shop-grid">
           {shopItems.length > 0 ? (
