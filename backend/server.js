@@ -532,6 +532,22 @@ app.post('/delete-content', async (req, res) => {
     }
 });
 
+app.post('/validate-email', async (req, res) => {
+    const { email } = req.body;
+
+    try {
+        const result = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+        if (result.rows.length > 0) {
+            res.status(200).json({ success: true });
+        } else {
+            res.status(404).json({ success: false, message: 'Email not associated with any account' });
+        }
+    } catch (error) {
+        console.error('Error validating email:', error);
+        res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+});
+
 cron.schedule('0 0 * * *', () => {
     sendComeBackEmails();
 });
