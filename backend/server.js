@@ -261,6 +261,7 @@ app.post('/set/:userId/xp', async (req, res) => {
         } else {
             res.status(404).json({ success: false, message: 'User not found' });
         }
+        
     } catch (error) {
         console.error('Error updating xp:', error);
         res.status(500).json({ success: false, message: 'Server error' });

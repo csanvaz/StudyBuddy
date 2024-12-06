@@ -21,24 +21,28 @@ function QuizCard({ questionData = [], userId }) {
     const handleSubmit = () => {
         if (!currentQuestion) return; // Prevent further actions if question is undefined
 
+        let updatedScore = score;
         if (selectedAnswer === currentQuestion.correct_answer) {
             setIsCorrect(true); // Correct answer
             setScore((prevScore) => prevScore + 10); // Award 10 points for correct answer
         } else {
             setIsCorrect(false); // Incorrect answer
         }
+
+        updateHomeXP(userId, updatedScore);
     };
 
     // Send score update to the backend
-    const updateHomeXP = async (userId, score) => {
-        console.log("Updating Home XP", score);
+    const updateHomeXP = async (userId, updatedScore) => {
+        console.log("Updating Home XP", updatedScore, userId);
+
         try {
             const response = await fetch(`${backendURL}/set/:userId/xp`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ userId: userId, score: score }),
+                body: JSON.stringify({ userId: userId, xp: updatedScore }),
             });
 
             if (!response.ok) {
