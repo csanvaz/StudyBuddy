@@ -306,6 +306,7 @@ app.post('/api/purchase', async (req, res) => {
     try {
         const userResult = await pool.query('SELECT gold FROM users WHERE user_id = $1', [userId]);
         const itemResult = await pool.query('SELECT cost FROM shop_items WHERE id = $1', [itemId]);
+        const itemTitleResult = await pool.query('SELECT title FROM shop_items WHERE id = $1', [itemId]);
         const ownershipResult = await pool.query(
             'SELECT item_id FROM user_items WHERE user_id = $1 AND item_id = $2',
             [userId, itemId]
@@ -321,6 +322,7 @@ app.post('/api/purchase', async (req, res) => {
 
         const userGold = userResult.rows[0].gold;
         const itemCost = itemResult.rows[0].cost;
+        const itemTitle = itemTitleResult.rows[0].title;
 
         if (userGold < itemCost) {
             return res.status(400).json({ error: 'Not enough gold' });
@@ -329,7 +331,7 @@ app.post('/api/purchase', async (req, res) => {
         await pool.query('UPDATE users SET gold = gold - $1 WHERE user_id = $2', [itemCost, userId]);
         await pool.query('INSERT INTO user_items (user_id, item_id) VALUES ($1, $2)', [userId, itemId]);
 
-        res.json({ success: true, message: `Item ${itemId} purchased successfully!` });
+        res.json({ success: true, message: `Item ${itemId} purchased successfully!`, title: itemTitle});
     } catch (error) {
         console.error('Error purchasing item:', error);
         res.status(500).json({ error: 'Failed to purchase item' });
