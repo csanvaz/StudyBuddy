@@ -8,15 +8,19 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     text-align: center;
     font-family: Arial, sans-serif;
-    position: relative; /* Enable positioning of the score header */
+    position: relative; /* Enable positioning for child elements */
 }
 
-.score-header {
+.score-footer {
     position: absolute;
-    top: 10px;
-    right: 10px;
+    bottom: 10px; /* Align score to the bottom */
+    right: 10px; /* Align score to the right */
     font-size: 1rem;
     font-weight: bold;
+    background-color: rgba(64, 196, 179, 0.1); /* Optional background for visibility */
+    padding: 5px 10px;
+    border-radius: 5px;
+    color: #40C4B3;
 }
 
 .quiz-card-container h2 {

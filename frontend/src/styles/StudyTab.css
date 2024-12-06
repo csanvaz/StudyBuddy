@@ -26,6 +26,7 @@
 
 .material-group {
   margin-bottom: 5px;
+  
 }
 
 .material-item {
@@ -36,7 +37,7 @@
 }
 
 .material-button {
-  background-color: #f5f7fa;
+  background-color: #1abc9c;
   padding: 10px 10px;
   border: 2px solid #dfe6e9;
   border-radius: 5px;
@@ -48,6 +49,7 @@
 
 .material-button:hover {
   background-color: #ecf0f1;
+  color:#1abc9c;
   transform: scale(1.05);
   box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
 }
