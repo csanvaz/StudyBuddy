@@ -23,7 +23,7 @@ const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 const upload = multer({ dest: 'uploads/' });
 const cors = require('cors');
 app.use(cors({
-  origin: true,//'https://main.d3mw78ay7wmpwg.amplifyapp.com/',
+  origin: 'https://main.d3mw78ay7wmpwg.amplifyapp.com',
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true,
 }));
