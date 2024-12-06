@@ -66,7 +66,6 @@ const SettingsTab = ({ userId }) => {
         {error && <div className="error-message">{error}</div>}
         {success && <div className="success-message">{success}</div>}
       </div>
-      {/* Add more settings sections here */}
     </div>
   );
 };

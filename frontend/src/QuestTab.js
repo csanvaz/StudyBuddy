@@ -4,6 +4,7 @@ import './styles/QuestTab.css';
 import { GiGoldBar } from 'react-icons/gi'; // Import the gold bar icon
 import backendURL from './config';
 
+
 // Fixed import of images
 const images = {
   '/assets/2dglasses.png': require('./assets/2dglasses.png'),
@@ -19,9 +20,30 @@ const images = {
   // Add other images here...
 };
 
-function QuestPage() {
+function QuestPage({ userId }) {
   const [completedQuests, setCompletedQuests] = useState(0); // Tracks completed activities
   const [shopItems, setShopItems] = useState([]); // Dynamic shop items
+  const [userItems, setUserItems] = useState([]); // User's items
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+
+  useEffect(() => {
+    const fetchUserItems = async () => {
+      try {
+        const response = await fetch(`${backendURL}/user/${userId}/items`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        console.log('Fetched user items:', data);
+        setUserItems(data);
+      } catch (error) {
+        console.error('Error fetching user items:', error);
+      }
+    };
+
+    fetchUserItems();
+  }, [userId]);
 
   // Fetch shop items from the backend
   useEffect(() => {
@@ -48,31 +70,30 @@ function QuestPage() {
     }
   };
 
-  const handlePurchase = async (itemId, specialAbility) => {
-    console.log(`Purchased item ${itemId} with ability: ${specialAbility}`);
-    // Implement purchase logic here 
-    // Example: Send a request to the backend to process the purchase
+  const handlePurchase = async (itemId, userId) => {
+    console.log(`Purchased item ${itemId} with ability}`);
+    setErrorMessage('');
+    setSuccessMessage('');
     try {
       const response = await fetch(`${backendURL}/api/purchase`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ itemId }),
+        body: JSON.stringify({ userId: userId, itemId: itemId }),
       });
 
       if (!response.ok) {
-        throw new Error(`Purchase failed with status: ${response.status}`);
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Unknown error');
       }
 
       const result = await response.json();
-      console.log(`Purchase successful:`, result);
-      alert(`You have successfully purchased ${result.item.title}!`);
-      // Optionally, update the UI or state based on the purchase
-    } catch (error) {
+      setSuccessMessage(`You have successfully purchased ${result.title}!`);
+      } catch (error) {
       console.error('Error purchasing item:', error);
-      alert('Failed to purchase the item. Please try again later.');
-    }
+      setErrorMessage(error.message);
+      }
   };
 
   return (
@@ -152,6 +173,20 @@ function QuestPage() {
         <div className="av-box">
           <p>Complete weekly quests to receive gold!</p>
         </div>
+        
+        {/* Display error message if it exists */}
+        {errorMessage && (
+          <div className="error-message" style={{ color: 'red', margin: '10px 0' }}>
+            <strong>Error:</strong> {errorMessage}
+          </div>
+        )}
+
+        {/* Display success message if it exists */}
+        {successMessage && (
+          <div className="success-message" style={{ color: 'green', margin: '10px 0' }}>
+            <strong>Success:</strong> {successMessage}
+          </div>
+        )}
 
         {/* Dynamic Shop Grid */}
         <div className="shop-grid">
@@ -169,7 +204,7 @@ function QuestPage() {
                 <p>{item.title}</p>
                 <button
                   className="shop-button"
-                  onClick={() => handlePurchase(item.id, item.special_ability)}
+                  onClick={() => handlePurchase(item.id, userId)}
                   aria-label={`Buy ${item.title} for ${item.cost} gold`}
                 >
                   <GiGoldBar style={{ color: 'gold', fontSize: '24px', marginRight: '8px' }} />
