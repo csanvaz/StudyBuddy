@@ -20,6 +20,7 @@ function StudyTab({ userId, token }) {
                 token
             });
             setStudyMaterials(response.data.content);
+            console.log("fetchUser Content returned", response.data.content.data.data.questions)
         } catch (error) {
             console.error('Error fetching user content:', error.response ? error.response.data : error.message);
         }
