@@ -3,10 +3,11 @@ import axios from 'axios';
 import ContentPopup from './ContentPopup';
 import './styles/StudyTab.css';
 import Flashcard from './components/flashCard';
-import QuizCard from './components/quizCard'
+import QuizCard from './components/quizCard';
+import Helper from './Helper'; // Import Carlos the Helper
 import backendURL from './config';
 
-function StudyTab({ userId, token }) {
+function StudyTab({ userId, token, helperSteps, setHelperSteps }) {
     const [studyMaterials, setStudyMaterials] = useState([]);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [currentTopic, setCurrentTopic] = useState('');
@@ -19,15 +20,21 @@ function StudyTab({ userId, token }) {
                 token
             });
             setStudyMaterials(response.data.content);
-            console.log("fetchUser Content returned", response.data.content.data.data.questions)
+            console.log("fetchUser Content returned", response.data.content.data.data.questions);
         } catch (error) {
             console.error('Error fetching user content:', error.response ? error.response.data : error.message);
         }
-    },[userId, token]);
+    }, [userId, token]);
 
     useEffect(() => {
+        setHelperSteps([
+            { id: 'welcome-study', title: 'Welcome to the Study Tab! This is where your learning happens!', image: require('./assets/yeti/yeti1.png') },
+            { id: 'add-content', title: "Click on 'Add Content' to upload your study material. You can create quizzes or flashcards. It will take a few seconds for me to upload your material.", image: require('./assets/yeti/yeti2.png') },
+            { id: 'select-material', title: "Click on any content to start studying. Flashcards or quizzes, it's up to you!", image: require('./assets/yeti/yeti3.png') },
+            { id: 'delete-content', title: 'Finished with a topic? Use the delete button to clean up your study materials.', image: require('./assets/yeti/yeti4.png') },
+        ]);
         fetchUserContent();
-    }, [fetchUserContent]);
+    }, [fetchUserContent, setHelperSteps]);
 
     const handleAddContent = async (material) => {
         try {
@@ -59,7 +66,7 @@ function StudyTab({ userId, token }) {
                 password: token, // Assuming token is used as password for validation
                 contentId
             });
-    
+
             if (response.data.success) {
                 // Refetch the content after successful deletion
                 fetchUserContent();
@@ -82,6 +89,9 @@ function StudyTab({ userId, token }) {
 
     return (
         <div className="study-tab-background">
+            {/* Display Carlos the Yeti */}
+            <Helper steps={helperSteps} />
+
             <div className="study-tab-sheet">
                 <button
                     className="full-width-button"
@@ -121,7 +131,7 @@ function StudyTab({ userId, token }) {
                 {currentContent && (
                     <div className="flashcard-section">
                         {currentContent.is_quiz ? (
-                            <QuizCard questionData={currentContent.data.data.questions} userId={userId}/> // Pass the full array of questions
+                            <QuizCard questionData={currentContent.data.data.questions} userId={userId} /> // Pass the full array of questions
                         ) : (
                             <Flashcard questions={currentContent.data.data.questions} topic={currentTopic} />
                         )}
@@ -133,3 +143,4 @@ function StudyTab({ userId, token }) {
 }
 
 export default StudyTab;
+

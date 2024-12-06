@@ -2,12 +2,49 @@ import React, { useState, useEffect } from 'react';
 import * as GiIcons from 'react-icons/gi';
 import multiavatar from '@multiavatar/multiavatar';
 import backendURL from './config';
+import Draggable from 'react-draggable';
+import Helper from './Helper'; // Import Helper component for Carlos
 
 const Home = ({ userName, avatarName, handleAvatarChange, userId }) => {
   const [inputValue, setInputValue] = useState(avatarName);
   const [gold, setGold] = useState(0);
   const [xp, getXP] = useState(0); 
   const [streak, getStreak] = useState(0);
+  const [helperSteps, setHelperSteps] = useState([]);
+  const [showHelper, setShowHelper] = useState(true);
+
+  // Helper steps for Carlos the Yeti on the home page
+  useEffect(() => {
+    setHelperSteps([
+      {
+        id: 'welcome-main',
+        title: 'Welcome to the main page! Here, you can see your avatar.',
+        image: require('./assets/yeti/yeti1.png'),
+      },
+      {
+        id: 'stats-info',
+        title: 'Beneath your avatar, you can view your stats.',
+        image: require('./assets/yeti/yeti8.png'),
+      },
+      {
+        id: 'xp-info',
+        title: 'You earn XP for completing each lesson.',
+        image: require('./assets/yeti/yeti3.png'),
+      },
+      {
+        id: 'streak-info',
+        title: "Your streak shows how many consecutive days you've been studying.",
+        image: require('./assets/yeti/yeti2.png'),
+      },
+      {
+        id: 'gold-info',
+        title: 'You earn gold for study-related actions and completing quests.',
+        image: require('./assets/yeti/yeti1.png'),
+      },
+]);
+  }, []);
+
+  // Fetch gold amount
 
   // CHANGE FETCH URL TO USE THE CORRECT ENDPOINT
   useEffect(() => {
@@ -96,6 +133,10 @@ const Home = ({ userName, avatarName, handleAvatarChange, userId }) => {
 
   return (
     <div className="content">
+    {/* Carlos the Yeti Helper */}
+      {showHelper && <Helper steps={helperSteps} onClose={() => setShowHelper(false)} />}
+
+      {/* Main content */}
       <div className="welcome-stats-container">
         <h1 className="welcome-text">Welcome, {userName}!</h1>
         {/* Avatar Display */}

@@ -1,0 +1,105 @@
+.helper-container {
+    position: fixed;
+    top: 10%;
+    right: 10%;
+    background: rgba(255, 255, 255, 0.95); /* Slightly more opaque background */
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3); /* Add a shadow around the box */
+    z-index: 1000;
+    max-width: 300px; /* Set max width */
+    text-align: center; /* Center align text and content */
+}
+
+.helper-header {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Minimize button (X) */
+.helper-close-button {
+    background: none;
+    border: none;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #ff4d4d;
+}
+
+.helper-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.helper-image {
+    width: 100px; /* Set desired size for Carlos */
+    height: auto; /* Maintain aspect ratio */
+    margin-bottom: 10px;
+    border-radius: 0;
+    box-shadow: none;
+    background: none;
+    padding: 0;
+}
+
+.helper-image::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    width: 120px; /* Glow size around Carlos */
+    height: 120px;
+    border-radius: 50%;
+    box-shadow: 0 0 20px 10px rgba(255, 215, 0, 0.7); /* Glowing effect */
+    z-index: -1; /* Behind Carlos */
+}
+
+.helper-text p {
+    font-size: 16px;
+    margin: 10px 0;
+}
+
+.helper-buttons {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+}
+
+.helper-button {
+    padding: 8px 12px;
+    font-size: 10px;
+    color: white;
+    background: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.helper-button:hover {
+    background: #0056b3;
+}
+
+/* Minimized state for Carlos */
+.helper-minimized {
+    position: fixed;
+    top: 10%;
+    right: 10%;
+    z-index: 1000;
+    cursor: pointer;
+    background: none;
+    border: none;
+}
+
+.helper-minimized img {
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+}

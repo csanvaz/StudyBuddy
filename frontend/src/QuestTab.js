@@ -3,6 +3,8 @@ import React, { useState, useEffect, useCallback } from 'react';
 import './styles/QuestTab.css';
 import { GiGoldBar } from 'react-icons/gi'; // Import the gold bar icon
 import backendURL from './config';
+import Draggable from 'react-draggable';
+import Helper from './Helper'; 
 
 
 // Fixed import of images
@@ -26,6 +28,7 @@ function QuestPage({ userId }) {
   const [userItems, setUserItems] = useState([]); // User's items
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  const [helperSteps, setHelperSteps] = useState([]); // Steps for Carlos the Yeti
 
   const fetchUserItems = useCallback(async () => {
     try {
@@ -63,6 +66,16 @@ function QuestPage({ userId }) {
 
     fetchShopItems();
   }, []); // Empty dependency array ensures this runs once on mount
+
+   // Set helper steps for Carlos the Yeti
+  useEffect(() => {
+    setHelperSteps([
+      { id: 'welcome-quest', title: 'Welcome to the Quest page!', image: require('./assets/yeti/yeti1.png') },
+      { id: 'study-daily', title: 'Study for 15 minutes daily to complete your daily quest!', image: require('./assets/yeti/yeti2.png') },
+      { id: 'complete-weekly', title: 'Complete 7 daily quests to earn extra gold!', image: require('./assets/yeti/yeti3.png') },
+      { id: 'gold-info', title: 'Want to know about gold? Spend it in our store and explore the options!', image: require('./assets/yeti/yeti4.png') },
+    ]);
+  }, []);
 
   const handleCompleteQuest = (index) => {
     if (index === completedQuests) {
@@ -129,6 +142,9 @@ function QuestPage({ userId }) {
 
   return (
     <div className="quest-page">
+    {/* Display Carlos the Yeti */}
+      <Helper steps={helperSteps} />
+
       {/* Weekly Quest Section */}
       <div className="weekly-quest">
         <h2>Weekly Quest</h2>

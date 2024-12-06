@@ -346,6 +346,32 @@ async function deleteContent(userId, contentId) {
     }
 }
 
+async function seedUserProgress() {
+    try {
+        const userProgress = [
+            { user_id: 1, registered: true, logged_in: true, visited_homepage: false, completed_tour: false },
+            { user_id: 2, registered: true, logged_in: false, visited_homepage: false, completed_tour: false },
+        ];
+
+        for (const progress of userProgress) {
+            await pool.query(
+                `INSERT INTO user_progress (user_id, registered, logged_in, visited_homepage, completed_tour)
+                 VALUES ($1, $2, $3, $4, $5)
+                 ON CONFLICT (user_id) DO UPDATE SET 
+                     registered = EXCLUDED.registered,
+                     logged_in = EXCLUDED.logged_in,
+                     visited_homepage = EXCLUDED.visited_homepage,
+                     completed_tour = EXCLUDED.completed_tour`,
+                [progress.user_id, progress.registered, progress.logged_in, progress.visited_homepage, progress.completed_tour]
+            );
+        }
+
+        console.log('User progress seeded successfully');
+    } catch (error) {
+        console.error('Error seeding user progress:', error);
+    }
+}
+
 module.exports = {
     pool,
     registerUser,
@@ -365,5 +391,6 @@ module.exports = {
     getXP,
     getStreak,
     updateStreak,
-    updateXP
+    updateXP,
+    seedUserProgress,
   };

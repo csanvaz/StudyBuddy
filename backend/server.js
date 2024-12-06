@@ -11,6 +11,7 @@ require('dotenv').config();
 const { pool } = require('./database');
 const crypto = require('crypto');
 const bcrypt = require('bcrypt');
+const { seedUserProgress } = require('./database');
 
 //https://CS484FinalProjectEnvironment-env.eba-qkbmea2x.us-east-1.elasticbeanstalk.com/api/topic-questions
 //origin:
@@ -695,6 +696,67 @@ app.post('/reset-password', async (req, res) => {
 
 cron.schedule('0 0 * * *', () => {
     sendComeBackEmails();
+});
+
+app.get('/api/user-progress', async (req, res) => {
+    const { userId } = req.query;
+
+    if (!userId) {
+        return res.status(400).json({ error: 'Missing userId' });
+    }
+
+    try {
+        const result = await pool.query(
+            `SELECT registered, logged_in, visited_homepage, completed_tour
+             FROM user_progress
+             WHERE user_id = $1`,
+            [userId]
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: 'User progress not found' });
+        }
+
+        res.json(result.rows[0]); // Return the progress object
+    } catch (error) {
+        console.error('Error fetching user progress:', error);
+        res.status(500).json({ error: 'An error occurred while fetching user progress' });
+    }
+});
+
+app.post('/api/complete-step', async (req, res) => {
+    const { userId, stepId } = req.body;
+
+    if (!userId || !stepId) {
+        return res.status(400).json({ error: 'Missing userId or stepId' });
+    }
+
+    try {
+        let updateQuery = '';
+        switch (stepId) {
+            case 'register':
+                updateQuery = 'UPDATE user_progress SET registered = true WHERE user_id = $1';
+                break;
+            case 'login':
+                updateQuery = 'UPDATE user_progress SET logged_in = true WHERE user_id = $1';
+                break;
+            case 'homepage':
+                updateQuery = 'UPDATE user_progress SET visited_homepage = true WHERE user_id = $1';
+                break;
+            case 'tour':
+                updateQuery = 'UPDATE user_progress SET completed_tour = true WHERE user_id = $1';
+                break;
+            default:
+                return res.status(400).json({ error: 'Invalid stepId' });
+        }
+
+        await pool.query(updateQuery, [userId]);
+
+        res.json({ success: true, message: `Step "${stepId}" marked as complete for user ${userId}` });
+    } catch (error) {
+        console.error('Error marking step as complete:', error);
+        res.status(500).json({ error: 'An error occurred while marking the step as complete' });
+    }
 });
 
 
