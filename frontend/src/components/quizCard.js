@@ -17,20 +17,21 @@ function QuizCard({ questionData = [], userId }) {
         setSelectedAnswer(e.target.value);
     };
 
-    // Handle form submission and check the answer
     const handleSubmit = () => {
         if (!currentQuestion) return; // Prevent further actions if question is undefined
-
-        let updatedScore = score;
+    
+        let updatedScore = score; // Start with the current score
         if (selectedAnswer === currentQuestion.correct_answer) {
             setIsCorrect(true); // Correct answer
-            setScore((prevScore) => prevScore + 10); // Award 10 points for correct answer
+            updatedScore += 10; // Add 10 points if the answer is correct
         } else {
             setIsCorrect(false); // Incorrect answer
         }
-
-        updateHomeXP(userId, updatedScore);
+    
+        setScore(updatedScore); // Update the state with the new score
+        updateHomeXP(userId, updatedScore); // Send the updated score to the backend
     };
+    
 
     // Send score update to the backend
     const updateHomeXP = async (userId, updatedScore) => {
