@@ -35,10 +35,9 @@ const AppContent = ({ userName, avatarName, handleAvatarChange, userId, token, o
       case 'study':
         return <StudyTab userId={userId} token={token}/>;
       case 'quest':
-        return <QuestTab />;
-        case 'settings':
-          return <SettingsTab userId={userId}/>;
         return <QuestTab userId={userId} token={token}/>;
+      case 'settings':
+        return <SettingsTab userId={userId}/>;
       default:
         return null;
     }

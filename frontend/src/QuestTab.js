@@ -25,6 +25,7 @@ function QuestPage({ userId }) {
   const [shopItems, setShopItems] = useState([]); // Dynamic shop items
   const [userItems, setUserItems] = useState([]); // User's items
   const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
 
   useEffect(() => {
     const fetchUserItems = async () => {
@@ -72,6 +73,7 @@ function QuestPage({ userId }) {
   const handlePurchase = async (itemId, userId) => {
     console.log(`Purchased item ${itemId} with ability}`);
     setErrorMessage('');
+    setSuccessMessage('');
     try {
       const response = await fetch(`${backendURL}/api/purchase`, {
         method: 'POST',
@@ -87,7 +89,7 @@ function QuestPage({ userId }) {
       }
 
       const result = await response.json();
-      alert(`You have successfully purchased ${result.title}!`);
+      setSuccessMessage(`You have successfully purchased ${result.title}!`);
       } catch (error) {
       console.error('Error purchasing item:', error);
       setErrorMessage(error.message);
