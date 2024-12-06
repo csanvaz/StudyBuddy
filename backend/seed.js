@@ -4,10 +4,10 @@ const { v4: uuidv4 } = require('uuid');
 
 async function dropTables() {
     try {
-        await pool.query('DROP TABLE IF EXISTS content');
-        await pool.query('DROP TABLE IF EXISTS users');
-        await pool.query('DROP TABLE IF EXISTS shop_items');
-        await pool.query('DROP TABLE IF EXISTS user_items');
+        await pool.query('DROP TABLE IF EXISTS user_items CASCADE');
+        await pool.query('DROP TABLE IF EXISTS content CASCADE');
+        await pool.query('DROP TABLE IF EXISTS shop_items CASCADE');
+        await pool.query('DROP TABLE IF EXISTS users CASCADE');
         console.log('Tables dropped successfully');
     } catch (error) {
         console.error('Error dropping tables:', error);

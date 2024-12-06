@@ -307,7 +307,7 @@ app.post('/api/purchase', async (req, res) => {
         const userResult = await pool.query('SELECT gold FROM users WHERE user_id = $1', [userId]);
         const itemResult = await pool.query('SELECT cost FROM shop_items WHERE id = $1', [itemId]);
         const ownershipResult = await pool.query(
-            'SELECT id FROM user_items WHERE user_id = $1 AND item_id = $2',
+            'SELECT item_id FROM user_items WHERE user_id = $1 AND item_id = $2',
             [userId, itemId]
         );
 
@@ -367,17 +367,35 @@ app.get('/api/shop-items', async (req, res) => {
 
 app.get('/user/:id/items', async (req, res) => {
     const { id } = req.params;
+
     try {
+        if (!id) {
+            return res.status(400).json({ error: 'User ID is required' });
+        }
+
         const result = await pool.query(
-            `SELECT si.* 
-             FROM shop_items si
-             JOIN user_items ui ON si.id = ui.item_id
-             WHERE ui.user_id = $1`,
+            `
+            SELECT ui.user_id,
+                si.id AS item_id,
+                si.title,
+                si.image,
+                si.special_ability
+            FROM user_items ui
+            JOIN shop_items si 
+            ON si.id = ui.item_id
+            WHERE ui.user_id = $1
+            `,
             [id]
         );
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: 'No items found for this user' });
+        }
+
         res.json(result.rows);
     } catch (error) {
         console.error('Error fetching user items:', error);
+
         res.status(500).json({ error: 'Internal server error' });
     }
 });
