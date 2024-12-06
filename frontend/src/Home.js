@@ -18,7 +18,7 @@ const Home = ({ userName, avatarName, handleAvatarChange, userId }) => {
     setHelperSteps([
       {
         id: 'welcome-main',
-        title: 'Welcome to the main page! Here, you can see your avatar.',
+        title: 'Welcome to the main page! Here, you can see your avatar. It is generated randomly, but you can change it by typing anything!',
         image: require('./assets/yeti/yeti1.png'),
       },
       {
@@ -38,7 +38,7 @@ const Home = ({ userName, avatarName, handleAvatarChange, userId }) => {
       },
       {
         id: 'gold-info',
-        title: 'You earn gold for study-related actions and completing quests.',
+        title: 'You earn gold for study-related actions.',
         image: require('./assets/yeti/yeti1.png'),
       },
 ]);

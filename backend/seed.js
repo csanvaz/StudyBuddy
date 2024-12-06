@@ -129,40 +129,6 @@ async function seedUsers() {
     }
 }
 
-async function seedContent() {
-    try {
-        const text_id = uuidv4();
-
-        const content = [
-            {
-                user_id: 1,
-                title: "Math Quiz",
-                text_id: text_id,
-                is_quiz: true,
-                data: { question: "What is 2 + 2?", options: ["3", "4", "5"], answer: "4" }
-            },
-            {
-                user_id: 1,
-                title: "Geography Question",
-                text_id: text_id,
-                is_quiz: false,
-                data: { question: "What is the capital of France?", answer: "Paris" }
-            }
-        ];
-
-        for (const item of content) {
-            await pool.query(
-                'INSERT INTO content (title, text_id, is_quiz, data) VALUES ($1, $2, $3, $4)',
-                [item.title, item.text_id, item.is_quiz, item.data]
-            );
-        }
-
-        console.log('Content seeded successfully');
-    } catch (error) {
-        console.error('Error seeding content:', error);
-    }
-}
-
 async function seedShopItems() {
     try {
         const shopItems = [
@@ -272,7 +238,6 @@ async function seedDatabase() {
     await dropTables();
     await createTables();
     await seedUsers();
-    await seedContent();
     await seedShopItems(); // shop items
     await seedUserItems();
     await seedUserProgress();

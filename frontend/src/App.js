@@ -22,7 +22,7 @@ const App = () => {
 
   const navigate = useNavigate();
 
-  // Fetch state from storage
+  // Fetch state from localStorage
   useEffect(() => {
     const savedToken = localStorage.getItem('token');
     const savedUserName = localStorage.getItem('userName');
@@ -39,50 +39,22 @@ const App = () => {
     setIsLoading(false);
   }, []);
 
-  // Set helper steps for non-logged-in users only
-  useEffect(() => {
-    if (!isLoggedIn) {
-      setHelperSteps([
-        {
-          id: 'welcome',
-          title:
-            'Welcome to the StudyBuddy! My name is Carlos! And I am your Study Buddy',
-          image: require('./assets/yeti/yeti1.png'),
-        },
-        {
-          id: 'ask-registered',
-          title: 'Are you registered yet?',
-          type: 'question',
-          image: require('./assets/yeti/yeti1.png'),
-        },
-        {
-          id: 'not-registered',
-          title:
-            'Not a problem! Go to the Register page to create an account.',
-          image: require('./assets/yeti/yeti1.png'),
-        },
-        {
-          id: 'post-registration',
-          title: 'I am not looking at your password!',
-          image: require('./assets/yeti/yeti4.png'),
-        },
-        {
-          id: 'registered',
-          title: 'Great! You are all set, then!',
-          image: require('./assets/yeti/yeti2.png'),
-        },
-      ]);
-    } else {
-      setHelperSteps([]); // Reset steps for logged-in users
-    }
-  }, [isLoggedIn]);
-
+  // Set helper steps for Carlos
+ useEffect(() => {
+  if (!isLoggedIn) {
+    setHelperSteps([
+      { id: 'welcome', title: 'Welcome to the StudyBuddy! My name is Carlos! I am your personal study buddy! We reccomend you use this application in full screen and use your actual email.', image: require('./assets/yeti/yeti1.png') },
+      { id: 'ask-registered', title: 'Are you registered yet?', type: 'question', image: require('./assets/yeti/yeti1.png') },
+      { id: 'registered', title: 'Great! You are all set! Log in any time!', image: require('./assets/yeti/yeti2.png') },
+      { id: 'not-registered', title: 'Not a problem! Go to the Register page to create an account.', image: require('./assets/yeti/yeti1.png') },
+      { id: 'post-registration', title: 'Go ahead! I am not looking at your password!', image: require('./assets/yeti/yeti4.png') },
+    ]);
+  }
+}, [isLoggedIn]);
+  
   const handleLogin = async (username, password) => {
     try {
-      const response = await axios.post(`${backendURL}/login`, {
-        username,
-        password,
-      });
+      const response = await axios.post(`${backendURL}/login`, { username, password });
 
       if (response.status === 200) {
         const data = response.data;
@@ -110,11 +82,7 @@ const App = () => {
 
   const handleRegister = async (username, email, password, onSuccess) => {
     try {
-      const response = await axios.post(`${backendURL}/register`, {
-        username,
-        email,
-        password,
-      });
+      const response = await axios.post(`${backendURL}/register`, { username, email, password });
 
       if (response.status === 201) {
         onSuccess();
@@ -150,12 +118,10 @@ const App = () => {
   };
 
   const handleLogout = () => {
-    // Clear all state
     setIsLoggedIn(false);
     setUserName('');
     setToken('');
     setAvatarName('default');
-    setIsLoggedIn(false);
     setUserId('');
     localStorage.clear();
     navigate('/login');
@@ -166,13 +132,13 @@ const App = () => {
   }
 
   return (
-    <Routes>
-      <Route
-        path="/"
-        element={
-          <>
-            <Helper steps={helperSteps} />
-            {isLoggedIn ? (
+    <>
+      {!isLoggedIn && <Helper steps={helperSteps} />}
+      <Routes>
+        <Route
+          path="/"
+          element={
+            isLoggedIn ? (
               <AppContent
                 userName={userName}
                 avatarName={avatarName}
@@ -184,20 +150,14 @@ const App = () => {
               />
             ) : (
               <Navigate to="/login" />
-            )}
-          </>
-        }
-      />
-      <Route
-        path="/login"
-        element={<Login onLogin={handleLogin} loginError={loginError} />}
-      />
-      <Route
-        path="/register"
-        element={<Register onRegister={handleRegister} />}
-      />
-      <Route path="/forgot-password" element={<ForgotPassword />} />
-    </Routes>
+            )
+          }
+        />
+        <Route path="/login" element={<Login onLogin={handleLogin} loginError={loginError} />} />
+        <Route path="/register" element={<Register onRegister={handleRegister} />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+      </Routes>
+    </>
   );
 };
 

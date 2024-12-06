@@ -18,9 +18,13 @@ The output should be in the following format:
 
 const askMyDocPrompt = '';
 
+const emailTask = `task: Generate a friendly and engaging email to encourage the user to come back to our platform. Use the following content as a reference to highlight what they can continue learning. The output should be in HTML format. The content is: {CONTENT}`;
+
+
 module.exports = { 
     systemIdentity, 
     flashCardTask, 
     quizTask,
-    askMyDocPrompt 
+    askMyDocPrompt,
+    emailTask
 };

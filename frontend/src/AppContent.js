@@ -67,7 +67,7 @@ const AppContent = ({ userName, avatarName, handleAvatarChange, userId, token, o
           onClick={() => setCurrentTab('study')}
         />
         <MenuButton
-          text="QUEST"
+          text="SHOP"
           icon={GiIcons.GiHiking}
           isActive={currentTab === 'quest'}
           onClick={() => setCurrentTab('quest')}
