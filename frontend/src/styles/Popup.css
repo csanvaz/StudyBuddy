@@ -202,3 +202,41 @@
 .menu-option:hover {
   background-color: #2980b9;
 }
+
+.popup-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.checkbox-container {
+  display: flex;
+  flex-direction: column; /* Stack the items vertically */
+  gap: 10px; /* Add space between each checkbox */
+}
+
+.checkbox-item {
+  display: flex;
+  align-items: center;
+}
+
+.checkbox-item label {
+  margin-right: 8px; /* Space between label and checkbox */
+}
+
+.checkbox-item input {
+  transform: scale(1.2);
+  cursor: pointer;
+}
+
+
+.input-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.submit-button, .close-button {
+  margin-top: 10px;
+}

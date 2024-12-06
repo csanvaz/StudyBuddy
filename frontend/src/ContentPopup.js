@@ -31,24 +31,28 @@ function ContentPopup({ onAddContent, onClose }) {
                     ></textarea>
                 </div>
                 <div className="checkbox-container">
-                    <label>
+                    <div className="checkbox-item">
+                        <label>
+                            Flashcards
+                        </label>
                         <input
                             type="checkbox"
                             checked={generateFlashcards}
                             onChange={(e) => setGenerateFlashcards(e.target.checked)}
                             disabled={generateQuiz} // Disable flashcards checkbox if quiz is selected
                         />
-                        Generate Flashcards
-                    </label>
-                    <label>
+                    </div>
+                    <div className="checkbox-item">
+                        <label>
+                            Quiz
+                        </label>
                         <input
                             type="checkbox"
                             checked={generateQuiz}
                             onChange={(e) => setGenerateQuiz(e.target.checked)}
                             disabled={generateFlashcards} // Disable quiz checkbox if flashcards is selected
                         />
-                        Generate Quiz
-                    </label>
+                    </div>
                 </div>
                 <div className="button-container">
                     <button className="submit-button" onClick={handleSubmit}>Add Content</button>
