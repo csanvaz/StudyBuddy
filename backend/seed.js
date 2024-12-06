@@ -1,13 +1,15 @@
 const { pool } = require('./database');
 const bcrypt = require('bcrypt');
 const { v4: uuidv4 } = require('uuid');
+const { seedUserProgress } = require('./database');
 
 async function dropTables() {
     try {
         await pool.query('DROP TABLE IF EXISTS user_items CASCADE');
-        await pool.query('DROP TABLE IF EXISTS content CASCADE');
         await pool.query('DROP TABLE IF EXISTS shop_items CASCADE');
-        await pool.query('DROP TABLE IF EXISTS users CASCADE');
+        await pool.query('DROP TABLE IF EXISTS content CASCADE');
+        await pool.query('DROP TABLE IF EXISTS user_progress CASCADE');
+        await pool.query('DROP TABLE IF EXISTS users CASCADE'); 
         console.log('Tables dropped successfully');
     } catch (error) {
         console.error('Error dropping tables:', error);
@@ -75,6 +77,18 @@ async function createTables() {
                 UNIQUE(email)
             );
         `);
+        // New: Create user_progress table
+        await pool.query(`
+            CREATE TABLE IF NOT EXISTS user_progress (
+                user_id INT REFERENCES users(user_id) ON DELETE CASCADE,
+                registered BOOLEAN DEFAULT FALSE,
+                logged_in BOOLEAN DEFAULT FALSE,
+                visited_homepage BOOLEAN DEFAULT FALSE,
+                completed_tour BOOLEAN DEFAULT FALSE,
+                PRIMARY KEY (user_id)
+            );
+        `);
+        console.log('User progress table created successfully');
     } catch (error) {
         console.error('Error creating tables:', error);
     }
@@ -241,6 +255,7 @@ async function seedUserItems() {
         for (const userItem of userItems) {
             await pool.query(
                 'INSERT INTO user_items (user_id, item_id) VALUES ($1, $2)',
+                 ON CONFLICT DO NOTHING`,
                 [userItem.user_id, userItem.item_id]
             );
         }
@@ -260,6 +275,7 @@ async function seedDatabase() {
     await seedContent();
     await seedShopItems(); // shop items
     await seedUserItems();
+    await seedUserProgress();
     pool.end();
 }
 
