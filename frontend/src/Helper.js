@@ -8,13 +8,26 @@ const Helper = ({ steps }) => {
   const [isMinimized, setIsMinimized] = useState(false);
   const navigate = useNavigate(); // Initialize navigate
 
-  if (steps.length === 0) return null;
+  if (!steps || steps.length === 0) return null;
 
   const currentStep = steps[currentStepIndex];
 
   const handleNext = () => {
     if (currentStep.id === 'registered') {
-      // Close Carlos after the last step
+      // Close Carlos after the final step
+      setIsMinimized(true);
+      return;
+    }
+
+    if (currentStep.id === 'not-registered') {
+      // Redirect to the registration page after "Not a problem" step
+      navigate('/register');
+      setCurrentStepIndex(steps.findIndex((step) => step.id === 'post-registration'));
+      return;
+    }
+
+    if (currentStep.id === 'post-registration') {
+      // Close Carlos after the registration message
       setIsMinimized(true);
       return;
     }
@@ -32,9 +45,7 @@ const Helper = ({ steps }) => {
     if (choice === 'yes') {
       setCurrentStepIndex(steps.findIndex((step) => step.id === 'registered'));
     } else if (choice === 'no') {
-      // Redirect to the registration page and set the next step to post-registration
-      navigate('/register');
-      setCurrentStepIndex(steps.findIndex((step) => step.id === 'post-registration'));
+      setCurrentStepIndex(steps.findIndex((step) => step.id === 'not-registered'));
     }
   };
 
@@ -52,7 +63,9 @@ const Helper = ({ steps }) => {
           </button>
         </div>
         <div className="helper-content">
-          <img src={currentStep.image} alt="Yeti" className="helper-image" />
+          {currentStep.image && (
+            <img src={currentStep.image} alt="Yeti" className="helper-image" />
+          )}
           <div className="helper-text">
             <p>{currentStep.title}</p>
             <div className="helper-buttons">
@@ -85,3 +98,4 @@ const Helper = ({ steps }) => {
 };
 
 export default Helper;
+
