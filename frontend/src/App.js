@@ -43,7 +43,7 @@ const App = () => {
  useEffect(() => {
   if (!isLoggedIn) {
     setHelperSteps([
-      { id: 'welcome', title: 'Welcome to the StudyBuddy! My name is Carlos! I am your personal study buddy!', image: require('./assets/yeti/yeti1.png') },
+      { id: 'welcome', title: 'Welcome to the StudyBuddy! My name is Carlos! I am your personal study buddy! We reccomend you use this application in full screen and use your actual email.', image: require('./assets/yeti/yeti1.png') },
       { id: 'ask-registered', title: 'Are you registered yet?', type: 'question', image: require('./assets/yeti/yeti1.png') },
       { id: 'registered', title: 'Great! You are all set! Log in any time!', image: require('./assets/yeti/yeti2.png') },
       { id: 'not-registered', title: 'Not a problem! Go to the Register page to create an account.', image: require('./assets/yeti/yeti1.png') },
