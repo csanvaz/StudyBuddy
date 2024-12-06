@@ -30,6 +30,7 @@ const AppContent = ({ userName, avatarName, handleAvatarChange, userId, token, o
             userName={userName}
             avatarName={avatarName}
             handleAvatarChange={handleAvatarChange}
+            userId={userId}
           />
         );
       case 'study':

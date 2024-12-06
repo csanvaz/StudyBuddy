@@ -169,9 +169,9 @@ async function getShopItems() {
     }
 }
 
-async function getGold(userName) {
+async function getGold(userId) {
     try {
-        const result = await pool.query('SELECT gold FROM users WHERE username = $1', [userName]);
+        const result = await pool.query('SELECT gold FROM users WHERE user_id = $1', [userId]);
         if (result.rows.length > 0) {
             return { success: true, gold: result.rows[0].gold }; // Return the gold of the user
         } else {

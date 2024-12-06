@@ -221,10 +221,10 @@ app.post('/user-content', async (req, res) => {
     }
 });
 
-app.get('/user/:userName/gold', async (req, res) => {
-    const { userName } = req.params;
+app.get('/user/:userId/gold', async (req, res) => {
+    const { userId } = req.params;
     try {
-        const result = await getGold(userName);
+        const result = await getGold(userId);
         if (result.success) {
             res.json({ success: true, gold: result.gold });
         } else {
@@ -299,13 +299,13 @@ app.get('/user/:userName/streak', async (req, res) => {
 });
 
 app.post('/update-gold', async (req, res) => {
-    const { username, goldEarned } = req.body;
-    if (!username || typeof goldEarned !== 'number') {
+    const { userId, goldEarned } = req.body;
+    if (!userId || typeof goldEarned !== 'number') {
         return res.status(400).json({ success: false, message: 'Invalid input' });
     }
 
     try {
-        const userResult = await pool.query('SELECT gold FROM users WHERE username = $1', [username]);
+        const userResult = await pool.query('SELECT gold FROM users WHERE user_id = $1', [userId]);
 
         if (userResult.rows.length === 0) {
             return res.status(404).json({ success: false, message: 'User not found' });
@@ -316,7 +316,7 @@ app.post('/update-gold', async (req, res) => {
             return res.status(400).json({ success: false, message: 'Not enough gold' });
         }
 
-        await pool.query('UPDATE users SET gold = $1 WHERE username = $2', [newGold, username]);
+        await pool.query('UPDATE users SET gold = $1 WHERE user_id = $2', [newGold, userId]);
 
         res.json({ success: true, gold: newGold });
     } catch (error) {

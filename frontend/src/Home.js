@@ -3,7 +3,7 @@ import * as GiIcons from 'react-icons/gi';
 import multiavatar from '@multiavatar/multiavatar';
 import backendURL from './config';
 
-const Home = ({ userName, avatarName, handleAvatarChange }) => {
+const Home = ({ userName, avatarName, handleAvatarChange, userId }) => {
   const [inputValue, setInputValue] = useState(avatarName);
   const [gold, setGold] = useState(0);
   const [xp, getXP] = useState(0); 
@@ -13,7 +13,7 @@ const Home = ({ userName, avatarName, handleAvatarChange }) => {
   useEffect(() => {
     const fetchGold = async () => {
       try {
-        const response = await fetch(`${backendURL}/user/${userName}/gold`);
+        const response = await fetch(`${backendURL}/user/${userId}/gold`);
         const data = await response.json();
         if (data.success) {
           setGold(data.gold);
@@ -26,7 +26,7 @@ const Home = ({ userName, avatarName, handleAvatarChange }) => {
     };
 
     fetchGold();
-  }, [userName]);
+  }, [userId]);
 
   useEffect(() => {
     const fetchXP = async () => {
@@ -77,7 +77,7 @@ const Home = ({ userName, avatarName, handleAvatarChange }) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username: userName, goldEarned }),
+        body: JSON.stringify({ userId: userId, goldEarned }),
       });
       const data = await response.json();
       if (data.success) {
