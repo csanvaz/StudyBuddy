@@ -6,15 +6,18 @@ function ContentPopup({ onAddContent, onClose }) {
     const [text, setText] = useState('');
     const [generateFlashcards, setGenerateFlashcards] = useState(false);
     const [generateQuiz, setGenerateQuiz] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const handleSubmit = () => {
         onAddContent({ subject, text, generateFlashcards, generateQuiz });
+        setLoading(true);
     };
 
     return (
         <div className="popup">
             <div className="popup-inner">
                 <h3>Add New Content</h3>
+                {loading && <p>Loading...</p>}
                 <div className="input-container">
                     <input
                         type="text"
