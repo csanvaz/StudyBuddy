@@ -53,19 +53,23 @@ function StudyTab({ userId, token }) {
         setCurrentTopic(content.title);
     };
 
-    const handleDeleteContent = (contentId) => {
-        // Remove the material and its associated flashcard content from state
-        setStudyMaterials((prevMaterials) =>
-            prevMaterials.filter((material) => material.content_id !== contentId)
-        );
-
-        // Add the material to the deletedMaterials set
-        setDeletedMaterials((prevDeleted) => new Set(prevDeleted).add(contentId));
-
-        // If the deleted material was the currently displayed one, clear the content
-        if (currentContent && currentContent.content_id === contentId) {
-            setCurrentContent(null);  // Remove the current content
-            setCurrentTopic('');      // Remove the current topic
+    const handleDeleteContent = async (contentId) => {
+        try {
+            const response = await axios.post(`${backendURL}/delete-content`, {
+                userId,
+                password: token, // Assuming token is used as password for validation
+                contentId
+            });
+    
+            if (response.data.success) {
+                // Refetch the content after successful deletion
+                fetchUserContent();
+            } else {
+                alert('Failed to delete content: ' + response.data.message);
+            }
+        } catch (error) {
+            console.error('Error deleting content:', error.response ? error.response.data : error.message);
+            alert('An error occurred while deleting content. Please try again.');
         }
     };
 
