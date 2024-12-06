@@ -8,6 +8,7 @@ import AppContent from './AppContent.js';
 import axios from 'axios';
 import backendURL from './config';
 import ForgotPassword from './ForgotPassword';
+import Helper from './Helper';
 
 const App = () => {
   const [userName, setUserName] = useState("");
@@ -17,6 +18,7 @@ const App = () => {
   const [userId, setUserId] = useState("");
   const [loginError, setLoginError] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [helperSteps, setHelperSteps] = useState([]);
 
   const navigate = useNavigate();
 
@@ -36,6 +38,21 @@ const App = () => {
     }
     setIsLoading(false);
   }, []);
+
+  // Set helper steps for non-logged-in users only
+  useEffect(() => {
+    if (!isLoggedIn) {
+      setHelperSteps([
+        { id: 'welcome', title: 'Welcome to the StudyBuddy! My name is Carlos! And I am your Study Buddy', image: require('./assets/yeti/yeti1.png') },
+        { id: 'ask-registered', title: 'Are you registered yet?', type: 'question', image: require('./assets/yeti/yeti1.png') },
+        { id: 'not-registered', title: 'Not a problem! Go to the Register page to create an account.', image: require('./assets/yeti/yeti1.png') },
+        { id: 'post-registration', title: 'I am not looking at your password!', image: require('./assets/yeti/yeti4.png') },
+        { id: 'registered', title: 'Great! You are all set, then!', image: require('./assets/yeti/yeti2.png') },
+      ]);
+    } else {
+      setHelperSteps([]); // Reset steps for logged-in users
+    }
+  }, [isLoggedIn]);
 
   const handleLogin = async (username, password) => {
     try {
@@ -116,6 +133,11 @@ const App = () => {
 
   return (
       <Routes>
+    <>
+      {/* Carlos the Yeti is always displayed */}
+      <Helper steps={helperSteps} />
+
+      {/* Routes for the app */}
         <Route path="/login" element={<Login onLogin={handleLogin} loginError={loginError} />} />
         <Route path="/register" element={<Register onRegister={handleRegister} />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
