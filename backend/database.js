@@ -238,6 +238,33 @@ async function updatePassword(userId, newPassword) {
     }
 }
 
+async function getXP(userName) {
+    try {
+        const result = await pool.query('SELECT xp FROM users WHERE username = $1', [userName]);
+        if (result.rows.length > 0) {
+            return { success: true, xp: result.rows[0].xp }; 
+        } else {
+            return { success: false, message: 'User not found' };
+        }
+    } catch (error) {
+        console.error('Error fetching xp:', error);
+        return { success: false, error: error.message };
+    }
+}
+
+async function getStreak(userName) {
+    try {
+        const result = await pool.query('SELECT streak FROM users WHERE username = $1', [userName]);
+        if (result.rows.length > 0) {
+            return { success: true, streak: result.rows[0].streak }; 
+        } else {
+            return { success: false, message: 'User not found' };
+        }
+    } catch (error) {
+        console.error('Error fetching streak:', error);
+        return { success: false, error: error.message };
+    }
+}
 
 module.exports = {
     pool,
@@ -254,5 +281,7 @@ module.exports = {
     getGold,
     updateGold,
     deleteContent,
-    updatePassword
+    updatePassword,
+    getXP,
+    getStreak
   };

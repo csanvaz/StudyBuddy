@@ -7,7 +7,6 @@ import multiavatar from '@multiavatar/multiavatar';
 import AppContent from './AppContent.js';
 import axios from 'axios';
 import backendURL from './config';
-import QuestTab from './QuestTab';
 
 const App = () => {
   const [userName, setUserName] = useState("");

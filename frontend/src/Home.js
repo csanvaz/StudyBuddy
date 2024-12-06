@@ -6,7 +6,8 @@ import backendURL from './config';
 const Home = ({ userName, avatarName, handleAvatarChange }) => {
   const [inputValue, setInputValue] = useState(avatarName);
   const [gold, setGold] = useState(0);
-
+  const [xp, getXP] = useState(0); 
+  const [streak, getStreak] = useState(0);
 
   // CHANGE FETCH URL TO USE THE CORRECT ENDPOINT
   useEffect(() => {
@@ -27,8 +28,44 @@ const Home = ({ userName, avatarName, handleAvatarChange }) => {
     fetchGold();
   }, [userName]);
 
-  const getXP = () => 150;
-  const getStreak = () => 5;
+  useEffect(() => {
+    const fetchXP = async () => {
+      try {
+        const response = await fetch(`${backendURL}/user/${userName}/xp`);
+        const data = await response.json();
+        if (data.success) {
+          getXP(data.xp);
+        } else {
+          console.error('Error fetching XP:', data.message);
+        }
+      } catch (error) {
+        console.error('Error fetching XP:', error);
+      }
+    };
+
+    fetchXP();
+  }, [userName]);
+
+  useEffect(() => {
+    const fetchStreak = async () => {
+      try {
+        const response = await fetch(`${backendURL}/user/${userName}/streak`);
+        const data = await response.json();
+        if (data.success) {
+          getStreak(data.streak);
+        } else {
+          console.error('Error fetching streak:', data.message);
+        }
+      } catch (error) {
+        console.error('Error fetching streak:', error);
+      }
+    };
+
+    fetchStreak();
+  }, [userName]);
+
+  // const getXP = () => 150;
+  // const getStreak = () => 5;
   //const getGold = () => 100;
 
   // CHANGE FETCH URL TO USE THE CORRECT ENDPOINT
@@ -80,8 +117,8 @@ const Home = ({ userName, avatarName, handleAvatarChange }) => {
         <div className="stats-container">
           <p className="stats-title">Your statistics:</p>
           <div className="stats-grid">
-            <div className="stat-square xp-square">XP: {getXP()}</div>
-            <div className="stat-square streak-square">Streak: {getStreak()}</div>
+            <div className="stat-square xp-square">XP: {xp}</div>
+            <div className="stat-square streak-square">Streak: {streak}</div>
             <div className="stat-square gold-square">
               <GiIcons.GiGoldBar style={{ color: '#ef7971', fontSize: '24px', marginRight: '8px' }} />
               Gold: {gold}

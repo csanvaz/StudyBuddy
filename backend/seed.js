@@ -24,6 +24,8 @@ async function createTables() {
                 password VARCHAR(255) NOT NULL,
                 avatar VARCHAR(255),
                 gold INTEGER DEFAULT 0,
+                streak INTEGER DEFAULT 0,
+                xp INTEGER DEFAULT 0, 
                 last_login TIMESTAMP DEFAULT NOW()
             );
         `);
@@ -75,21 +77,25 @@ async function seedUsers() {
                 username: '123',
                 email: 'john@example.com',
                 password: await bcrypt.hash('123', 10),
-                avatar: 'default_avatar.png'
+                avatar: 'default_avatar.png',
+                streak: 0,
+                xp: 0 
             },
             {
                 username: 'jane_doe',
                 email: 'jane@example.com',
                 password: await bcrypt.hash('password123', 10),
-                avatar: 'default_avatar.png'
+                avatar: 'default_avatar.png',
+                streak: 0,
+                xp: 0
             }
         ];
 
         for (const user of users) {
             await pool.query(
-                'INSERT INTO users (username, email, password, avatar, gold, last_login) VALUES ($1, $2, $3, $4, $5, NOW()) ON CONFLICT (username) DO NOTHING',
-                [user.username, user.email, user.password, user.avatar, 0]
-            );
+                'INSERT INTO users (username, email, password, avatar, gold, streak, xp, last_login) VALUES ($1, $2, $3, $4, $5, $6, $7, NOW()) ON CONFLICT (username) DO NOTHING',
+                [user.username, user.email, user.password, user.avatar, 0, user.streak, user.xp]
+            );        
         }
 
         console.log('Users seeded successfully');

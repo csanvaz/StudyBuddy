@@ -3,7 +3,7 @@ const { OpenAI } = require('openai');
 const multer = require('multer');
 const fs = require('fs');
 const {systemIdentity, flashCardTask, quizTask} = require('./prompts.js');
-const { testDatabaseConnection, loginUser, registerUser, validatePassword, updateAvatar, createContent, getUserContent, setLoginNow, getShopItems, getGold, updateGold, updatePassword } = require('./database');
+const { testDatabaseConnection, loginUser, registerUser, validatePassword, updateAvatar, createContent, getUserContent, setLoginNow, getShopItems, getGold, getXP, updatePassword, getStreak } = require('./database');
 const { v4: uuidv4 } = require('uuid');
 const { sendEmail, sendWelcomeEmail } = require('./emailService');
 const cron = require('node-cron');
@@ -116,10 +116,6 @@ async function generateQuestions(content, Quiz, flashCard) {
         };
     }
 }
-
-
-
-
 
 // Route for topic-based questions
 app.post('/api/topic-questions', async (req, res) => {
@@ -236,6 +232,36 @@ app.get('/user/:userName/gold', async (req, res) => {
         }
     } catch (error) {
         console.error('Error fetching gold:', error);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+});
+
+app.get('/user/:userName/xp', async (req, res) => {
+    const { userName } = req.params;
+    try {
+        const result = await getXP(userName);
+        if (result.success) {
+            res.json({ success: true, xp: result.xp });
+        } else {
+            res.status(404).json({ success: false, message: 'User not found' });
+        }
+    } catch (error) {
+        console.error('Error fetching xp:', error);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+});
+
+app.get('/user/:userName/streak', async (req, res) => {
+    const { userName } = req.params;
+    try {
+        const result = await getStreak(userName);
+        if (result.success) {
+            res.json({ success: true, streak: result.streak });
+        } else {
+            res.status(404).json({ success: false, message: 'User not found' });
+        }
+    } catch (error) {
+        console.error('Error fetching streak:', error);
         res.status(500).json({ success: false, message: 'Server error' });
     }
 });
