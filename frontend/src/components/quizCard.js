@@ -33,7 +33,7 @@ function QuizCard({ questionData = [], userId }) {
     const updateHomeXP = async (userId, score) => {
         console.log("Updating Home XP", score);
         try {
-            const response = await fetch(`${backendURL}`, {
+            const response = await fetch(`${backendURL}/set/:userId/xp`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

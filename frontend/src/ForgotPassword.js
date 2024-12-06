@@ -1,24 +1,51 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import backendURL from './config'; 
+import axios from 'axios'; 
 import './styles/ForgotPassword.css';
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
+  const [isEmailValid, setIsEmailValid] = useState(true);
+  const [emailError, setEmailError] = useState('');
+  const [step, setStep] = useState('email');
   const [code, setCode] = useState('');
   const [newPassword, setNewPassword] = useState('');
-  const [step, setStep] = useState('email'); // 'email' or 'reset'
   const navigate = useNavigate();
 
-  const handleEmailSubmit = () => {
-    console.log('Email submitted:', email);
-    // Simulate backend response
-    setStep('reset');
+  const validateEmail = async () => {
+    try {
+      const response = await axios.post(`${backendURL}/validate-email`, { email }); 
+      if (response.status === 200 && response.data.success) {
+        setIsEmailValid(true);
+        setEmailError('');
+        setStep('reset'); 
+      }
+    } catch (error) {
+      setIsEmailValid(false);
+      if (error.response && error.response.status === 404) {
+        setEmailError('Email not associated with any account.');
+      } else {
+        setEmailError('An error occurred while validating the email.');
+      }
+    }
+  };
+
+  const handleEmailSubmit = async () => {
+    console.log('Validating email:', email);
+    await validateEmail();
+  };
+
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+    setIsEmailValid(true); 
+    setEmailError(''); 
   };
 
   const handlePasswordReset = () => {
     console.log('Password reset submitted');
     alert('Password changed successfully!');
-    navigate('/login'); // Navigate to login after success
+    navigate('/login');
   };
 
   return (
@@ -31,14 +58,13 @@ const ForgotPassword = () => {
               type="email"
               placeholder="Enter your email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <button
-              onClick={() => {
-                console.log('Email button clicked');
-                handleEmailSubmit();
+              onChange={handleEmailChange} // Reset error states on input change
+              style={{
+                border: isEmailValid ? '1px solid #ccc' : '2px solid red',
               }}
-            >
+            />
+            {!isEmailValid && <p style={{ color: 'red' }}>{emailError}</p>}
+            <button onClick={handleEmailSubmit}>
               Send Verification Code
             </button>
           </>
@@ -57,12 +83,7 @@ const ForgotPassword = () => {
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
             />
-            <button
-              onClick={() => {
-                console.log('Submit button clicked');
-                handlePasswordReset();
-              }}
-            >
+            <button onClick={handlePasswordReset}>
               Submit
             </button>
           </>
