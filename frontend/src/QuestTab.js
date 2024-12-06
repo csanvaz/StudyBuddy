@@ -140,158 +140,90 @@ function QuestPage({ userId }) {
   }
 };
 
-  return (
-    <div className="quest-page">
-    {/* Display Carlos the Yeti */}
-      <Helper steps={helperSteps} />
+return (
+  <div className="quest-page">
+  {/* Display Carlos the Yeti */}
+    <Helper steps={helperSteps} />
 
-      {/* Weekly Quest Section */}
-      <div className="weekly-quest">
-        <h2>Weekly Quest</h2>
-        <div className="progress-container">
-          <svg
-            className="progress-path"
-            viewBox="0 0 400 500"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            {/* Snake-like Path */}
-            <path
-              d="M350 450 C300 400, 200 500, 150 300 C100 100, 50 300, 10 100"
-              stroke="#FFD700"
-              strokeWidth="2"
-              fill="none"
-              strokeDasharray="5,5"
-            />
-            {Array.from({ length: 7 }).map((_, index) => {
-              const positions = [
-                { x: 350, y: 450 },
-                { x: 280, y: 400 },
-                { x: 200, y: 350 },
-                { x: 130, y: 300 },
-                { x: 80, y: 250 },
-                { x: 50, y: 180 },
-                { x: 30, y: 120 },
-              ];
+    {/* Equipment Section */}
+    <div className="equipment-box">
+      <h2 className="box-title">Available Equipment</h2>
 
-              const circleSize = 20 + (index % 2 === 0 ? 3 : -3); // Alternate sizes
-              const isCompleted = index < completedQuests;
-
-              return (
-                <g
-                  key={index}
-                  className={`progress-node ${isCompleted ? 'gold' : 'silver'}`}
-                  onClick={() => handleCompleteQuest(index)}
-                >
-                  <circle
-                    cx={positions[index].x}
-                    cy={positions[index].y}
-                    r={circleSize} // Dynamic radius
-                    className={`circle-border color-${index}`} // Dynamic class for borders
-                    fill={isCompleted ? 'gold' : '#C0C0C0'}
-                  />
-                  <text
-                    x={positions[index].x}
-                    y={positions[index].y + 5}
-                    textAnchor="middle"
-                    fontSize="14"
-                    className={`circle-text color-${index}`} // Dynamic class for text
-                  >
-                    {index + 1}
-                  </text>
-                </g>
-              );
-            })}
-          </svg>
-
-          {/* Mystery Box */}
-          <div className="mystery-box" title="It's a mystery box. Complete your weekly quest to receive a prize!">
-            <img
-              src={images['/assets/mystery-box-icon.png']}
-              alt="Mystery Box"
-            />
-          </div>
-        </div>
+      <div className="av-box">
+        <p>Complete quests to receive gold!</p>
       </div>
 
-      {/* Equipment Section */}
-      <div className="equipment-box">
-        <h2 className="box-title">Available Equipment</h2>
-
-        <div className="av-box">
-          <p>Complete weekly quests to receive gold!</p>
+      {/* User Items Section */}
+      <div className="user-items">
+        <h2>Your Items</h2>
+        <div className="user-items-container">
+          {userItems.map(item => (
+            <div
+              key={item.id}
+              className="user-item"
+              onClick={() => handleItemUse(item)}
+              title={`Click to use ${item.title}`}
+            >
+              <div className="item-image">
+                <img
+                  src={images[item.image] || images['/assets/default.png']}
+                  alt={item.title}
+                  loading="lazy"
+                  onError={(e) => { e.target.src = images['/assets/default.png']; }}
+                />
+              </div>
+              <p>{item.title}</p>
+              <div className="special-ability">{item.specialAbility}</div>
+            </div>
+          ))}
         </div>
+      </div>
+      
+      {/* Display error message if it exists */}
+      {errorMessage && (
+        <div className="error-message" style={{ color: 'red', margin: '10px 0' }}>
+          <strong>Error:</strong> {errorMessage}
+        </div>
+      )}
 
-        {/* User Items Section */}
-        <div className="user-items">
-          <h2>Your Items</h2>
-          <div className="user-items-container">
-            {userItems.map(item => (
-              <div
-                key={item.id}
-                className="user-item"
-                onClick={() => handleItemUse(item)}
-                title={`Click to use ${item.title}`}
+      {/* Display success message if it exists */}
+      {successMessage && (
+        <div className="success-message" style={{ color: 'green', margin: '10px 0' }}>
+          <strong>Success:</strong> {successMessage}
+        </div>
+      )}
+
+      {/* Dynamic Shop Grid */}
+      <div className="shop-grid">
+        {shopItems.length > 0 ? (
+          shopItems.map((item) => (
+            <div className="stat-square shop-square" key={item.id}>
+              <div className="image-container" title={item.title2}>
+                <img
+                  src={images[item.image] || images['/assets/default.png']}
+                  alt={item.title}
+                  loading="lazy"
+                  onError={(e) => { e.target.src = images['/assets/default.png']; }}
+                />
+              </div>
+              <p>{item.title}</p>
+              <button
+                className="shop-button"
+                onClick={() => handlePurchase(item.id, userId)}
+                aria-label={`Buy ${item.title} for ${item.cost} gold`}
               >
-                <div className="item-image">
-                  <img
-                    src={images[item.image] || images['/assets/default.png']}
-                    alt={item.title}
-                    loading="lazy"
-                    onError={(e) => { e.target.src = images['/assets/default.png']; }}
-                  />
-                </div>
-                <p>{item.title}</p>
-                <div className="special-ability">{item.specialAbility}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-        
-        {/* Display error message if it exists */}
-        {errorMessage && (
-          <div className="error-message" style={{ color: 'red', margin: '10px 0' }}>
-            <strong>Error:</strong> {errorMessage}
-          </div>
+                <GiGoldBar style={{ color: 'gold', fontSize: '24px', marginRight: '8px' }} />
+                {item.cost}
+              </button>
+            </div>
+          ))
+        ) : (
+          <p>No shop items available</p>
         )}
-
-        {/* Display success message if it exists */}
-        {successMessage && (
-          <div className="success-message" style={{ color: 'green', margin: '10px 0' }}>
-            <strong>Success:</strong> {successMessage}
-          </div>
-        )}
-
-        {/* Dynamic Shop Grid */}
-        <div className="shop-grid">
-          {shopItems.length > 0 ? (
-            shopItems.map((item) => (
-              <div className="stat-square shop-square" key={item.id}>
-                <div className="image-container" title={item.title2}>
-                  <img
-                    src={images[item.image] || images['/assets/default.png']}
-                    alt={item.title}
-                    loading="lazy"
-                    onError={(e) => { e.target.src = images['/assets/default.png']; }}
-                  />
-                </div>
-                <p>{item.title}</p>
-                <button
-                  className="shop-button"
-                  onClick={() => handlePurchase(item.id, userId)}
-                  aria-label={`Buy ${item.title} for ${item.cost} gold`}
-                >
-                  <GiGoldBar style={{ color: 'gold', fontSize: '24px', marginRight: '8px' }} />
-                  {item.cost}
-                </button>
-              </div>
-            ))
-          ) : (
-            <p>No shop items available</p>
-          )}
-        </div>
       </div>
     </div>
-  );
+  </div>
+);
 }
 
 export default QuestPage;
