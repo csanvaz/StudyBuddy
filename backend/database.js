@@ -216,6 +216,28 @@ async function deleteContent(contentId) {
     }
 }
 
+async function updatePassword(userId, newPassword) {
+    try {
+        // Hash the new password
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+        // Update the password in the database
+        const result = await pool.query(
+            'UPDATE users SET password = $1 WHERE user_id = $2',
+            [hashedPassword, userId]
+        );
+
+        if (result.rowCount === 1) {
+            return { success: true, message: 'Password updated successfully' };
+        } else {
+            return { success: false, message: 'Failed to update password' };
+        }
+    } catch (error) {
+        console.error('Error updating password:', error);
+        return { success: false, error: error.message };
+    }
+}
+
 
 module.exports = {
     pool,
@@ -231,5 +253,6 @@ module.exports = {
     getShopItems,
     getGold,
     updateGold,
-    deleteContent
+    deleteContent,
+    updatePassword
   };
