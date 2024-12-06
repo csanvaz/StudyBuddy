@@ -266,6 +266,40 @@ async function getStreak(userName) {
     }
 }
 
+async function updateStreak(userName, streak) {
+    try {
+        const result = await pool.query(
+            'UPDATE users SET streak = $1 WHERE user_id = $2 RETURNING streak',
+            [streak, userName]
+        );
+        if (result.rows.length > 0) {
+            return { success: true, streak: result.rows[0].streak }; 
+        } else {
+            return { success: false, message: 'User not found' };
+        }
+    } catch (error) {
+        console.error('Error updating streak:', error);
+        return { success: false, error: error.message };
+    }
+}
+
+async function updateXP(userName, xp) {
+    try {
+        const result = await pool.query(
+            'UPDATE users SET xp = $1 WHERE user_id = $2 RETURNING xp',
+            [xp, userName]
+        );
+        if (result.rows.length > 0) {
+            return { success: true, xp: result.rows[0].xp }; 
+        } else {
+            return { success: false, message: 'User not found' };
+        }
+    } catch (error) {
+        console.error('Error updating xp:', error);
+        return { success: false, error: error.message };
+    }
+}
+
 module.exports = {
     pool,
     registerUser,
@@ -283,5 +317,7 @@ module.exports = {
     deleteContent,
     updatePassword,
     getXP,
-    getStreak
+    getStreak,
+    updateStreak,
+    updateXP
   };

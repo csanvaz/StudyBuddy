@@ -3,7 +3,7 @@ const { OpenAI } = require('openai');
 const multer = require('multer');
 const fs = require('fs');
 const {systemIdentity, flashCardTask, quizTask} = require('./prompts.js');
-const { testDatabaseConnection, loginUser, registerUser, validatePassword, updateAvatar, createContent, getUserContent, setLoginNow, getShopItems, getGold, getXP, updatePassword, getStreak } = require('./database');
+const { testDatabaseConnection, loginUser, registerUser, validatePassword, updateAvatar, createContent, getUserContent, setLoginNow, getShopItems, getGold, getXP, updatePassword, getStreak, updateStreak, updateXP } = require('./database');
 const { v4: uuidv4 } = require('uuid');
 const { sendEmail, sendWelcomeEmail } = require('./emailService');
 const cron = require('node-cron');
@@ -247,6 +247,36 @@ app.get('/user/:userName/xp', async (req, res) => {
         }
     } catch (error) {
         console.error('Error fetching xp:', error);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+});
+
+app.post('/set/:userId/xp', async (req, res) => {
+    const { userId, xp } = req.body;
+    try {
+        const result = await updateXP(userId, xp);
+        if (result.success) {
+            res.json({ success: true, message: 'XP updated successfully' });
+        } else {
+            res.status(404).json({ success: false, message: 'User not found' });
+        }
+    } catch (error) {
+        console.error('Error updating xp:', error);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+});
+
+app.post('/set/:userId/streak', async (req, res) => {
+    const { userId, streak } = req.body;
+    try {
+        const result = await updateStreak(userId, streak);
+        if (result.success) {
+            res.json({ success: true, message: 'Streak updated successfully' });
+        } else {
+            res.status(404).json({ success: false, message: 'User not found' });
+        }
+    } catch (error) {
+        console.error('Error updating streak:', error);
         res.status(500).json({ success: false, message: 'Server error' });
     }
 });
