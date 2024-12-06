@@ -266,17 +266,40 @@ async function getXP(userName) {
 
 async function getStreak(userName) {
     try {
-        const result = await pool.query('SELECT streak FROM users WHERE username = $1', [userName]);
-        if (result.rows.length > 0) {
-            return { success: true, streak: result.rows[0].streak }; 
-        } else {
+        const result = await pool.query(
+            'SELECT streak, last_login FROM users WHERE username = $1',
+            [userName]
+        );
+
+        if (result.rows.length === 0) {
             return { success: false, message: 'User not found' };
         }
+
+        const { streak, last_login } = result.rows[0];
+        const lastLoginDate = new Date(last_login);
+        const currentDate = new Date();
+
+        const differenceInTime = currentDate.getTime() - lastLoginDate.getTime();
+        const differenceInDays = differenceInTime / (1000 * 60 * 60 * 24);
+
+        let updatedStreak = streak;
+
+        if (differenceInDays >= 1) {
+            updatedStreak += 1;
+
+            await pool.query(
+                'UPDATE users SET streak = $1, last_login = $2 WHERE username = $3',
+                [updatedStreak, currentDate, userName]
+            );
+        }
+
+        return { success: true, streak: updatedStreak };
     } catch (error) {
         console.error('Error fetching streak:', error);
         return { success: false, error: error.message };
     }
 }
+
 
 async function updateStreak(userName, streak) {
     try {
