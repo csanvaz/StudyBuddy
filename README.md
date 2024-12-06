@@ -1,1 +1,1 @@
-Welcome to Study App! This app is designed to make learning efficient, engaging, and fun. Whether you are preparing for exams, exploring new topics, or just want to test your knowledge, our app is here to help!
+Welcome to Study Buddy! This app is designed to make learning efficient, engaging, and fun. Whether you are preparing for exams, exploring new topics, or just want to test your knowledge, our app is here to help!
