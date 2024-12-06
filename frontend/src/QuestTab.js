@@ -1,5 +1,5 @@
 // QuestPage.jsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import './styles/QuestTab.css';
 import { GiGoldBar } from 'react-icons/gi'; // Import the gold bar icon
 import backendURL from './config';
@@ -27,23 +27,23 @@ function QuestPage({ userId }) {
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
 
-  useEffect(() => {
-    const fetchUserItems = async () => {
-      try {
-        const response = await fetch(`${backendURL}/user/${userId}/items`);
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        console.log('Fetched user items:', data);
-        setUserItems(data);
-      } catch (error) {
-        console.error('Error fetching user items:', error);
+  const fetchUserItems = useCallback(async () => {
+    try {
+      const response = await fetch(`${backendURL}/user/${userId}/items`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
-    };
+      const data = await response.json();
+      console.log('Fetched user items:', data);
+      setUserItems(data);
+    } catch (error) {
+      console.error('Error fetching user items:', error);
+    }
+  },[userId]);
 
+  useEffect(() => {
     fetchUserItems();
-  }, [userId]);
+  }, [fetchUserItems]);
 
   // Fetch shop items from the backend
   useEffect(() => {
@@ -90,7 +90,7 @@ function QuestPage({ userId }) {
 
       const result = await response.json();
       setSuccessMessage(`You have successfully purchased ${result.title}!`);
-      window.location.reload(); 
+      fetchUserItems();
       } catch (error) {
       console.error('Error purchasing item:', error);
       setErrorMessage(error.message);
