@@ -25,13 +25,13 @@ function QuizCard({ questionData = [], userId }) {
             setIsCorrect(true); // Correct answer
             updatedScore += 10; // Add 10 points if the answer is correct
             updateHomeXP(userId, 10); // Send the updated score to the backend
+            updateGold(userId, 100);
         } else {
             setIsCorrect(false); // Incorrect answer
         }
     
         setScore(updatedScore); // Update the state with the new score    
-    };
-    
+    }; 
 
     // Send score update to the backend
     const updateHomeXP = async (userId, updatedScore) => {
@@ -54,6 +54,29 @@ function QuizCard({ questionData = [], userId }) {
             }
         } catch (error) {
             console.error('Failed to send XP Points', error);
+        }
+    };
+
+    const updateGold = async (userId, goldEarned) => {
+        console.log("Updating Gold", goldEarned, userId);
+
+        try {
+            const response = await fetch(`${backendURL}/update-gold`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ userId: userId, goldEarned: goldEarned }),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Unknown error');
+            } else {
+                console.log('Gold points sent successfully!');
+            }
+        } catch (error) {
+            console.error('Failed to send Gold Points', error);
         }
     };
 

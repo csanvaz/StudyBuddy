@@ -116,7 +116,7 @@ function QuestPage({ userId }) {
       throw new Error(errorData.message || 'Unknown error');
     }
 
-    const result = await response.json();
+    //const result = await response.json();
     fetchUserItems();
     setSuccessMessage(`You have successfully used ${item.title} with special ability ${item.special_ability}!`);
     console.log(`You used item: ${item.title}`);

@@ -184,14 +184,25 @@ async function getGold(userId) {
 }
 
 // Update the user's gold in the database
-async function updateGold(userName, goldEarned) {
+async function updateGold(userId, goldEarned) {
     try {
-        const result = await pool.query(
-            'UPDATE users SET gold = gold + $1 WHERE username = $2 RETURNING gold',
-            [goldEarned, userName]
+        // Fetch current gold of the user first
+        const currentGoldResult = await pool.query(
+            'SELECT gold FROM users WHERE user_id = $1',
+            [userId]
         );
-        if (result.rows.length > 0) {
-            return { success: true, gold: result.rows[0].gold }; // Return the updated gold
+        console.log("CurrentGold", currentGoldResult);
+        if (currentGoldResult.rows.length > 0) {
+            console.log("About to update gold");
+            const currentGold = currentGoldResult.rows[0].gold;
+            const updatedGold = currentGold + goldEarned;
+
+            const result = await pool.query(
+                'UPDATE users SET gold = $1 WHERE user_id = $2 RETURNING gold',
+                [updatedGold, userId]
+            );
+
+            return { success: true, gold: result.rows[0].gold };
         } else {
             return { success: false, message: 'User not found' };
         }
@@ -200,6 +211,7 @@ async function updateGold(userName, goldEarned) {
         return { success: false, error: error.message };
     }
 }
+
 
 async function deleteContent(contentId) {
     try {

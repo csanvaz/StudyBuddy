@@ -3,7 +3,7 @@ const { OpenAI } = require('openai');
 const multer = require('multer');
 const fs = require('fs');
 const {systemIdentity, flashCardTask, quizTask} = require('./prompts.js');
-const { testDatabaseConnection, loginUser, registerUser, validatePassword, updateAvatar, createContent, getUserContent, setLoginNow, getShopItems, getGold, getXP, updatePassword, getStreak, updateStreak, updateXP, deleteContent } = require('./database');
+const { testDatabaseConnection, loginUser, registerUser, validatePassword, updateAvatar, createContent, getUserContent, setLoginNow, getShopItems, getGold, updateGold, getXP, updatePassword, getStreak, updateStreak, updateXP, deleteContent } = require('./database');
 const { v4: uuidv4 } = require('uuid');
 const { sendEmail, sendWelcomeEmail } = require('./emailService');
 const cron = require('node-cron');
@@ -307,25 +307,19 @@ app.post('/update-gold', async (req, res) => {
     }
 
     try {
-        const userResult = await pool.query('SELECT gold FROM users WHERE user_id = $1', [userId]);
+        const result = await updateGold(userId, goldEarned);
 
-        if (userResult.rows.length === 0) {
-            return res.status(404).json({ success: false, message: 'User not found' });
+        if (result.success) {
+            res.json({ success: true, gold: result.gold });
+        } else {
+            res.status(404).json({ success: false, message: result.message });
         }
-
-        const newGold = userResult.rows[0].gold + goldEarned;
-        if (newGold < 0) {
-            return res.status(400).json({ success: false, message: 'Not enough gold' });
-        }
-
-        await pool.query('UPDATE users SET gold = $1 WHERE user_id = $2', [newGold, userId]);
-
-        res.json({ success: true, gold: newGold });
     } catch (error) {
         console.error('Error updating gold:', error);
         res.status(500).json({ success: false, message: 'Server error' });
     }
 });
+
 
 app.post('/create-content', async (req, res) => {
     const { userId, title, text, makeQuiz, makeCards, token } = req.body;
