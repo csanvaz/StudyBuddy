@@ -36,6 +36,7 @@ function ContentPopup({ onAddContent, onClose }) {
                             type="checkbox"
                             checked={generateFlashcards}
                             onChange={(e) => setGenerateFlashcards(e.target.checked)}
+                            disabled={generateQuiz} // Disable flashcards checkbox if quiz is selected
                         />
                         Generate Flashcards
                     </label>
@@ -44,6 +45,7 @@ function ContentPopup({ onAddContent, onClose }) {
                             type="checkbox"
                             checked={generateQuiz}
                             onChange={(e) => setGenerateQuiz(e.target.checked)}
+                            disabled={generateFlashcards} // Disable quiz checkbox if flashcards is selected
                         />
                         Generate Quiz
                     </label>
