@@ -38,7 +38,7 @@ const Home = ({ userName, avatarName, handleAvatarChange, userId }) => {
       },
       {
         id: 'gold-info',
-        title: 'You earn gold for study-related actions and completing quests.',
+        title: 'You earn gold for study-related actions.',
         image: require('./assets/yeti/yeti1.png'),
       },
 ]);
