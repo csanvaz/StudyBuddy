@@ -40,19 +40,18 @@ const App = () => {
   }, []);
 
   // Set helper steps for Carlos
-  useEffect(() => {
-    if (!isLoggedIn) {
-      setHelperSteps([
-        { id: 'welcome', title: 'Welcome to the StudyBuddy! My name is Carlos! I am your personal study buddy!', image: require('./assets/yeti/yeti1.png') },
-        { id: 'ask-registered', title: 'Are you registered yet?', type: 'question', image: require('./assets/yeti/yeti1.png') },
-        { id: 'registered', title: 'Great! You are all set! Log in any time!', image: require('./assets/yeti/yeti2.png') },
-        { id: 'not-registered', title: 'Not a problem! Go to the Register page to create an account.', image: require('./assets/yeti/yeti1.png') },
-        { id: 'post-registration', title: 'Go ahead! I am not looking at your password!', image: require('./assets/yeti/yeti4.png') },
-      ]);
-    }
-  }, [isLoggedIn]);
+ useEffect(() => {
+  if (!isLoggedIn) {
+    setHelperSteps([
+      { id: 'welcome', title: 'Welcome to the StudyBuddy! My name is Carlos! I am your personal study buddy!', image: require('./assets/yeti/yeti1.png') },
+      { id: 'ask-registered', title: 'Are you registered yet?', type: 'question', image: require('./assets/yeti/yeti1.png') },
+      { id: 'registered', title: 'Great! You are all set! Log in any time!', image: require('./assets/yeti/yeti2.png') },
+      { id: 'not-registered', title: 'Not a problem! Go to the Register page to create an account.', image: require('./assets/yeti/yeti1.png') },
+      { id: 'post-registration', title: 'Go ahead! I am not looking at your password!', image: require('./assets/yeti/yeti4.png') },
+    ]);
+  }
+}, [isLoggedIn]);
   
-
   const handleLogin = async (username, password) => {
     try {
       const response = await axios.post(`${backendURL}/login`, { username, password });
@@ -134,7 +133,7 @@ const App = () => {
 
   return (
     <>
-      <Helper steps={helperSteps} />
+      {!isLoggedIn && <Helper steps={helperSteps} />}
       <Routes>
         <Route
           path="/"
