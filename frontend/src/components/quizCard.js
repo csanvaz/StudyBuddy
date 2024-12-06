@@ -24,12 +24,12 @@ function QuizCard({ questionData = [], userId }) {
         if (selectedAnswer === currentQuestion.correct_answer) {
             setIsCorrect(true); // Correct answer
             updatedScore += 10; // Add 10 points if the answer is correct
+            updateHomeXP(userId, 10); // Send the updated score to the backend
         } else {
             setIsCorrect(false); // Incorrect answer
         }
     
-        setScore(updatedScore); // Update the state with the new score
-        updateHomeXP(userId, updatedScore); // Send the updated score to the backend
+        setScore(updatedScore); // Update the state with the new score    
     };
     
 
@@ -59,9 +59,7 @@ function QuizCard({ questionData = [], userId }) {
 
     // Move to the next question
     const handleNextQuestion = () => {
-        // Send the updated score to the backend
-        updateHomeXP(userId, score);
-
+    
         // Reset all necessary states for the next question
         setIsCorrect(null); // Reset correctness
         setSelectedAnswer(null); // Reset selected answer

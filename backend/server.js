@@ -9,6 +9,8 @@ const { sendEmail, sendWelcomeEmail } = require('./emailService');
 const cron = require('node-cron');
 require('dotenv').config();
 const { pool } = require('./database');
+const crypto = require('crypto');
+const bcrypt = require('bcrypt');
 
 //https://CS484FinalProjectEnvironment-env.eba-qkbmea2x.us-east-1.elasticbeanstalk.com/api/topic-questions
 //origin:
