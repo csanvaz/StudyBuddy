@@ -71,6 +71,17 @@ const Login = ({ onLogin, loginError }) => {
           style={{ borderColor: passError ? 'red' : '' }}
         />
         {passError && <div className="error-message">Password is required</div>}
+        <p
+          onClick={() => navigate('/forgot-password')}
+          style={{
+            marginTop: '10px',
+            fontStyle: 'italic',
+            color: 'blue',
+            cursor: 'pointer',
+          }}
+        >
+          Forgot Password?
+        </p>
         <button onClick={handleLogin}>Login</button>
         <button onClick={() => navigate('/register')}>Go to Register</button>
       </div>

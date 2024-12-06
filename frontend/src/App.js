@@ -7,6 +7,7 @@ import multiavatar from '@multiavatar/multiavatar';
 import AppContent from './AppContent.js';
 import axios from 'axios';
 import backendURL from './config';
+import ForgotPassword from './ForgotPassword';
 
 const App = () => {
   const [userName, setUserName] = useState("");
@@ -117,6 +118,7 @@ const App = () => {
       <Routes>
         <Route path="/login" element={<Login onLogin={handleLogin} loginError={loginError} />} />
         <Route path="/register" element={<Register onRegister={handleRegister} />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route
           path="/"
           element={isLoggedIn ? (
