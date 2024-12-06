@@ -53,6 +53,12 @@
   }
 }
 
+.progress-node.current-streak circle {
+  stroke: #FF4500; /* Orange border for current streak */
+  stroke-width: 3; /* Thicker border */
+  fill: #FFD700; /* Gold fill */
+}
+
 .mystery-box img {
   width: 100%;
   height: auto;

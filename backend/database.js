@@ -278,6 +278,20 @@ async function getStreak(userName) {
     }
 }
 
+async function getStreakByUserId(userId) {
+    try {
+        const result = await pool.query('SELECT streak FROM users WHERE user_id = $1', [userId]);
+        if (result.rows.length > 0) {
+            return { success: true, streak: result.rows[0].streak }; 
+        } else {
+            return { success: false, message: 'User not found' };
+        }
+    } catch (error) {
+        console.error('Error fetching streak:', error);
+        return { success: false, error: error.message };
+    }
+}
+
 async function updateStreak(userName, streak) {
     try {
         const result = await pool.query(
@@ -393,4 +407,5 @@ module.exports = {
     updateStreak,
     updateXP,
     seedUserProgress,
+    getStreakByUserId,
   };

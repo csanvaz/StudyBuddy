@@ -3,7 +3,7 @@ const { OpenAI } = require('openai');
 const multer = require('multer');
 const fs = require('fs');
 const {systemIdentity, flashCardTask, quizTask} = require('./prompts.js');
-const { testDatabaseConnection, loginUser, registerUser, validatePassword, updateAvatar, createContent, getUserContent, setLoginNow, getShopItems, getGold, updateGold, getXP, updatePassword, getStreak, updateStreak, updateXP, deleteContent } = require('./database');
+const { testDatabaseConnection, loginUser, registerUser, validatePassword, updateAvatar, createContent, getUserContent, setLoginNow, getShopItems, getGold, updateGold, getXP, updatePassword, getStreak, updateStreak, updateXP, deleteContent, getStreakByUserId } = require('./database');
 const { v4: uuidv4 } = require('uuid');
 const { sendEmail, sendWelcomeEmail } = require('./emailService');
 const cron = require('node-cron');
@@ -20,7 +20,7 @@ const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 const upload = multer({ dest: 'uploads/' });
 const cors = require('cors');
 app.use(cors({
-  origin: 'https://main.d3mw78ay7wmpwg.amplifyapp.com',
+  origin: true,//'https://main.d3mw78ay7wmpwg.amplifyapp.com',
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true,
 }));
@@ -291,6 +291,25 @@ app.get('/user/:userName/streak', async (req, res) => {
             res.json({ success: true, streak: result.streak });
         } else {
             res.status(404).json({ success: false, message: 'User not found' });
+        }
+    } catch (error) {
+        console.error('Error fetching streak:', error);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+});
+
+app.post('/get-streak', async (req, res) => {
+    const { userId } = req.body;
+    if (!userId) {
+        return res.status(400).json({ success: false, message: 'Invalid input' });
+    }
+
+    try {
+        const result = await getStreakByUserId(userId);
+        if (result.success) {
+            res.json({ success: true, streak: result.streak });
+        } else {
+            res.status(404).json({ success: false, message: result.message });
         }
     } catch (error) {
         console.error('Error fetching streak:', error);

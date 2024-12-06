@@ -5,6 +5,7 @@ import { GiGoldBar } from 'react-icons/gi'; // Import the gold bar icon
 import backendURL from './config';
 import Draggable from 'react-draggable';
 import Helper from './Helper'; 
+import axios from 'axios';
 
 
 // Fixed import of images
@@ -29,6 +30,7 @@ function QuestPage({ userId }) {
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [helperSteps, setHelperSteps] = useState([]); // Steps for Carlos the Yeti
+  const [streak, setStreak] = useState(0); // User's streak
 
   const fetchUserItems = useCallback(async () => {
     try {
@@ -44,9 +46,26 @@ function QuestPage({ userId }) {
     }
   },[userId]);
 
+  const fetchUserStreak = useCallback(async () => {
+    try {
+      const response = await axios.post(`${backendURL}/get-streak`, { userId });
+      if (response.data.success) {
+        setStreak(response.data.streak % 7);
+      } else {
+        console.error('Error fetching streak:', response.data.message);
+      }
+    } catch (error) {
+      console.error('Error fetching streak:', error);
+    }
+  }, [userId]);
+
   useEffect(() => {
     fetchUserItems();
   }, [fetchUserItems]);
+
+  useEffect(() => {
+    fetchUserStreak();
+  }, [fetchUserStreak]);
 
   // Fetch shop items from the backend
   useEffect(() => {
@@ -146,7 +165,7 @@ return (
 
     {/* Weekly Quest Section */}
     <div className="weekly-quest">
-      <h2>Weekly Quest</h2>
+      <h2>Weekly Streak Quest</h2>
       <div className="progress-container">
         <svg
           className="progress-path"
@@ -174,11 +193,12 @@ return (
 
             const circleSize = 20 + (index % 2 === 0 ? 3 : -3); // Alternate sizes
             const isCompleted = index < completedQuests;
+            const isCurrentStreak = index === streak - 1;
 
             return (
               <g
                 key={index}
-                className={`progress-node ${isCompleted ? 'gold' : 'silver'}`}
+                className={`progress-node ${isCompleted ? 'gold' : 'silver'} ${isCurrentStreak ? 'current-streak' : ''}`}
                 onClick={() => handleCompleteQuest(index)}
               >
                 <circle

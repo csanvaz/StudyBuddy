@@ -103,8 +103,8 @@ async function seedUsers() {
                 email: 'john@example.com',
                 password: await bcrypt.hash('123', 10),
                 avatar: 'default_avatar.png',
-                streak: 0,
-                xp: 0 
+                streak: 10,
+                xp: 50 
             },
             {
                 username: 'jane_doe',
@@ -119,7 +119,7 @@ async function seedUsers() {
         for (const user of users) {
             await pool.query(
                 'INSERT INTO users (username, email, password, avatar, gold, streak, xp, xp_multiplier, last_login) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, NOW()) ON CONFLICT (username) DO NOTHING',
-                [user.username, user.email, user.password, user.avatar, 0, user.streak, user.xp, 1]
+                [user.username, user.email, user.password, user.avatar, 100, user.streak, user.xp, 1]
             );        
         }
 
