@@ -233,15 +233,25 @@ app.get('/user/:userName/gold', async (req, res) => {
 
 app.post('/update-gold', async (req, res) => {
     const { username, goldEarned } = req.body;
-    console.log("Request body:", req.body);
+    if (!username || typeof goldEarned !== 'number') {
+        return res.status(400).json({ success: false, message: 'Invalid input' });
+    }
+
     try {
-        const result = await updateGold(username, goldEarned);
-        console.log("Result:", result);
-        if (result.success) {
-            res.json({ success: true, gold: result.gold });
-        } else {
-            res.status(404).json({ success: false, message: 'User not found' });
+        const userResult = await pool.query('SELECT gold FROM users WHERE username = $1', [username]);
+
+        if (userResult.rows.length === 0) {
+            return res.status(404).json({ success: false, message: 'User not found' });
         }
+
+        const newGold = userResult.rows[0].gold + goldEarned;
+        if (newGold < 0) {
+            return res.status(400).json({ success: false, message: 'Not enough gold' });
+        }
+
+        await pool.query('UPDATE users SET gold = $1 WHERE username = $2', [newGold, username]);
+
+        res.json({ success: true, gold: newGold });
     } catch (error) {
         console.error('Error updating gold:', error);
         res.status(500).json({ success: false, message: 'Server error' });
@@ -286,11 +296,45 @@ app.post('/create-content', async (req, res) => {
     }
 });
 
-/*
-app.get('/api/purchase', async (req, res) => {
-    const { userId, itemId, token, gold } = req.body;
-)
-*/
+app.post('/api/purchase', async (req, res) => {
+    const { userId, itemId } = req.body;
+
+    if (!userId || !itemId) {
+        return res.status(400).json({ error: 'Missing userId or itemId' });
+    }
+
+    try {
+        const userResult = await pool.query('SELECT gold FROM users WHERE user_id = $1', [userId]);
+        const itemResult = await pool.query('SELECT cost FROM shop_items WHERE id = $1', [itemId]);
+        const ownershipResult = await pool.query(
+            'SELECT id FROM user_items WHERE user_id = $1 AND item_id = $2',
+            [userId, itemId]
+        );
+
+        if (userResult.rows.length === 0 || itemResult.rows.length === 0) {
+            return res.status(404).json({ error: 'User or item not found' });
+        }
+
+        if (ownershipResult.rows.length > 0) {
+            return res.status(400).json({ error: 'Item already owned' });
+        }
+
+        const userGold = userResult.rows[0].gold;
+        const itemCost = itemResult.rows[0].cost;
+
+        if (userGold < itemCost) {
+            return res.status(400).json({ error: 'Not enough gold' });
+        }
+
+        await pool.query('UPDATE users SET gold = gold - $1 WHERE user_id = $2', [itemCost, userId]);
+        await pool.query('INSERT INTO user_items (user_id, item_id) VALUES ($1, $2)', [userId, itemId]);
+
+        res.json({ success: true, message: `Item ${itemId} purchased successfully!` });
+    } catch (error) {
+        console.error('Error purchasing item:', error);
+        res.status(500).json({ error: 'Failed to purchase item' });
+    }
+});
 
 async function sendComeBackEmails() {
     try {
@@ -321,6 +365,38 @@ app.get('/api/shop-items', async (req, res) => {
     }
 });
 
+app.get('/user/:id/items', async (req, res) => {
+    const { id } = req.params;
+    try {
+        const result = await pool.query(
+            `SELECT si.* 
+             FROM shop_items si
+             JOIN user_items ui ON si.id = ui.item_id
+             WHERE ui.user_id = $1`,
+            [id]
+        );
+        res.json(result.rows);
+    } catch (error) {
+        console.error('Error fetching user items:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+app.post('/user/:id/add-item', async (req, res) => {
+    const { id } = req.params;
+    const { itemId } = req.body;
+
+    try {
+        await pool.query(
+            'INSERT INTO user_items (user_id, item_id) VALUES ($1, $2) ON CONFLICT DO NOTHING',
+            [id, itemId]
+        );
+        res.json({ success: true, message: `Item ${itemId} added to user ${id}` });
+    } catch (error) {
+        console.error('Error adding item to user:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
 
 cron.schedule('0 0 * * *', () => {
     sendComeBackEmails();

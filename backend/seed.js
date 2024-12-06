@@ -7,6 +7,7 @@ async function dropTables() {
         await pool.query('DROP TABLE IF EXISTS content');
         await pool.query('DROP TABLE IF EXISTS users');
         await pool.query('DROP TABLE IF EXISTS shop_items');
+        await pool.query('DROP TABLE IF EXISTS user_items');
         console.log('Tables dropped successfully');
     } catch (error) {
         console.error('Error dropping tables:', error);
@@ -52,6 +53,16 @@ async function createTables() {
                 special_ability VARCHAR(255) -- Special perks/abilities
             );
         `);
+        console.log('Shop items table created successfully');
+
+        await pool.query(`
+            CREATE TABLE IF NOT EXISTS user_items (
+                user_id INTEGER REFERENCES users(user_id) ON DELETE CASCADE,
+                item_id INTEGER REFERENCES shop_items(id) ON DELETE CASCADE,
+                PRIMARY KEY (user_id, item_id)
+            );
+        `);
+        console.log('User items table created successfully');
     } catch (error) {
         console.error('Error creating tables:', error);
     }
@@ -203,6 +214,27 @@ async function seedShopItems() {
     }
 }
 
+async function seedUserItems() {
+    try {
+        const userItems = [
+            { user_id: 1, item_id: 1 }, 
+            { user_id: 1, item_id: 2 }, 
+            { user_id: 2, item_id: 1 }  
+        ];
+
+        for (const userItem of userItems) {
+            await pool.query(
+                'INSERT INTO user_items (user_id, item_id) VALUES ($1, $2)',
+                [userItem.user_id, userItem.item_id]
+            );
+        }
+
+        console.log('User items seeded successfully');
+    } catch (error) {
+        console.error('Error seeding user items:', error);
+    }
+}
+
 
 
 async function seedDatabase() {
@@ -211,6 +243,7 @@ async function seedDatabase() {
     await seedUsers();
     await seedContent();
     await seedShopItems(); // shop items
+    await seedUserItems();
     pool.end();
 }
 
