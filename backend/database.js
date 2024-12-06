@@ -405,6 +405,6 @@ module.exports = {
     getXP,
     getStreak,
     updateStreak,
-    updateXP
+    updateXP,
     seedUserProgress,
   };
