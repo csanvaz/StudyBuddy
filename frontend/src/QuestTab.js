@@ -117,7 +117,8 @@ function QuestPage({ userId }) {
     }
 
     const result = await response.json();
-    fetchUserItems()
+    fetchUserItems();
+    setSuccessMessage(`You have successfully used ${item.title}!`);
     console.log(`You used item: ${item.title}`);
   } catch (error) {
     console.error('Error using item:', error);
