@@ -9,6 +9,8 @@ const { sendEmail, sendWelcomeEmail } = require('./emailService');
 const cron = require('node-cron');
 require('dotenv').config();
 const { pool } = require('./database');
+const crypto = require('crypto');
+const bcrypt = require('bcrypt');
 
 //https://CS484FinalProjectEnvironment-env.eba-qkbmea2x.us-east-1.elasticbeanstalk.com/api/topic-questions
 //origin:
@@ -588,18 +590,98 @@ app.post('/delete-content', async (req, res) => {
 app.post('/validate-email', async (req, res) => {
     const { email } = req.body;
 
+    if (!email) {
+        return res.status(400).json({ success: false, message: 'Email is required' });
+    }
+
     try {
-        const result = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
-        if (result.rows.length > 0) {
-            res.status(200).json({ success: true });
-        } else {
-            res.status(404).json({ success: false, message: 'Email not associated with any account' });
+        // Check if the email exists in the database
+        const result = await pool.query('SELECT user_id FROM users WHERE email = $1', [email]);
+        
+        if (result.rows.length === 0) {
+            console.log(`Email not found: ${email}`);
+            return res.status(404).json({ success: false, message: 'Email not associated with any account' });
         }
+
+        const userId = result.rows[0].user_id;
+
+        // Generate a random 6-digit code
+        const code = crypto.randomInt(100000, 999999).toString();
+
+        await pool.query(
+            'INSERT INTO password_reset_codes (user_id, email, code, expires_at) VALUES ($1, $2, $3, NOW() + INTERVAL \'15 minutes\') ON CONFLICT (email) DO UPDATE SET code = $3, expires_at = NOW() + INTERVAL \'15 minutes\'',
+            [userId, email, code]
+        );
+
+        const emailSent = await sendEmail(
+            email,
+            'Your Password Reset Code',
+            `<p>Your password reset code is: <strong>${code}</strong></p><p>This code will expire in 15 minutes.</p>`
+        );
+
+        if (!emailSent.success) {
+            console.error('Error sending email:', emailSent.error);
+            return res.status(500).json({ success: false, message: 'Failed to send email' });
+        }
+
+        console.log(`Reset code sent to ${email}`);
+        res.status(200).json({ success: true, message: 'Verification code sent to your email' });
     } catch (error) {
-        console.error('Error validating email:', error);
+        console.error('Error processing password reset request:', error);
         res.status(500).json({ success: false, message: 'Internal server error' });
     }
 });
+
+app.post('/verify-reset-code', async (req, res) => {
+    const { email, code } = req.body;
+
+    if (!email || !code) {
+        return res.status(400).json({ success: false, message: 'Email and code are required' });
+    }
+
+    try {
+        const result = await pool.query(
+            'SELECT * FROM password_reset_codes WHERE email = $1 AND code = $2 AND expires_at > NOW()',
+            [email, code]
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(400).json({ success: false, message: 'Invalid or expired code' });
+        }
+
+        console.log(`Code verified for ${email}`);
+        res.status(200).json({ success: true, message: 'Code verified' });
+    } catch (error) {
+        console.error('Error verifying reset code:', error);
+        res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+});
+
+app.post('/reset-password', async (req, res) => {
+    
+    const { email, newPassword } = req.body;
+
+    try {
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+        const result = await pool.query(
+            'UPDATE users SET password = $1 WHERE email = $2 RETURNING user_id',
+            [hashedPassword, email]
+        );
+
+        if (result.rowCount === 0) {
+            console.error(`Password reset failed. No user found for email: ${email}`);
+            return res.status(404).json({ success: false, message: 'User not found.' });
+        }
+
+        console.log(`Password updated successfully for email: ${email}`);
+        res.status(200).json({ success: true, message: 'Password updated successfully.' });
+    } catch (error) {
+        console.error('Error updating password:', error.message);
+        res.status(500).json({ success: false, message: 'Internal server error. Please try again later.' });
+    }
+});
+
 
 cron.schedule('0 0 * * *', () => {
     sendComeBackEmails();

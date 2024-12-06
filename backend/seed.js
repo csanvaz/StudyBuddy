@@ -65,6 +65,16 @@ async function createTables() {
             );
         `);
         console.log('User items table created successfully');
+        await pool.query(`
+            CREATE TABLE IF NOT EXISTS password_reset_codes (
+                id SERIAL PRIMARY KEY,
+                user_id INTEGER NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+                email VARCHAR(255) NOT NULL,
+                code VARCHAR(6) NOT NULL,
+                expires_at TIMESTAMP NOT NULL,
+                UNIQUE(email)
+            );
+        `);
     } catch (error) {
         console.error('Error creating tables:', error);
     }

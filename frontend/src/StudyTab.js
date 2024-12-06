@@ -11,7 +11,6 @@ function StudyTab({ userId, token }) {
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [currentTopic, setCurrentTopic] = useState('');
     const [currentContent, setCurrentContent] = useState(null);
-    const [deletedMaterials, setDeletedMaterials] = useState(new Set());  // Track deleted materials
 
     const fetchUserContent = useCallback(async () => {
         try {
@@ -119,7 +118,7 @@ function StudyTab({ userId, token }) {
                         </div>
                     ))}
                 </div>
-                {currentContent && !deletedMaterials.has(currentContent.content_id) && (
+                {currentContent && (
                     <div className="flashcard-section">
                         {currentContent.is_quiz ? (
                             <QuizCard questionData={currentContent.data.data.questions} userId={userId}/> // Pass the full array of questions
