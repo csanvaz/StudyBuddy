@@ -101,6 +101,7 @@ function QuestPage({ userId }) {
   console.log('Item clicked:', item);
   console.log(`Using item: ${item.title}`);
   console.log("item id", item.item_id);
+  console.log("special ability", item.special_ability);
 
   try {
     const response = await fetch(`${backendURL}/api/update-items/${userId}`, {
@@ -108,7 +109,7 @@ function QuestPage({ userId }) {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ itemId: item.item_id }),
+      body: JSON.stringify({ itemId: item.item_id, specialAbility: item.special_ability }),
     });
 
     if (!response.ok) {

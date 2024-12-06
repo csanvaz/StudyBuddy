@@ -295,35 +295,21 @@ async function updateStreak(userName, streak) {
     }
 }
 
-// async function updateXP(userName, xpIncrement) {
-//     try {
-//         const result = await pool.query(
-//             'UPDATE users SET xp = xp + $1 WHERE user_id = $2 RETURNING xp',
-//             [xpIncrement, userName]
-//         );
-//         if (result.rows.length > 0) {
-//             return { success: true, xp: result.rows[0].xp }; 
-//         } else {
-//             return { success: false, message: 'User not found' };
-//         }
-//     } catch (error) {
-//         console.error('Error updating xp:', error);
-//         return { success: false, error: error.message };
-//     }
-// }
-
 async function updateXP(userId, xpIncrement) {
     try {
         // Fetch current XP of the user first
         const currentXPResult = await pool.query(
-            'SELECT xp FROM users WHERE user_id = $1',
+            'SELECT xp, xp_multiplier FROM users WHERE user_id = $1',
             [userId]
         );
         console.log("CurrentXP", currentXPResult);
         if (currentXPResult.rows.length > 0) {
             console.log("About to update XP")
             const currentXP = currentXPResult.rows[0].xp;
-            const updatedXP = currentXP + xpIncrement; // Add the increment to the current XP
+            const xpMultiplier = currentXPResult.rows[0].xp_multiplier;
+            const adjustedXPIncrement = xpIncrement * xpMultiplier;
+
+            const updatedXP = currentXP + adjustedXPIncrement;
 
             // Update the user's XP with the new value
             const result = await pool.query(

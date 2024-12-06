@@ -25,7 +25,8 @@ async function createTables() {
                 avatar VARCHAR(255),
                 gold INTEGER DEFAULT 0,
                 streak INTEGER DEFAULT 0,
-                xp INTEGER DEFAULT 0, 
+                xp INTEGER DEFAULT 0,
+                xp_multiplier INTEGER DEFAULT 1, 
                 last_login TIMESTAMP DEFAULT NOW()
             );
         `);
@@ -103,8 +104,8 @@ async function seedUsers() {
 
         for (const user of users) {
             await pool.query(
-                'INSERT INTO users (username, email, password, avatar, gold, streak, xp, last_login) VALUES ($1, $2, $3, $4, $5, $6, $7, NOW()) ON CONFLICT (username) DO NOTHING',
-                [user.username, user.email, user.password, user.avatar, 0, user.streak, user.xp]
+                'INSERT INTO users (username, email, password, avatar, gold, streak, xp, xp_multiplier, last_login) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, NOW()) ON CONFLICT (username) DO NOTHING',
+                [user.username, user.email, user.password, user.avatar, 0, user.streak, user.xp, 1]
             );        
         }
 

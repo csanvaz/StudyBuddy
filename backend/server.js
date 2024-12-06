@@ -485,7 +485,8 @@ app.post('/user/:id/add-item', async (req, res) => {
 
 app.post('/api/update-items/:userId', async (req, res) => {
     const { userId } = req.params;
-    const { itemId } = req.body;
+    // const { itemId } = req.body;
+    const { itemId, specialAbility } = req.body;
 
     if (!itemId) {
         return res.status(400).json({ success: false, message: 'Item ID is required' });
@@ -504,6 +505,21 @@ app.post('/api/update-items/:userId', async (req, res) => {
             return res.status(404).json({ success: false, message: 'Item not found for this user' });
         }
 
+        const itemDetails = userItemCheck.rows[0];
+        console.log(`User ${userId} used item: ${itemDetails.title} with special ability: ${specialAbility || itemDetails.special_ability}`);
+
+        if (specialAbility === 'Double XP for 1 hour') {
+            console.log('Special ability activated: Double XP for 1 hour');
+            await pool.query(`UPDATE users SET xp_multiplier = 2 WHERE user_id = $1`, [userId]);
+            console.log('XP multiplier set to 2');
+        }
+
+        if (specialAbility === 'Triple XP for 1 hour') {
+            console.log('Special ability activated: Triple XP for 1 hour');
+            await pool.query(`UPDATE users SET xp_multiplier = 3 WHERE user_id = $1`, [userId]);
+            console.log('XP multiplier set to 3');
+        }
+
         await pool.query(
             'DELETE FROM user_items WHERE user_id = $1 AND item_id = $2',
             [userId, itemId]
@@ -511,8 +527,8 @@ app.post('/api/update-items/:userId', async (req, res) => {
 
         // perform actions based on the item's special ability
         // (for now, simply log it.)
-        const itemDetails = userItemCheck.rows[0];
-        console.log(`User ${userId} used item: ${itemDetails.title}`);
+        // const itemDetails = userItemCheck.rows[0];
+        // console.log(`User ${userId} used item: ${itemDetails.title}`);
 
         const updatedItems = await pool.query(
             `
