@@ -255,7 +255,6 @@ async function seedUserItems() {
         for (const userItem of userItems) {
             await pool.query(
                 'INSERT INTO user_items (user_id, item_id) VALUES ($1, $2)',
-                 ON CONFLICT DO NOTHING`,
                 [userItem.user_id, userItem.item_id]
             );
         }
